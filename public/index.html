@@ -1,0 +1,200 @@
+<html>
+<head>
+    <title>Miguel Fernandez</title>
+
+    <script src="js/main.js"></script>
+    <script src="js/fss.min.js"></script>
+    <script src="js/utyl.min.js"></script>
+    <style media="" data-href="assets/styles/styles.css">
+        @import url(http://fonts.googleapis.com/css?family=Gabriela|Dosis:200);
+
+        body {
+          font-family: "Vidaloka", serif;
+          -webkit-font-smoothing: antialiased;
+          font-weight: normal;
+          background: #151618;
+          color: #FFF;
+          margin: 0;
+        }
+
+        h1 {
+          text-transform: uppercase;
+          letter-spacing: 4px;
+          font-weight: normal;
+          font-size: 16px;
+        }
+
+        p {
+          line-height: 1.6em;
+          text-align: center;
+          font-size: 14px;
+        }
+
+        p + p {
+          margin-top: 1.0em;
+        }
+
+        a {
+          transition: color 0.2s ease-out;
+          text-decoration: none;
+          color: #FBB;
+        }
+
+        a:hover {
+          color: #444;
+        }
+
+        .overlay {
+          pointer-events: none;
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          left: 0;
+          top: 0;
+        }
+
+        .logo {
+          margin-bottom: 10px;
+          height: 120px;
+          width: 120px;
+        }
+
+        .container {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+        }
+
+        .wrapper {
+          transition: opacity 0.4s ease-out;
+          margin: -280px -180px;
+          text-align: center;
+          position: absolute;
+          height: 560px;
+          width: 360px;
+          left: 50%;
+          top: 50%;
+        }
+
+        .header {
+          margin-bottom: 80px;
+        }
+
+        .information {
+          margin-bottom: 60px;
+        }
+
+        .footer {
+          font-family: Baskerville, sans-serif;
+          font-size: 30px;
+        }
+
+        .footer a {
+          text-transform: uppercase;
+          font-size: 11px;
+        }
+
+        .footer .handle {
+          font-style: italic;
+        }
+
+        .controls {
+          -webkit-font-smoothing: subpixel-antialiased;
+          position: absolute;
+          right: 20px;
+          top: 0;
+        }
+
+        .links {
+          position: absolute;
+          list-style: none;
+          width: 120px;
+          bottom: 40px;
+          right: 20px;
+          padding: 0;
+          margin: 0;
+        }
+
+        .links li {
+          border-bottom: #222 1px solid;
+          border-bottom: rgba(255,255,255,0.1) 1px solid;
+        }
+
+        .links li a {
+          transition: opacity 0.2s ease-out;
+          -webkit-font-smoothing: subpixel-antialiased;
+          font-family: 'Dosis', sans-serif;
+          text-transform: uppercase;
+          text-align: right;
+          padding: 0.25em 0;
+          letter-spacing: 2px;
+          font-weight: 200;
+          font-size: 12px;
+          display: block;
+          width: 100%;
+          opacity: 0.4;
+          color: #FFF;
+        }
+
+        .links li a:hover {
+          opacity: 0.8;
+        }
+
+        .links li .linkedin:before {
+          opacity: 0.5;
+          content: '↓';
+          float: left;
+        }
+
+        .links li .github:before {
+          opacity: 0.5;
+          content: '{}';
+          float: left;
+        }
+
+        .links li .twitter:before {
+          opacity: 0.5;
+          content: '△';
+          float: left;
+        }
+
+        .vignette {
+          background-image: -webkit-radial-gradient(50% 50%, ellipse, rgba(0,0,0,0) 40%, rgba(0,0,0,1) 100%);
+          background-image: radial-gradient(50% 50%, ellipse, rgba(0,0,0,0) 40%, rgba(0,0,0,1) 100%);
+        }
+
+        .noise {
+          background-image: url("http://matthew.wagerfield.com/flat-surface-shader/assets/styles/../graphics/noise.png");
+          opacity: 0.075;
+        }
+
+        .hide {
+          opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container" class="container">
+      <div id="output" class="container"></div>
+      <div id="vignette" class="overlay vignette">
+      </div>
+      <div id="noise" class="overlay noise">
+      </div>
+      <div id="ui" class="wrapper">
+        <header id="header" class="header">
+          <h1>Miguel Fernandez</h1><br>
+          Muitxer
+        </header>
+        <article id="information" class="information">
+        </article>
+        <footer id="footer" class="footer">
+        </footer>
+      </div>
+      <ul id="links" class="links">
+        <li><a class="linkedin" href="https://es.linkedin.com/in/muitxer" target="_blank">Linkedin</a></li>
+        <li><a class="github" href="https://github.com/muit" target="_blank">GitHub</a></li>
+        <li><a class="twitter" href="https://twitter.com/muitxer" target="_blank">Twitter</a></li>
+      </ul>
+    </div>
+</body>
+</html>
