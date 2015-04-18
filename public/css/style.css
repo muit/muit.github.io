@@ -1,0 +1,140 @@
+@import url(http://fonts.googleapis.com/css?family=Gabriela|Dosis:200);
+
+body {
+  font-family: "Vidaloka", serif;
+  -webkit-font-smoothing: antialiased;
+  font-weight: normal;
+}
+
+h1 {
+  font-family: "Vidaloka", serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+.title {
+  padding: 10em 2em 3em 2em;
+}
+
+#footer {
+  transition: opacity 0.2s ease-out;
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-family: 'Dosis', sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.25em 0;
+  letter-spacing: 2px;
+  font-weight: 200;
+  font-size: 12px;
+  display: block;
+  width: 100%;
+  color: #FFF;
+}
+
+.links {
+  position: absolute;
+  list-style: none;
+  width: 120px;
+  bottom: 40px;
+  right: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.links li {
+  border-bottom: #222 1px solid;
+  border-bottom: rgba(255,255,255,0.1) 1px solid;
+}
+
+.links li a {
+  transition: opacity 0.2s ease-out;
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-family: 'Dosis', sans-serif;
+  text-transform: uppercase;
+  text-align: right;
+  padding: 0.25em 0;
+  letter-spacing: 2px;
+  font-weight: 200;
+  font-size: 12px;
+  display: block;
+  width: 100%;
+  opacity: 0.4;
+  color: #FFF;
+}
+
+.links li a:hover {
+  opacity: 0.8;
+}
+
+.links li .link_before {
+  opacity: 0.5;
+  float: left;
+}
+
+.nav-bar{
+  position: absolute;
+  right: 0px;
+  z-index: 1;
+}
+.nav-bar.top{
+  top: 0px;
+}
+.nav-bar.bottom{
+  bottom: 0px;
+}
+
+.parallax100 {
+    min-height: 100%;
+    background: transparent;
+}
+.parallax85 {
+    min-height: 85%;
+    background: transparent;
+}
+.parallax75 {
+    min-height: 75%;
+    background: transparent;
+}
+.parallax66 {
+    min-height: 66%;
+    background: transparent;
+}
+.parallax50 {
+    min-height: 50%;
+    background: transparent;
+}
+.parallax33 {
+    min-height: 33%;
+    background: transparent;
+}
+.parallax25 {
+    min-height: 25%;
+    background: transparent;
+}
+
+.bg-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.overlay-window {
+  pointer-events: none;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+.vignette {
+  background-image: -webkit-radial-gradient(50% 50%, ellipse, rgba(0,0,0,0) 40%, rgba(0,0,0,1) 100%);
+  background-image: radial-gradient(50% 50%, ellipse, rgba(0,0,0,0) 40%, rgba(0,0,0,1) 100%);
+}
+
+.noise {
+  background-image: url("http://matthew.wagerfield.com/flat-surface-shader/assets/graphics/noise.png");
+  opacity: 0.075;
+}

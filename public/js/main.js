@@ -41,8 +41,27 @@ http = {
 
 window.onload = function(){
 
+    var $sidebar   = $(".nav-bar.top"), 
+        $window    = $(window),
+        offset     = $sidebar.offset(),
+        topPadding = 0;
+
+    $window.scroll(function() {
+      if ($window.scrollTop() > offset.top) {
+        $sidebar.stop().animate({
+          marginTop: $window.scrollTop() - offset.top + topPadding
+        });
+      } else {
+        $sidebar.stop().animate({
+          marginTop: 0
+        });
+      }
+    });
 
 
+  //------------------------------
+  // FFS Background
+  //------------------------------
 
   //------------------------------
   // Mesh Properties
@@ -98,25 +117,16 @@ window.onload = function(){
   };
 
   //------------------------------
-  // UI Properties
-  //------------------------------
-  var UI = {
-    show: true
-  };
-
-  //------------------------------
   // Global Properties
   //------------------------------
   var now, start = Date.now();
   var center = FSS.Vector3.create();
   var attractor = FSS.Vector3.create();
-  var container = document.getElementById('container');
-  var controls = document.getElementById('controls');
+  var container = document.getElementsByClassName('bg-container')[0];
   var output = document.getElementById('output');
-  var ui = document.getElementById('ui');
   var renderer, scene, mesh, geometry, material;
   var webglRenderer, canvasRenderer, svgRenderer;
-  var gui, autopilotController;
+  var autopilotController;
 
   //------------------------------
   // Methods
