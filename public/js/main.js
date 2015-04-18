@@ -57,8 +57,9 @@ window.onload = function(){
         });
       }
     });
-
-
+};
+loadBackground();
+function loadBackground(){
   //------------------------------
   // FFS Background
   //------------------------------
