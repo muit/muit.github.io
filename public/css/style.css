@@ -1,13 +1,11 @@
-@import url(http://fonts.googleapis.com/css?family=Gabriela|Dosis:200);
+@import url(http://fonts.googleapis.com/css?family=Dosis:200);
 
 body {
-  font-family: "Vidaloka", serif;
   -webkit-font-smoothing: antialiased;
   font-weight: normal;
 }
 
 h1 {
-  font-family: "Vidaloka", serif;
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 4px;
@@ -113,6 +111,16 @@ h1 {
     background: transparent;
 }
 
+.parallax20 {
+    min-height: 20%;
+    background: transparent;
+}
+
+.parallax-container {
+  background: transparent;
+  width:100%;
+}
+
 .bg-container {
   position: absolute;
   width: 100%;
@@ -137,4 +145,32 @@ h1 {
 .noise {
   background-image: url("http://matthew.wagerfield.com/flat-surface-shader/assets/graphics/noise.png");
   opacity: 0.075;
+}
+
+.next_arrow {
+  position: absolute;
+  transform: rotate(180deg) translateZ(0px);
+  height: 16px;
+  width: 57px;
+}
+
+.next_arrow svg {
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  margin:auto;
+}
+    
+.next_arrow path,.next_arrow polygon,.next_arrow rect,.next_arrow circle,.next_arrow ellipse,.next_arrow polyline,.next_arrow line {
+  fill:#4bc613;
+  stroke:rgba(255, 255, 255, 1);
+  stroke-width:0px;
+}
+
+.padding-top5{
+  padding-top: 5em;
 }
