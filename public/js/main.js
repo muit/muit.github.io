@@ -1,3 +1,4 @@
+
 http = {
 	getJSON: function(url, callback){
 		var xhr = this.createCORSRequest("GET", url);
@@ -37,6 +38,8 @@ http = {
 		return xhr;
 	}
 }
+
+
 $(document).ready(function() {
     $('#fullpage').fullpage({
       anchors:['titleSection', 'contentSection'],
@@ -58,6 +61,10 @@ $(document).ready(function() {
       $(this).addClass('active');
       $.fn.fullpage.moveTo("contentSection", $(this).index());
     });
+
+    //Setup fit text
+    $('.title').fitText(0.7);
+    //$('.menuElement').fitText(0.7);
 
     var $sidebar   = $(".nav-bar.top"), 
         $window    = $(window),
