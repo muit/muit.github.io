@@ -37,9 +37,27 @@ http = {
 		return xhr;
 	}
 }
+$(document).ready(function() {
+    $('#fullpage').fullpage({
+      anchors:['titleSection', 'contentSection'],
 
+      //Design
+      controlArrows: false,
+      verticalCentered: false,
+      resize : true,
 
-window.onload = function(){
+      afterSlideLoad: function(anchorLink, index, slideAnchor, slideIndex){
+        if(index  == 2){
+          $('.section').eq(index-1).find('.toSlide').removeClass('active').eq(slideIndex).addClass('active');  
+        }
+      }
+    });
+
+    $('.toSlide').click(function () {
+      $(this).siblings().removeClass('active');
+      $(this).addClass('active');
+      $.fn.fullpage.moveTo("contentSection", $(this).index());
+    });
 
     var $sidebar   = $(".nav-bar.top"), 
         $window    = $(window),
@@ -57,8 +75,10 @@ window.onload = function(){
         });
       }
     });
-};
+});
+
 loadBackground();
+
 function loadBackground(){
   //------------------------------
   // FFS Background
@@ -153,6 +173,7 @@ function loadBackground(){
     if (renderer) {
       output.removeChild(renderer.element);
     }
+
     switch(index) {
       case WEBGL:
         renderer = webglRenderer;
