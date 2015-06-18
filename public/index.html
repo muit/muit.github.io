@@ -16,7 +16,7 @@
 
   <script src="js/fss.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>  
+  <script type="text/javascript" src="js/jquery.slimscroll.min.js"></script>
   <script src="js/jquery.fullPage.js"></script>
   <script src="js/jquery.fittext.js"></script>
   <script src="js/tuktuk.js"></script>
@@ -56,9 +56,9 @@
         <div class="toSlide cell menuElement" data-index="3">OTHER</div>
       </div>
 
-      <div class="slide" data-anchor="gamesSlide">
-        <img style="width:33.333333%;height:100%;position:absolute; z-index:-1; opacity:0.3"data-src="images/Arise.png">
-
+      <div id="games" class="slide" data-anchor="gamesSlide">
+        <img class="back" style="width:100vw; height:100%; opacity:0.3" data-src="images/Arise.png">
+        
         <div class="row">
           <div class="next_arrow align center offset_1">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
@@ -72,14 +72,60 @@
             <h2>Games</h2>
           </div>
         </div>
-        <!--
-        <div class="row">
-          <div id="" class="column_2 offset_1">
-            <h4>PacVolution</h4>
 
+        <div class="row padding-bottom5">
+          <div class="game-container ratio16_9 column_6">
+            <div class="content"> 
+              <img class="bg" src="images/Arise.png" />
+              <div class="mask bck dark">
+                <h4>Arise</h4> 
+                <p>Platform hability game with the objective of reaching the checkpoints. It includes cooperative mode</p>
+                <div class="buttons">
+                  <a href="#" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
+                  <a href="#" class="info"><div>
+                    <div class="link_before fa fa-windows"></div>
+                    <div class="link_before fa fa-apple"></div>
+                    <div class="link_before fa fa-linux"></div>
+                    Demo
+                  </div></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="game-container ratio16_9 column_6">
+            <div class="content"> 
+              <img class="bg" src="images/PacVolution.png" />
+              <div class="mask">
+                <h4>PacVolution</h4> 
+                <p>2d strategy and multiplayer game where you will need to surround the enemies to get his cubes</p>
+                <div class="buttons">
+                  <a href="#" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
+                  <a href="#" class="info"><div><div class="link_before fa fa-android"></div>Demo</div></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="game-container ratio16_9 column_6">  
+            <div class="content"> 
+              <img class="bg" src="images/ClipJump.png" />
+              <div class="mask">
+                <h4>ClipJump</h4> 
+                <p>Demo for a first person game introduction.</p>
+                <div class="buttons">
+                  <a href="#" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
+                  <a href="#" class="info"><div>
+                    <div class="link_before fa fa-windows"></div>
+                    <div class="link_before fa fa-apple"></div>
+                    <div class="link_before fa fa-linux"></div>
+                    Demo
+                  </div></a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        -->
       </div>
 
       <div class="slide" data-anchor="backendSlide">
@@ -125,6 +171,8 @@
       minFontSize: '10px', 
       maxFontSize: '32px'
     });
+    $(".content p").fitText(2);
+    $(".content h4").fitText(1.9);
   </script>
 </body>
 </html>

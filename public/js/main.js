@@ -44,6 +44,8 @@ $(document).ready(function() {
     $('#fullpage').fullpage({
       anchors:['titleSection', 'contentSection'],
 
+      scrollOverflow: true,
+
       //Design
       controlArrows: false,
       verticalCentered: false,
@@ -60,13 +62,6 @@ $(document).ready(function() {
       $(this).siblings().removeClass('active');
       $(this).addClass('active');
       $.fn.fullpage.moveTo("contentSection", $(this).index());
-    });
-
-    //Setup fit text
-    $('.title').fitText(0.7);
-    $('.menuElement').fitText(0.5, {
-      minFontSize: '10px', 
-      maxFontSize: '32px'
     });
 
     var $sidebar   = $(".nav-bar.top"), 
