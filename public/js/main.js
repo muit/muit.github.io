@@ -64,7 +64,7 @@ $(document).ready(function() {
 
     //Setup fit text
     $('.title').fitText(0.7);
-    //$('.menuElement').fitText(0.7);
+    $('.menuElement').fitText(0.5);
 
     var $sidebar   = $(".nav-bar.top"), 
         $window    = $(window),
