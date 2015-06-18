@@ -16,7 +16,6 @@
 
   <script src="js/fss.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script type="text/javascript" src="js/jquery.slimscroll.min.js"></script>
   <script src="js/jquery.fullPage.js"></script>
   <script src="js/jquery.fittext.js"></script>
   <script src="js/tuktuk.js"></script>
@@ -54,24 +53,18 @@
         <div class="toSlide cell menuElement active" data-index="1">GAMES</div>
         <div class="toSlide cell menuElement" data-index="2">BACKEND</div>
         <div class="toSlide cell menuElement" data-index="3">OTHER</div>
-      </div>
-
-      <div id="games" class="slide" data-anchor="gamesSlide">
-        <img class="back" style="width:100vw; height:100%; opacity:0.3" data-src="images/Arise.png">
-        
         <div class="row">
-          <div class="next_arrow align center offset_1">
+          <div id="arrow" class="next_arrow align center offset_1">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
               <g transform="translate(0,0)">
                 <polygon points="28.499856,0 56.999882,15.999966 0,15.999966"></polygon>
               </g>
             </svg>
           </div>
-
-          <div class="column_4 padding-top padding-bottom">
-            <h2>Games</h2>
-          </div>
         </div>
+      </div>
+
+      <div id="games" class="slide padding-top5" data-anchor="gamesSlide">
 
         <div class="row padding-bottom5">
           <div class="game-container ratio16_9 column_6">
@@ -130,38 +123,20 @@
 
       <div class="slide" data-anchor="backendSlide">
         <div class="row">
-          <div class="next_arrow align center offset_6">
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
-              <g transform="translate(0,0)">
-                <polygon points="28.499856,0 56.999882,15.999966 0,15.999966"></polygon>
-              </g>
-            </svg>
-          </div>
-
-          <div class="column_4 padding-top padding-bottom">
-            <h2>Backend</h2>
+          <div class="padding-top padding-bottom">
           </div>
         </div>
       </div>
 
       <div class="slide" data-anchor="otherSlide">
         <div class="row">
-          <div class="next_arrow align center offset_10">
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
-              <g transform="translate(0,0)">
-                <polygon points="28.499856,0 56.999882,15.999966 0,15.999966"></polygon>
-              </g>
-            </svg>
-          </div>
-
-          <div class="column_4 padding-top padding-bottom">
-            <h2>Other</h2>
+          <div class="padding-top padding-bottom">
           </div>
         </div>
       </div>
 
+      <footer style="position:absolute;bottom:0px"class="bck dark">@2015 COPYRIGHT</footer>
     </div>
-  <footer class="bck dark">@2015 COPYRIGHT</footer>
   </div>
   <script src="js/main.js"></script>
   <script>
