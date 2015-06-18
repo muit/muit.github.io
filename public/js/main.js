@@ -64,7 +64,10 @@ $(document).ready(function() {
 
     //Setup fit text
     $('.title').fitText(0.7);
-    $('.menuElement').fitText(0.5);
+    $('.menuElement').fitText(0.5, {
+      minFontSize: '10px', 
+      maxFontSize: '32px'
+    });
 
     var $sidebar   = $(".nav-bar.top"), 
         $window    = $(window),
