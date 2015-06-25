@@ -40,9 +40,9 @@
     <!-- End Bg Effect -->
 
     <div class="section" data-anchor="titleSection">
-      <div class="row padding-top5">
+      <div class="row">
         <div class="offset_1 column_10">
-          <h1 class="title">Miguel Fernandez</h1>
+          <h1 class="title">Miguel Fernández</h1>
           <h3>Web & Game programmer</h3>
         </div>
       </div>
@@ -64,9 +64,8 @@
         </div>
       </div>
 
-      <div id="games" class="slide padding-top5" data-anchor="gamesSlide">
-
-        <div class="row padding-bottom5">
+      <div id="games" style="overflow: auto;" class="slide padding-top5 marin-bottom" data-anchor="gamesSlide">
+        <div style="height: auto; overflow: hidden;" class="row">
           <div class="game-container ratio16_9 column_6">
             <div class="content"> 
               <img class="bg" src="images/Arise.png" />
@@ -74,7 +73,7 @@
                 <h4>Arise</h4> 
                 <p>Platform hability game with the objective of reaching the checkpoints. It includes cooperative mode</p>
                 <div class="buttons">
-                  <a href="#" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
+                  <a href="https://github.com/muit/Arise" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
                   <a href="#" class="info"><div>
                     <div class="link_before fa fa-windows"></div>
                     <div class="link_before fa fa-apple"></div>
@@ -93,8 +92,8 @@
                 <h4>PacVolution</h4> 
                 <p>2d strategy and multiplayer game where you will need to surround the enemies to get his cubes</p>
                 <div class="buttons">
-                  <a href="#" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
-                  <a href="#" class="info"><div><div class="link_before fa fa-android"></div>Demo</div></a>
+                  <a href="https://github.com/muit/PacVolution" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
+                  <a href="http://www.mediafire.com/download/156bedhn4jx5q52/Delta.zip" class="info"><div><div class="link_before fa fa-android"></div>Demo</div></a>
                 </div>
               </div>
             </div>
@@ -102,12 +101,12 @@
 
           <div class="game-container ratio16_9 column_6">  
             <div class="content"> 
-              <img class="bg" src="images/ClipJump.png" />
+              <img class="bg" src="images/ColorParty.png" />
               <div class="mask">
-                <h4>ClipJump</h4> 
+                <h4>ColorParty</h4> 
                 <p>Demo for a first person game introduction.</p>
                 <div class="buttons">
-                  <a href="#" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
+                  <a href="https://github.com/muit/ColorParty" class="info"><div><div class="link_before fa fa-github"></div> Source</div></a>
                   <a href="#" class="info"><div>
                     <div class="link_before fa fa-windows"></div>
                     <div class="link_before fa fa-apple"></div>
@@ -134,14 +133,15 @@
           </div>
         </div>
       </div>
-
-      <footer style="position:absolute;bottom:0px"class="bck dark">@2015 COPYRIGHT</footer>
     </div>
   </div>
   <script src="js/main.js"></script>
   <script>
     //Setup fit text
-    $('.title').fitText(0.7);
+    $('.title').fitText(0.7, {
+      minFontSize: '10px', 
+      maxFontSize: '98px'
+    });
     $('.menuElement').fitText(0.5, {
       minFontSize: '10px', 
       maxFontSize: '32px'

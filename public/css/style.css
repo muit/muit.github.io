@@ -22,6 +22,7 @@ h5 { font-size: 0.5em; }
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 4px;
+  padding-top: 10vw;
 }
 
 .links {
@@ -235,7 +236,7 @@ div.cell
   z-index: 1000; 
   position:fixed;
   margin: 0;
-  max-height: 15%;
+  max-height: 10%;
 }
 
 #games {

@@ -1,0 +1,28 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/muit/.nvm/versions/io.js/v1.8.1/bin/iojs',
+1 verbose cli   '/home/muit/.nvm/versions/io.js/v1.8.1/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--no-bin-links' ]
+2 info using npm@2.8.3
+3 info using node@v1.8.1
+4 verbose readDependencies loading dependencies from /code/personalsite/package.json
+5 error install Couldn't read dependencies
+6 verbose stack Error: Invalid name: "muitxer site"
+6 verbose stack     at ensureValidName (/home/muit/.nvm/versions/io.js/v1.8.1/lib/node_modules/npm/node_modules/normalize-package-data/lib/fixer.js:310:15)
+6 verbose stack     at Object.module.exports.fixNameField (/home/muit/.nvm/versions/io.js/v1.8.1/lib/node_modules/npm/node_modules/normalize-package-data/lib/fixer.js:205:5)
+6 verbose stack     at /home/muit/.nvm/versions/io.js/v1.8.1/lib/node_modules/npm/node_modules/normalize-package-data/lib/normalize.js:30:38
+6 verbose stack     at Array.forEach (native)
+6 verbose stack     at normalize (/home/muit/.nvm/versions/io.js/v1.8.1/lib/node_modules/npm/node_modules/normalize-package-data/lib/normalize.js:29:15)
+6 verbose stack     at final (/home/muit/.nvm/versions/io.js/v1.8.1/lib/node_modules/npm/node_modules/read-package-json/read-json.js:338:5)
+6 verbose stack     at then (/home/muit/.nvm/versions/io.js/v1.8.1/lib/node_modules/npm/node_modules/read-package-json/read-json.js:113:5)
+6 verbose stack     at /home/muit/.nvm/versions/io.js/v1.8.1/lib/node_modules/npm/node_modules/read-package-json/read-json.js:300:12
+6 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (evalmachine.<anonymous>:382:3)
+7 verbose cwd /code/personalsite
+8 error Linux 3.2.0-4-amd64
+9 error argv "/home/muit/.nvm/versions/io.js/v1.8.1/bin/iojs" "/home/muit/.nvm/versions/io.js/v1.8.1/bin/npm" "install" "--no-bin-links"
+10 error node v1.8.1
+11 error npm  v2.8.3
+12 error Invalid name: "muitxer site"
+13 error If you need help, you may report this error at:
+13 error     <https://github.com/npm/npm/issues>
+14 verbose exit [ 1, true ]
