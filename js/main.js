@@ -11,8 +11,13 @@ $(window).scroll(function() {
 $(function() {
     $('a.page-scroll').bind('click', function(event) {
         var $anchor = $(this);
+        var top = 0;
+        if($anchor.attr('href') != "#") {
+        	top = $($anchor.attr('href')).offset().top;
+        }
+        
         $('html, body').stop().animate({
-            scrollTop: $($anchor.attr('href')).offset().top-75
+            scrollTop: top-75
         }, 700);
         event.preventDefault();
     });
@@ -21,8 +26,13 @@ $(function() {
 $(function() {
     $('a.page-fast-scroll').bind('click', function(event) {
         var $anchor = $(this);
+        var top = 0;
+        if($anchor.attr('href') != "#") {
+        	top = $($anchor.attr('href')).offset().top;
+        }
+
         $('html, body').stop().animate({
-            scrollTop: $($anchor.attr('href')).offset().top-75
+            scrollTop: top-75
         }, 500);
         event.preventDefault();
     });
