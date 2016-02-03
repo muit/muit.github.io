@@ -12,7 +12,7 @@ $(function() {
     $('a.page-scroll').bind('click', function(event) {
         var $anchor = $(this);
         $('html, body').stop().animate({
-            scrollTop: $($anchor.attr('href')).offset().top
+            scrollTop: $($anchor.attr('href')).offset().top-75
         }, 700);
         event.preventDefault();
     });
@@ -22,7 +22,7 @@ $(function() {
     $('a.page-fast-scroll').bind('click', function(event) {
         var $anchor = $(this);
         $('html, body').stop().animate({
-            scrollTop: $($anchor.attr('href')).offset().top
+            scrollTop: $($anchor.attr('href')).offset().top-75
         }, 500);
         event.preventDefault();
     });
