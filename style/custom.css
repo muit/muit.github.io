@@ -1,0 +1,44 @@
+.section-info a {
+  color: #fff;
+  text-decoration: none;
+}
+.section-info a:hover,
+.section-info a:focus {
+  color: #aaa;
+  
+}
+
+.section-info a div{
+    background-color: transparent;
+
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.section-info a:hover div,
+.section-info a:focus div{
+	background-color: #99251f;	
+}
+
+.section-info a small {
+	color:#ccc
+}
+
+.cover .cover-image {
+  background-image : url('../images/mrbrian_bg.gif'); 
+}
+
+.cover .cover-image.fader {
+  background: #332929;
+  opacity: 0.8;
+}
+
+.cover .cover-image.bg-points,
+.bg-points {
+  background: url("../images/bck.dots.png");
+}
+
+.game-jam {
+	padding-top: 1em;
+}

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Poiret One|Roboto Slab');
+@import url('https://fonts.googleapis.com/css?family=Poiret One|Open Sans');
 /*!
  * Default theme for Pingendo 
  * Homepage: http://pingendo.com  
@@ -1086,7 +1086,7 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: Roboto Slab;
+  font-family: "Open Sans";
   font-size: 14px;
   line-height: 1.42857143;
   color: #ffffff;
@@ -1107,7 +1107,7 @@ a {
 a:hover,
 a:focus {
   color: #86130d;
-  text-decoration: underline;
+  text-decoration: none;
 }
 a:focus {
   outline: thin dotted;
@@ -5825,7 +5825,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: Roboto Slab;
+  font-family: "Open Sans";
   font-size: 12px;
   font-weight: normal;
   line-height: 1.4;
@@ -5932,7 +5932,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: Roboto Slab;
+  font-family: "Open Sans";
   font-size: 14px;
   font-weight: normal;
   line-height: 1.42857143;
@@ -6626,7 +6626,7 @@ body {
   opacity: 0.5;
 }
 .section-info {
-  background-color: #404040 !important;
+  background-color: #bf2e26 !important;
   color: #ffffff;
 }
 .section-info .background-image {
@@ -6776,6 +6776,3 @@ body {
   background-attachment: fixed;
 }
 /* PINGENDO COMMENT DO NOT REMOVE */
-.bg {
-  background: url("../images/bck.dots.png");
-}
