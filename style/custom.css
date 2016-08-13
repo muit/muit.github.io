@@ -1,3 +1,16 @@
+a div{
+    background-color: transparent;
+
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+a:hover div,
+a:focus div{
+	background-color: #444;	
+}
+
 .section-info a {
   color: #fff;
   text-decoration: none;
@@ -39,6 +52,10 @@
   background: url("../images/bck.dots.png");
 }
 
-.game-jam {
+.padding-top {
 	padding-top: 1em;
+}
+
+.title {
+	text-align: center;
 }
