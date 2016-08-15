@@ -10,6 +10,27 @@ a:hover div,
 a:focus div{
 	background-color: #444;	
 }
+a {
+  color: #fff;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  color: #ccc;
+  
+}
+
+a small {
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+	color: #ccc
+}
+
+a:hover small,
+a:focus small {
+	color: #888
+}
 
 .section-info a {
   color: #fff;
@@ -17,7 +38,7 @@ a:focus div{
 }
 .section-info a:hover,
 .section-info a:focus {
-  color: #aaa;
+  color: #ccc;
   
 }
 
@@ -56,6 +77,8 @@ a:focus div{
 	padding-top: 1em;
 }
 
-.title {
-	text-align: center;
+ul.nav.navbar-nav li a{
+    -webkit-transition: background-color 0.2s ease-in-out;
+    -o-transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 }

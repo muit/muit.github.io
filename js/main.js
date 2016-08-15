@@ -13,8 +13,14 @@ $(function() {
         var $anchor = $(this);
         var top = 0;
         if($anchor.attr('href') != "#") {
-        	top = $($anchor.attr('href')).offset().top;
+            var offset = $($anchor.attr('href')).offset(); 
+        	top = offset? offset.top : 0;
         }
+        $("ul.nav.navbar-nav").children('li').each(function () {
+            console.log(this.value);
+            $(this).removeClass("active");
+        });
+        $anchor.parent().addClass("active");
         
         $('html, body').stop().animate({
             scrollTop: top-75
