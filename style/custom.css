@@ -55,7 +55,8 @@ a:focus small {
 	background-color: #99251f;	
 }
 
-.section-info a small {
+.section-info a small,
+.item small {
 	color:#ccc
 }
 
@@ -81,4 +82,13 @@ ul.nav.navbar-nav li a{
     -webkit-transition: background-color 0.2s ease-in-out;
     -o-transition: background-color 0.2s ease-in-out;
     transition: background-color 0.2s ease-in-out;
+}
+
+
+.img-rounded-x2 {
+  border-radius: 10px;
+}
+
+.links a {
+  color: #777;
 }
