@@ -127,4 +127,9 @@ ul.nav.navbar-nav li a{
 footer {
   padding-bottom: 10px !important;
 }
+
+.xs-no-padding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
 }
