@@ -12,7 +12,7 @@ $(window).scroll(function(event) {
         var refElement = $(currLink.attr("href"));
 
         //600 is a height offset
-        if (refElement.position().top-600 <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
+        if (refElement.position().top-500 <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
             $('.nav li').removeClass("active");
             currLink.parent().addClass("active");
         }
