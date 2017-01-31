@@ -112,3 +112,19 @@ ul.nav.navbar-nav li a{
 .links a {
   color: #777;
 }
+
+.no-padding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+.fill {
+  min-width: 100%;
+}
+
+
+@media (max-width: 767px) {
+footer {
+  padding-bottom: 10px !important;
+}
+}
