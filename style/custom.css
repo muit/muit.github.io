@@ -1,3 +1,7 @@
+body {
+    position: relative; 
+}
+
 a div{
     background-color: transparent;
 
@@ -42,7 +46,8 @@ a:focus small {
   
 }
 
-.section-info a div{
+.section-info a div,
+.link-hover {
     background-color: transparent;
 
     -webkit-transition: all 0.2s ease-in-out;
@@ -51,8 +56,16 @@ a:focus small {
 }
 
 .section-info a:hover div,
-.section-info a:focus div{
+.section-info a:focus div {
 	background-color: #99251f;	
+}
+
+.link-hover {
+  padding: 10px;
+}
+
+.link-hover:hover {
+  background-color: rgba(153, 37, 31, 0.8);
 }
 
 .section-info a small,
@@ -61,8 +74,15 @@ a:focus small {
 }
 
 .cover .cover-image {
-  background-image : url('../images/mrbrian_bg.gif'); 
+  background-image : url('../images/bg_mrbrian_video.gif'); 
 }
+
+@media (max-width: 767px) {
+.cover .cover-image {
+  background-image : url('../images/bg_mrbrian.png'); 
+}
+}
+
 
 .cover .cover-image.fader {
   background: #332929;

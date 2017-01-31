@@ -21,12 +21,12 @@
                 <a class="navbar-brand page-scroll" href="#"><span>MIGUEL FERNANDEZ</span></a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-ex-collapse">
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navigation navbar-nav navbar-right">
                     <li class="active">
-                        <a href="#home" class="page-scroll">HOME</a>
+                        <a href="#main" class="page-scroll">HOME</a>
                     </li>
                     <li>
-                        <a href="#works" class="page-scroll">PROJECTS</a>
+                        <a href="#projects" class="page-scroll">PROJECTS</a>
                     </li>
                     <li>
                         <a href="#about-me" class="page-scroll">ABOUT ME</a>
@@ -59,12 +59,12 @@
             </div>
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <a href="#about-me" class="page-fast-scroll"><i class="fa fa-3x fa-fw fa-angle-down"></i></a>
+                    <a href="#projects" class="page-fast-scroll"><i class="fa fa-3x fa-fw fa-angle-down"></i></a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="section section-info" id="works">
+    <div class="section section-info" id="projects">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -77,16 +77,15 @@
             <div class="row">
                 <div class="col-md-7">
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="text-center">Games</h1>
-                        </div>
+                    <div class="col-md-12">
+                        <h1 class="text-center">Games</h1>
                     </div>
-                    <div id="fullcarousel" data-interval="5000" class="carousel slide" data-ride="carousel">
+                    
+                    <div id="fullcarousel" data-interval="5000" class="col-md-12 carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-                            <div class="item row padding-top active">
+                            <div class="item padding-top active">
                                 <a href="https://piperift.itch.io/etereo">
-                                <img src="images/cover_etereo.png" class="img-rounded-x2">
+                                <img src="images/games/etereo.png" class="img-rounded-x2">
                                 <div class="col-md-12 text-center">
                                     <h2>
                                         Etereo
@@ -97,9 +96,9 @@
                                 </div>
                                 </a>
                             </div>
-                            <div class="item row padding-top">
+                            <div class="item padding-top">
                                 <a href="http://piperift.com">
-                                <img src="images/cover_mrbrian.png" class="img-rounded-x2">
+                                <img src="images/games/mrbrian.png" class="img-rounded-x2">
                                 <div class="col-md-12 text-center">
                                     <h2>
                                         Mr. Brian
@@ -111,7 +110,8 @@
                                 </a>
                             </div>
                             <div class="item padding-top">
-                                <img src="images/Electroshift.png" class="img-rounded-x2">
+                                <a href="http://www.indiedb.com/games/electroshift">
+                                <img src="images/games/electroshift.png" class="img-rounded-x2">
                                 <div class="col-md-12 text-center">
                                     <h2>
                                         Electroshift
@@ -120,9 +120,11 @@
                                     </h2>
                                     <p>Oldsports Game Studios - Square Enix Collective</p>
                                 </div>
+                                </a>
                             </div>
                             <div class="item padding-top">
-                                <img src="images\atf.png" class="img-rounded-x2">
+                                <a href="http://www.demigod-studios.com/games-atf">
+                                <img src="images/games/atf.png" class="img-rounded-x2">
                                 <div class="col-md-12 text-center">
                                     <h2>
                                         After The Fall
@@ -131,6 +133,7 @@
                                     </h2>
                                     <p>Demigod Studios</p>
                                 </div>
+                                </a>
                             </div>
                         </div>
                         <a class="left carousel-control" href="#fullcarousel" data-slide="prev"><i class="icon-prev fa fa-angle-left"></i></a>
@@ -142,54 +145,65 @@
                         <div class="col-md-12">
                             <h1 class="text-center">Game Jams</h1>
                         </div>
-                    </div>
-                    <div class="row">
-                        <a href="http://bit.ly/ld_beforeyoudie">
-                            <div class="col-md-6 padding-top">
-                                <img src="images/beforeyoudie_small.png" class="img-responsive img-rounded">
-                                <h2>
-                                    Before You Die
-                                    <br>
-                                    <small>&nbsp;Ludum Dare 36 - Compo</small>
-                                </h2>
-                                <p>Third person Doom-like shooter. 
-                                <br>Deliciously Evil.</p>
+                        <div class="col-md-12">
+                            <div class="link-hover col-xs-6 padding-top">
+                                <a href="http://bit.ly/un-dia-mas"><div>
+                                    <img src="images/gamejam/un_dia_mas.png" class="img-responsive img-rounded">
+                                    <h2>
+                                        Un Dia Mas
+                                        <br>
+                                        <small>&nbsp;Global Game Jam 2017</small>
+                                    </h2>
+                                    <p>An Oculus VR cooperative game about a diver and his partner.</p>
+                                </div></a>
                             </div>
-                        </a>
-                        <a href="http://globalgamejam.org/2016/games/paula">
-                            <div class="col-md-6 padding-top">
-                                <img src="images/paula_bg_small.png" class="img-responsive img-rounded">
-                                <h2>
-                                    Paula
-                                    <br>
-                                    <small>&nbsp;Global Game Jam 2016</small>
-                                </h2>
-                                <p>Programming, Lighting, Materials.
-                                <br>Horror Adventure first person game.</p>
+                            <div class="link-hover col-xs-6 padding-top">
+                                <a href="http://bit.ly/ld_beforeyoudie"><div>
+                                    <img src="images/gamejam/beforeyoudie.png" class="img-responsive img-rounded">
+                                    <h2>
+                                        Before You Die
+                                        <br>
+                                        <small>&nbsp;Ludum Dare 36 - Compo</small>
+                                    </h2>
+                                    <p>Third person Doom-like shooter. 
+                                    <br>Deliciously Evil.</p>
+                                </div></a>
                             </div>
-                        </a>
-                        <a href="http://bit.ly/mr_brian">
-                            <div class="col-md-6 padding-top">
-                                <img src="images/mr.brian_small.png" class="img-responsive img-rounded">
-                                <h2>
-                                    Mr. Brian
-                                    <br>
-                                    <small>&nbsp;Ludum Dare 34 - Compo</small>
-                                </h2>
-                                <p>First person adventure game.</p>
+                            <div class="link-hover col-xs-6 padding-top">
+                                <a href="http://globalgamejam.org/2016/games/paula"><div>
+                                    <img src="images/gamejam/paula.png" class="img-responsive img-rounded">
+                                    <h2>
+                                        Paula
+                                        <br>
+                                        <small>&nbsp;Global Game Jam 2016</small>
+                                    </h2>
+                                    <p>Programming, Lighting, Materials.
+                                    <br>Horror Adventure first person game.</p>
+                                </div></a>
                             </div>
-                        </a>
-                        <a href="http://bit.ly/cucumis_love">
-                            <div class="col-md-6 padding-top">
-                                <img src="images/CucumisLove_small.png" class="img-responsive img-rounded">
-                                <h2>
-                                    Cucumis Love
-                                    <br>
-                                    <small>&nbsp;Ludum Dare 33 - Compo</small>
-                                </h2>
-                                <p>Top down survival shooter.</p>
+                            <div class="link-hover col-xs-6 padding-top">
+                                <a href="http://bit.ly/mr_brian"><div>
+                                    <img src="images/gamejam/mrbrian.png" class="img-responsive img-rounded">
+                                    <h2>
+                                        Mr. Brian
+                                        <br>
+                                        <small>&nbsp;Ludum Dare 34 - Compo</small>
+                                    </h2>
+                                    <p>First person adventure game.</p>
+                                </div></a>
                             </div>
-                        </a>
+                            <!--<div class="link-hover col-xs-6 padding-top">
+                                <a href="http://bit.ly/cucumis_love"><div>
+                                    <img src="images/gamejam/cucumislove.png" class="img-responsive img-rounded">
+                                    <h2>
+                                        Cucumis Love
+                                        <br>
+                                        <small>&nbsp;Ludum Dare 33 - Compo</small>
+                                    </h2>
+                                    <p>Top down survival shooter.</p>
+                                </div></a>
+                            </div>-->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -201,38 +215,42 @@
                 <div class="col-md-12">
                     <h1 class="text-center">Other</h1>
                 </div>
-            </div>
-            <div class="row">
-                <a href="https://www.unrealengine.com/marketplace/cel-shading-and-outline-materials">
-                    <div class="col-md-3 padding-top">
-                        <img src="images\other_celshading.png" class="img-responsive img-rounded">
-                        <h2>Cel Shading and Outline Pack</h2>
-                        <p>Unreal Engine 4 cel-shading and outline post-processing based materials pack</p>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="link-hover col-md-6 col-xs-6 padding-top">
+                        <a href="https://www.unrealengine.com/marketplace/cel-shading-and-outline-materials">
+                            <img src="images/other/celshading.png" class="img-responsive img-rounded">
+                            <h2>Cel Shading and Outline Pack</h2>
+                            <p>Unreal Engine 4 cel-shading and outline post-processing based materials pack</p>
+                        </a>
                     </div>
-                </a>
-                <a href="https://github.com/muit/serveme" target="_blank">
-                    <div class="col-md-3 padding-top">
-                        <img src="images\serveme.png" class="img-responsive img-rounded">
-                        <h2>Serve Me</h2>
-                        <p>A NodeJS DSL for creating simple web applications</p>
+                    <div class="link-hover col-md-6 col-xs-6 padding-top">
+                        <a href="https://github.com/muit/serveme" target="_blank">
+                            <img src="images/other/serveme.png" class="img-responsive img-rounded">
+                            <h2>Serve Me</h2>
+                            <p>A NodeJS DSL for creating simple web applications</p>
+                        </a>
                     </div>
-                </a>
-                <a href="https://github.com/thewildboard/wildboard" target="_blank">
-                    <div class="col-md-3 padding-top">
-                        <img src="images\wildboard.png" class="img-responsive img-rounded">
-                        <h2>Wildboard
-                            <br>
-                        </h2>
-                        <p>An open source, api-ready dashboard for apps</p>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="link-hover col-md-6 col-xs-6 padding-top">
+                        <a href="https://github.com/thewildboard/wildboard" target="_blank">
+                            <img src="images/other/wildboard.png" class="img-responsive img-rounded">
+                            <h2>Wildboard
+                                <br>
+                            </h2>
+                            <p>An open source, api-ready dashboard for apps</p>
+                        </a>
                     </div>
-                </a>
-                <a href="https://play.google.com/store/apps/details?id=com.PixelDream.Delta" target="_blank">
-                    <div class="col-md-3 padding-top">
-                        <img src="images\Arise.png" class="img-responsive img-rounded">
-                        <h2>Arise</h2>
-                        <p></p>
+                    <div class="link-hover col-md-6 col-xs-6 hidden-xs padding-top">
+                        <a href="https://play.google.com/store/apps/details?id=com.PixelDream.Delta" target="_blank">
+                            <img src="images/other/arise.png" class="img-responsive img-rounded">
+                            <h2>Arise</h2>
+                            <p></p>
+                        </a>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </div>
