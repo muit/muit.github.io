@@ -343,3 +343,11 @@ body::-webkit-scrollbar-thumb
   -moz-transition: -moz-transform 0.3s 0.7s, opacity 0s 0.7s;
   transition: transform 0.3s 0.7s, opacity 0s 0.7s;
 }
+
+.image-box  {
+  height: 200px;
+}
+
+.image-box img {
+  height: 100%;
+}
