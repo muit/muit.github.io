@@ -78,10 +78,10 @@ $(function() {
     var techChart = new Chart($("#tech-chart"), {
         type: 'horizontalBar',
         data: {
-            labels: ["Unreal Engine 4", "C++", "Unity & C#", "Back-End, NodeJs", "Photoshop"],
+            labels: ["Unreal Engine 4", "C++", "Unity & C#", "Back-End, NodeJs", "Agile & Git"],
             datasets: [{
                 label: "Years of Experience",
-                data: [2, 3, 2, 4, 2, 0],
+                data: [2.5, 3, 2, 4, 3.5],
                 backgroundColor: 'rgba(191, 46, 38, 0.2)',
                 borderColor: 'rgba(191, 46, 38,1)',
                 borderWidth: 2
