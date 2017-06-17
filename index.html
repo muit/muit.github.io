@@ -4,6 +4,7 @@
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/chart.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="style/style.css" rel="stylesheet" type="text/css">
@@ -44,7 +45,7 @@
               <a href="#about-me" class="page-scroll">ABOUT ME</a>
             </li>
             <li>
-              <a href="Resume.pdf">RESUME</a>
+              <a class="external" href="Resume.pdf">RESUME</a>
             </li>
             <li>
               <a href="#contact" class="page-scroll">CONTACT</a>
@@ -162,8 +163,7 @@
                 <a href="http://bit.ly/un-dia-mas"><div>
                   <img src="images/gamejam/un_dia_mas.png" class="img-responsive img-rounded">
                   <h2>
-                      Un Dia Mas
-                      <br>
+                      Un Dia Mas<br>
                       <small>&nbsp;Global Game Jam 2017</small>
                   </h2>
                   <p>An Oculus VR cooperative game about a diver and his partner.</p>
@@ -173,8 +173,7 @@
                 <a href="http://bit.ly/ld_beforeyoudie"><div>
                   <img src="images/gamejam/beforeyoudie.png" class="img-responsive img-rounded">
                   <h2>
-                      Before You Die
-                      <br>
+                      Before You Die<br>
                       <small>&nbsp;Ludum Dare 36 - Compo</small>
                   </h2>
                   <p>Third person Doom-like shooter. 
@@ -185,8 +184,7 @@
                 <a href="http://globalgamejam.org/2016/games/paula"><div>
                   <img src="images/gamejam/paula.png" class="img-responsive img-rounded">
                   <h2>
-                      Paula
-                      <br>
+                      Paula<br>
                       <small>&nbsp;Global Game Jam 2016</small>
                   </h2>
                   <p>Programming, Lighting, Materials.
@@ -197,9 +195,8 @@
                 <a href="http://bit.ly/mr_brian"><div>
                   <img src="images/gamejam/mrbrian.png" class="img-responsive img-rounded">
                   <h2>
-                      Mr. Brian
-                      <br>
-                      <small>&nbsp;Ludum Dare 34 - Compo</small>
+                    Mr. Brian<br>
+                    <small>&nbsp;Ludum Dare 34 - Compo</small>
                   </h2>
                   <p>First person adventure game.</p>
                 </div></a>
@@ -218,26 +215,24 @@
           <div class="col-md-offset-2 col-md-8 col-xs-12">
             <div class="link-hover col-md-4 col-xs-6 padding-top">
               <a href="https://www.unrealengine.com/marketplace/cel-shading-and-outline-materials">
-                            <img src="images/other/celshading.png" class="img-responsive img-rounded">
-                            <h2>Cel Shading and Outline Pack</h2>
-                            <p>Unreal Engine 4 cel-shading and outline post-processing based materials pack</p>
-                        </a>
+                <img src="images/other/celshading.png" class="img-responsive img-rounded">
+                <h2>Cel Shading and Outline Pack</h2>
+                <p>Unreal Engine 4 cel-shading and outline post-processing based materials pack</p>
+              </a>
             </div>
             <div class="link-hover col-md-4 col-xs-6 padding-top">
               <a href="https://github.com/muit/serveme" target="_blank">
-                            <img src="images/other/serveme.png" class="img-responsive img-rounded">
-                            <h2>Serve Me</h2>
-                            <p>A NodeJS DSL for creating simple web applications</p>
-                        </a>
+                <img src="images/other/serveme.png" class="img-responsive img-rounded">
+                <h2>Serve Me</h2>
+                <p>A NodeJS DSL for creating simple web applications</p>
+              </a>
             </div>
             <div class="link-hover col-md-4 col-xs-6 padding-top">
               <a href="https://github.com/thewildboard/wildboard" target="_blank">
-                            <img src="images/other/wildboard.png" class="img-responsive img-rounded">
-                            <h2>Wildboard
-                                <br>
-                            </h2>
-                            <p>An open source, api-ready dashboard for apps</p>
-                        </a>
+                <img src="images/other/wildboard.png" class="img-responsive img-rounded">
+                <h2>Wildboard<br></h2>
+                <p>An open source, api-ready dashboard for apps</p>
+              </a>
             </div>
           </div>
         </div>
@@ -279,47 +274,18 @@
     <div class="section section-info" id="skills">
       <div class="container">
         <div class="row">
-          <div class="col-md-6 col-xs-12 no-padding">
-            <h2>Technology</h2>
-            <div class="col-md-4 col-xs-6 text-center">
-              <img src="images/skills/ue4.ico" width="64px">
-              <h2>5/5</h2>
+          <div class="col-md-12 col-xs-12 no-padding">
+
+            <div class="col-md-6 col-xs-12 text-center margin padding-top">
+              <h2>Programming</h2>
+              <div class="hidden-xs col-md-12 padding-top">&nbsp;</div>
+              <canvas id="skills-chart" class="padding-top" width="auto" height="200"></canvas>
             </div>
-            <div class="col-md-4 col-xs-6 text-center">
-              <img src="images/skills/unity.png" width="64px">
-              <h2>4/5</h2>
-            </div>
-            <div class="col-md-4 col-xs-6 text-center">
-              <img src="images/skills/visualstudio.png" width="64px">
-              <h2>4/5</h2>
-            </div>
-            <div class="col-md-4 col-xs-6 text-center">
-              <img src="images/skills/substancepainter.png" width="64px">
-              <h2>4/5</h2>
-            </div>
-            <div class="col-md-4 col-xs-6 text-center">
-              <img src="images/skills/photoshop.png" width="64px">
-              <h2>2/5</h2>
-            </div>
-          </div>
-          <div class="col-md-6 col-xs-12 no-padding">
-            <h2>Strengths</h2>
-            <div class="col-md-4 col-xs-6 text-center">
-              <h3>Fastlearning</h3>
-              <h2>4/5</h2>
-            </div>
-            <div class="col-md-4 col-xs-6 text-center">
-              <h3>Motivation</h3>
-              <h2>4/5</h2>
-            </div>
-            <div class="col-md-4 col-xs-6 text-center">
-              <h3>Persistence</h3>
-              <h2>5/5</h2>
-            </div>
-            <div class="col-md-4 col-xs-6 text-center">
-              <h3>Craziness</h3>
-              <h2>5/5</h2>
-              <small>With honors!</small>
+            <div class="col-md-6 col-xs-12 text-center margin padding-top">
+              <div class="hidden-md hidden-lg padding-top">&nbsp;</div>
+              <h2>Skills</h2>
+              <div class="hidden-xs col-md-12 padding-top">&nbsp;</div>
+              <canvas id="tech-chart" class="padding-top" width="auto" height="200"></canvas>
             </div>
           </div>
         </div>

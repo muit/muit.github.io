@@ -1,29 +1,10 @@
-//jQuery to collapse the navbar on scroll
-$(window).scroll(function(event) {
-    if ($(".navbar").offset().top > 50) {
-        $(".navbar-fixed-top").addClass("top-nav-collapse");
-    } else {
-        $(".navbar-fixed-top").removeClass("top-nav-collapse");
-    }
-    
-    var scrollPos = $(document).scrollTop();
-    $('.nav a').each(function () {
-        var currLink = $(this);
-        var refElement = $(currLink.attr("href"));
 
-        //600 is a height offset
-        if (refElement.position().top-500 <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
-            $('.nav li').removeClass("active");
-            currLink.parent().addClass("active");
-        }
-        else{
-            //currLink.parent().removeClass("active");
-        }
-    });
-});
+//Setup ChartJS
+/*Chart.defaults.global.defaultFontColor = 'white';*/
+/*Chart.defaults.global.defaultFontSize = 24;*/
+Chart.defaults.global.defaultFontFamily = "Poiret One";
 
 $(function() {
-
     //jQuery for page scrolling feature - requires jQuery Easing plugin
     $('a.page-scroll').bind('click', function(event) {
         var $anchor = $(this);
@@ -56,7 +37,115 @@ $(function() {
         event.preventDefault();
     });
 
+    var skillsChart = new Chart($("#skills-chart"), {
+        type: 'radar',
+        data: {
+            labels: ["Gameplay", "Animation", "Tools", "AI"],
+            datasets: [{
+                data: [30, 15, 20, 27],
+                backgroundColor: 'rgba(191, 46, 38, 0.2)',
+                borderColor: 'rgba(191, 46, 38,1)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scale: {
+                ticks: {
+                    display: false,
+                    min: 0,
+                    max: 35,
+                    stepSize: 5,
+                },
+                pointLabels: {
+                    fontSize:24,
+                    fontColor: "white",
+                    fontFamily: "Poiret One"
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                            return tooltipItem.yLabel;
+                    }
+                }
+            }
+        }
+    });
+
+    var techChart = new Chart($("#tech-chart"), {
+        type: 'horizontalBar',
+        data: {
+            labels: ["Unreal Engine 4", "C++", "Unity & C#", "Back-End, NodeJs", "Photoshop"],
+            datasets: [{
+                label: "Years of Experience",
+                data: [2, 3, 2, 4, 2, 0],
+                backgroundColor: 'rgba(191, 46, 38, 0.2)',
+                borderColor: 'rgba(191, 46, 38,1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontSize:22,
+                        fontColor: "white",
+                        fontFamily: "Poiret One"
+                    },
+                }],
+                xAxes: [{
+                    ticks: {
+                        stepSize: 1,
+                        fontSize:16,
+                        fontColor: "white",
+                        beginAtZero:true
+                    }
+                }]
+            },
+            legend: {
+                labels: {
+                    fontSize:18,
+                    fontColor: "white",
+                    beginAtZero:true
+                }
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                            return tooltipItem.yLabel;
+                    }
+                }
+            }
+        }
+    });
+});
+
+//jQuery to collapse the navbar on scroll
+$(window).scroll(function(event) {
+    if ($(".navbar").offset().top > 50) {
+        $(".navbar-fixed-top").addClass("top-nav-collapse");
+    } else {
+        $(".navbar-fixed-top").removeClass("top-nav-collapse");
+    }
     
+    var scrollPos = $(document).scrollTop();
+    $('.nav a').not('.external').each(function () {
+        var currLink = $(this);
+        var refElement = $(currLink.attr("href"));
+
+        //600 is a height offset
+        if (refElement.position().top-500 <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
+            $('.nav li').removeClass("active");
+            currLink.parent().addClass("active");
+        }
+        else{
+            //currLink.parent().removeClass("active");
+        }
+    });
 });
 
 jQuery(document).ready(function($){
