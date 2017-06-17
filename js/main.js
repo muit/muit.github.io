@@ -37,7 +37,7 @@ $(function() {
         event.preventDefault();
     });
 
-    var skillsChart = new Chart($("#skills-chart"), {
+    var skillsChart = new Chart($("#programming-chart"), {
         type: 'radar',
         data: {
             labels: ["Gameplay", "Animation", "Tools", "AI"],
@@ -75,7 +75,7 @@ $(function() {
         }
     });
 
-    var techChart = new Chart($("#tech-chart"), {
+    var techChart = new Chart($("#skills-chart"), {
         type: 'horizontalBar',
         data: {
             labels: ["Unreal Engine 4", "C++", "Unity & C#", "Back-End, NodeJs", "Agile & Git"],
