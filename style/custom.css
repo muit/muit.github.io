@@ -73,12 +73,19 @@ a:focus small {
 	color:#ccc
 }
 
-.cover .cover-image {
-  background-image : url('../images/bg_mrbrian_video.gif'); 
+.cover-image {    
+  position: absolute;
+  z-index: -1;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-image : url('../images/bg_mrbrian_video.gif');
+  background-attachment: fixed;
 }
 
 @media (max-width: 767px) {
-.cover .cover-image {
+.cover-image {
   background-image : url('../images/bg_mrbrian.png'); 
 }
 }
@@ -89,18 +96,6 @@ a:focus small {
   opacity: 0.8;
 }
 
-.cover .cover-image.bg-points,
-.bg-points {
-  background: url("../images/bck.dots.png");
-}
-
-.bg-points.soft {
-    background: url("../images/bck.dots.soft.png");
-}
-
-.padding-top {
-	padding-top: 1em;
-}
 
 ul.nav.navbar-nav li a{
     -webkit-transition: background-color 0.2s ease-in-out;

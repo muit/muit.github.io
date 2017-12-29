@@ -5,6 +5,20 @@
 Chart.defaults.global.defaultFontFamily = "Poiret One";
 
 $(function() {
+
+    let body = $('html, body');
+    let navbar_height = 70;
+
+    $(window).scroll(function() {
+        // Add effect on navbar when exiting home
+        if ($(document).scrollTop() > $( window ).height() - navbar_height-10) {
+            $('.navbar').addClass('scrolled');
+        }
+        else {
+            $('.navbar').removeClass('scrolled');
+        }
+    });
+
     //jQuery for page scrolling feature - requires jQuery Easing plugin
     $('a.page-scroll').bind('click', function(event) {
         var $anchor = $(this);
@@ -18,8 +32,8 @@ $(function() {
         });
         //$anchor.parent().addClass("active");
         
-        $('html, body').stop().animate({
-            scrollTop: top-75
+        body.stop().animate({
+            scrollTop: top - navbar_height
         }, 700);
         event.preventDefault();
     });
@@ -31,8 +45,8 @@ $(function() {
         	top = $($anchor.attr('href')).offset().top;
         }
 
-        $('html, body').stop().animate({
-            scrollTop: top-75
+        body.stop().animate({
+            scrollTop: top - navbar_height
         }, 500);
         event.preventDefault();
     });
@@ -40,9 +54,9 @@ $(function() {
     var skillsChart = new Chart($("#programming-chart"), {
         type: 'radar',
         data: {
-            labels: ["Gameplay", "Animation", "Tools", "AI"],
+            labels: ["Gameplay", "Tools", "Animation", "AI"],
             datasets: [{
-                data: [30, 15, 20, 27],
+                data: [22, 20, 12, 17],
                 backgroundColor: 'rgba(191, 46, 38, 0.2)',
                 borderColor: 'rgba(191, 46, 38,1)'
             }]
@@ -53,12 +67,12 @@ $(function() {
                 ticks: {
                     display: false,
                     min: 0,
-                    max: 35,
+                    max: 25,
                     stepSize: 5,
                 },
                 pointLabels: {
                     fontSize:24,
-                    fontColor: "white",
+                    fontColor: "#ccc",
                     fontFamily: "Poiret One"
                 }
             },
@@ -78,10 +92,10 @@ $(function() {
     var techChart = new Chart($("#skills-chart"), {
         type: 'horizontalBar',
         data: {
-            labels: ["Unreal Engine 4", "C++", "Unity & C#", "Back-End, NodeJs", "Agile & Git"],
+            labels: ["C++", "Unreal Engine 4", "Unity & C#", "Back-End", "Agile & Git"],
             datasets: [{
                 label: "Years of Experience",
-                data: [2.5, 3, 2, 4, 3.5],
+                data: [4, 3, 2, 4, 5],
                 backgroundColor: 'rgba(191, 46, 38, 0.2)',
                 borderColor: 'rgba(191, 46, 38,1)',
                 borderWidth: 2
@@ -92,16 +106,16 @@ $(function() {
             scales: {
                 yAxes: [{
                     ticks: {
-                        fontSize:22,
-                        fontColor: "white",
+                        fontSize:24,
+                        fontColor: "#ccc",
                         fontFamily: "Poiret One"
                     },
                 }],
                 xAxes: [{
                     ticks: {
                         stepSize: 1,
-                        fontSize:16,
-                        fontColor: "white",
+                        fontSize:18,
+                        fontColor: "#ccc",
                         beginAtZero:true
                     }
                 }]
@@ -109,7 +123,7 @@ $(function() {
             legend: {
                 labels: {
                     fontSize:18,
-                    fontColor: "white",
+                    fontColor: "#ccc",
                     beginAtZero:true
                 }
             },
@@ -133,17 +147,16 @@ $(window).scroll(function(event) {
     }
     
     var scrollPos = $(document).scrollTop();
-    $('.nav a').not('.external').each(function () {
-        var currLink = $(this);
-        var refElement = $(currLink.attr("href"));
+    $('.nav-item').not('.external').each(function () {
+        var currItem = $(this);
+        var refElement = $(currItem.children(".nav-link").attr("href"));
 
-        //600 is a height offset
-        if (refElement.position().top-500 <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
-            $('.nav li').removeClass("active");
-            currLink.parent().addClass("active");
-        }
-        else{
-            //currLink.parent().removeClass("active");
+        if(refElement.length) {
+            //500 is a height offset
+            if (refElement.position().top-500 <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
+                $('.nav-item').removeClass("active");
+                currItem.addClass("active");
+            }
         }
     });
 });
