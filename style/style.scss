@@ -1,6 +1,13 @@
 
 
 // Semantic color scheme
+; 
+; 
+; 
+; 
+; 
+; 
+@import url('https://fonts.googleapis.com/css?family=Lato'); 
 @import url('https://fonts.googleapis.com/css?family=Poiret One'); 
 @import url('https://fonts.googleapis.com/css?family=Open Sans'); 
 $theme-colors: (
@@ -11,7 +18,7 @@ $theme-colors: (
   warning: #ffc107,
   danger: #dc3545,
   light: #f8f9fa,
-  dark: #343a40
+  dark: #444
 );
 
 // Options
@@ -37,12 +44,13 @@ $body-color: #ccc;
 $body-color-inverse: invert($body-color) !default;
 
 
-$font-family-base: Open Sans;
+$font-family-base: Lato;
 
 $headings-font-family: Poiret One;
 
 
-$font-size-base: 1rem; // Assumes the browser default, typically `16px`
+$font-size-base: 0.9rem;
+ // Assumes the browser default, typically `16px`
 $font-size-h1: 2.5 * $font-size-base;
 $font-size-h2: 2 * $font-size-base;
 $font-size-h3: 1.75 * $font-size-base;

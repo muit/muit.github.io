@@ -22,7 +22,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md fixed-top bg-points navbar-dark scrolled">
+  <nav class="navbar navbar-expand-md fixed-top bg-points navbar-dark">
     <div class="container">
       <a class="navbar-brand text-primary py-2" href="#">MIGUEL FERNANDEZ</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
@@ -37,24 +37,33 @@
           <li class="nav-item py-2">
             <a class="nav-link page-scroll" href="#about-me">ABOUT</a>
           </li>
-          <li class="nav-item py-2 external">
+          <li class="nav-item py-2 pr-4 external">
             <a class="nav-link" href="Resume.pdf">RESUME</a>
           </li>
-          <li class="nav-item py-2">
-            <a class="nav-link page-scroll" href="#contact">CONTACT</a>
+          <li class="nav-item py-2 d-flex align-self-center external">
+            <a class="nav-link page-scroll" href="https://www.linkedin.com/in/muitxer"><i class="fa fa-lg fa-linkedin fa-fw"></i></a>
+          </li>
+          <li class="nav-item py-2 d-flex align-self-center external">
+            <a class="nav-link page-scroll" href="https://twitter.com/muitxer"><i class="fa fa-fw fa-lg fa-twitter"></i></a>
+          </li>
+          <li class="nav-item py-2 d-flex align-self-center external">
+            <a class="nav-link page-scroll" href="https://github.com/muit"><i class="fa fa-fw fa-lg fa-github"></i></a>
+          </li>
+          <li class="nav-item py-2 d-flex align-self-center external">
+            <a class="nav-link page-scroll" href="mailto:muit@piperift.com"><i class="fa fa-envelope fa-fw fa-lg"></i></a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-  <div class="cover d-flex align-items-center py-5" id="home">
+  <section class="cover d-flex align-items-center py-5" id="home">
     <div class="cover-image"></div>
     <div class="cover-image fader"></div>
     <div class="container bg-points">
       <div class="row">
         <div class="col-md-12 text-left title text-center">
           <h1 class="col-md-12 text-primary">MIGUEL FERNANDEZ
-            <br> <small class="text-muted">AI &amp; Gameplay Developer</small> </h1>
+            <br><small class="text-muted">Gameplay &amp; Tools Programmer</small></h1>
           <p class="col-md-12 links">
             <a href="https://www.linkedin.com/in/muitxer"><i class="fa fa-1x fa-fw fa-linkedin"></i></a>
             <a href="https://twitter.com/muitxer"> <i class="fa fa-1x fa-fw fa-twitter"> </i></a>
@@ -69,8 +78,101 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="cover d-flex align-items-center p-2 bg-secondary" id="about-me">
+  </section>
+  <section id="projects">
+    <section class="p-5 bg-secondary">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="py-4 text-center">GAMES</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="p-3 col-md-4">
+            <div class="card">
+              <img class="img-fluid" src="images/games/GiT.jpg" alt="Card image">
+              <div class="card-block px-5 py-4">
+                <h3 class="text-primary">Galaxy In Turmoil</h3>
+                <hr>
+                <h5 class="text-muted">Description</h5>
+                <p class="text-muted">Cyberpunk based, multiplayer fps game, where Roka, one of the galaxy’s most notorious mercenaries for hire, battles through the galaxy on a mission that will either save or destroy her universe</p>
+                <hr>
+                <h5 class="text-muted">Role: Gameplay programmer</h5>
+                <p class="text-muted">In charge of developing major gameplay systems like dialogues, story-line/quests and AI</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-3 col-md-4">
+            <div class="card">
+              <img class="img-fluid" src="images/games/before-you-die.png" alt="Card image">
+              <div class="card-block px-5 py-4">
+                <h3 class="text-primary">Before You Die</h3>
+                <hr>
+                <h5 class="text-secondary">Description</h5>
+                <p class="text-muted">Third person rogue-like shooter where Austin will save the souls of his family by killing hundreds of enemies and bosses</p>
+                <hr>
+                <h5 class="text-muted">Role: Director / Programmer</h5>
+                <p class="text-muted">In charge of leading the team, ensuring the conclusion of the deadlines and tasks, developing all the systems and doing the In-Engine work of the project</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-3 col-md-4">
+            <div class="card">
+              <img class="img-fluid" src="images/games/etereo.png" alt="Card image">
+              <div class="card-block px-5 py-4">
+                <h3 class="text-primary">Etereo</h3>
+                <hr>
+                <h5 class="text-muted">Description</h5>
+                <p class="text-muted">Third person peaceful platforming adventure with astonishing aesthetics where the player will decontaminate the world of darkness</p>
+                <hr>
+                <h5 class="text-muted">Role: Director / Programmer</h5>
+                <p class="text-muted">In charge of leading the team, keeping a common artistic vision, developing all the systems and doing the In-Engine work of the project</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="p-5 bg-dark">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="py-4 text-center">CODE</h1>
+          </div>
+        </div>
+        <div class="row align-self-start d-flex flex-row justify-content-center">
+          <div class="p-3 col-md-4">
+            <div class="card">
+              <div class="card-block p-4">
+                <h3 class="text-primary">JinkCore</h3>
+                <hr>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-muted">An Unreal Engine 4 plugin that adds game-focused features and improvements to the engine</p>
+                  </div>
+                  <div class="col-md-12 d-flex flex-wrap">
+                    <a href="https://gitlab.com/piperift/plugins/JinkCore/blob/master/Source/JinkCore/Public/Entities/Entity.h" class="btn btn-dark mr-2 mb-1">Code</a>
+                    <a href="https://gitlab.com/piperift/plugins/JinkCore/blob/master/Source/JinkCore/Public/Entities/Entity.h" class="btn btn-dark mb-1">Full Project</a>
+                  </div>
+                </div>
+              </div>
+              <img class="img-fluid" src="images/code/jinkcore.png" alt="Card image"> </div>
+          </div>
+          <div class="p-3 col-md-4">
+            <div class="card">
+              <div class="card-block p-4">
+                <h3 class="text-primary">Quest Extension</h3>
+                <hr>
+                <p class="text-muted">A plugin that provides a fully featured, non-linear and flexible Quest System to Unreal Engine 4</p>
+                <a href="https://www.unrealengine.com/marketplace/quest-extension" class="btn btn-dark">See on Marketplace</a>
+              </div>
+              <img class="img-fluid" src="images/code/quest-extension.png" alt="Card image"> </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+  <section class="cover d-flex align-items-center bg-secondary py-5" id="about-me">
     <div class="container">
       <div class="row">
         <div class="col-md-12 text-center">
@@ -107,65 +209,38 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="py-5 text-center bg-secondary">
+  </section>
+  <div class="text-white pt-5 bg-secondary">
     <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="pb-3 text-secondary">Sometimes is just matter to write things clear.&nbsp;</h1>
+      <div class="row d-flex flex-row align-self-center">
+        <div class="p-0 col-md-6 justify-content-center align-self-start d-flex">
+          <div class="col-md-6">
+            <h1 class="text-gray-dark text-primary">Contact</h1>
+            <p class="lead">Get in touch!
+              <br> </p>
+          </div>
+          <div class="col-md-6 p-0 align-self-center d-flex">
+            <a href="mailto:muit@piperift.com" class="btn btn-outline-primary">Send email</a>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end col-md-6">
+          <div class="d-flex justify-content-center align-self-center">
+            <a href="https://www.linkedin.com/in/muitxer" target="_blank"><i class="fa fa-fw text-white fa-linkedin fa-2x"></i></a>
+          </div>
+          <div class="align-self-center d-flex justify-content-center">
+            <a href="https://twitter.com/muitxer" target="_blank"><i class="fa fa-fw fa-twitter text-white fa-2x"></i></a>
+          </div>
+          <div class="d-flex justify-content-center align-self-center">
+            <a href="https://github.com/muit" target="_blank"><i class="fa fa-fw text-white fa-github fa-2x"></i></a>
+          </div>
+          <div class="d-flex justify-content-center align-self-center">
+            <a href="mailto:muit@piperift.com" target="_blank"><i class="fa fa-fw text-white fa-envelope fa-2x"></i></a>
+          </div>
         </div>
       </div>
       <div class="row">
-        <div class="text-right col-md-6">
-          <div class="row my-5">
-            <div class="col-2 order-lg-2 col-2 text-center"><i class="d-block fa fa-columns fa-3x"></i></div>
-            <div class="col-10 text-lg-right text-left order-lg-1">
-              <h4 class="text-primary">Responsive design</h4>
-              <p>Based on fluid design principles.
-                <br>Works with screen resolution</p>
-            </div>
-          </div>
-          <div class="row my-5">
-            <div class="col-2 order-lg-2 col-2 text-center"><i class="d-block fa fa-circle-thin fa-4x"></i></div>
-            <div class="col-10 text-lg-right text-left order-lg-1">
-              <h4 class="text-primary">Customized settings</h4>
-              <p>Choose settings depending on the criteria you value the most</p>
-            </div>
-          </div>
-          <div class="row my-5">
-            <div class="col-2 order-lg-2 col-2 text-center"><i class="d-block fa  fa-comment-o fa-3x"></i></div>
-            <div class="col-10 text-lg-right text-left order-lg-1">
-              <h4 class="text-primary">Connect</h4>
-              <p>In-app chat panel 24/7 active.
-                <br>The support you need, right there.</p>
-            </div>
-          </div>
-        </div>
-        <div class="text-left col-md-6">
-          <div class="row my-5">
-            <div class="col-2 text-center"><i class="d-block fa fa-battery-empty fa-3x"></i></div>
-            <div class="col-10">
-              <h4 class="text-primary">Battery-friendly</h4>
-              <p>Non consuming background operation
-                <br>Pingendo enhance the battery duration.</p>
-            </div>
-          </div>
-          <div class="row my-5">
-            <div class="col-2 text-center"><i class="d-block mx-auto fa  fa-clone fa-3x"></i></div>
-            <div class="col-10">
-              <h4 class="text-primary">Multilayers</h4>
-              <p>Work simultaneously on different panels.
-                <br>Share the work with teammates.</p>
-            </div>
-          </div>
-          <div class="row my-5">
-            <div class="col-2 text-center"><i class="d-block fa  fa-heart-o fa-3x"></i></div>
-            <div class="col-10">
-              <h4 class="text-primary">Share the love</h4>
-              <p>Help us spreading the word.
-                <br>Tell your friends with just one-click</p>
-            </div>
-          </div>
+        <div class="col-md-12 mt-3 text-center">
+          <p class="text-muted">© Copyright 2017 Miguel Fernández Arce - All rights reserved.</p>
         </div>
       </div>
     </div>
@@ -175,6 +250,11 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   <script type="text/javascript" src="js/chart.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
+  <div style="display: none">
+    <pingendo onclick="window.open('https://pingendo.com/', '_blank')" style="cursor:pointer;position: fixed;bottom: 10px;right:10px;padding:4px;background-color: #00b0eb;border-radius: 8px; width:110px;display:flex;flex-direction:row;align-items:center;justify-content:center;font-size:14px;color:white">made with&nbsp;&nbsp;
+      <img src="https://pingendo.com/site-assets/Pingendo_logo_big.png" class="d-block" alt="Pingendo logo" height="16">
+    </pingendo>
+  </div>
 </body>
 
 </html>
