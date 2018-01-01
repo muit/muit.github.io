@@ -2,28 +2,6 @@ body {
     position: relative; 
 }
 
-a div{
-    background-color: transparent;
-
-    -webkit-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-}
-
-a:hover div,
-a:focus div{
-	background-color: #444;	
-}
-a {
-  color: #fff;
-  text-decoration: none;
-}
-a:hover,
-a:focus {
-  color: #ccc;
-  
-}
-
 a small {
     -webkit-transition: all 0.2s ease-in-out;
     -o-transition: all 0.2s ease-in-out;

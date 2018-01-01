@@ -183,3 +183,17 @@ body > * {
     background: url("../images/bck.dots.soft.png");
   }
 }
+
+a {
+  
+  &:hover {
+  	text-decoration-line: none;
+  }
+  
+  & .card:hover {    
+  	@include transition(all 0.2s ease-in-out);
+    
+	  text-decoration-line: none;
+    background-color: darken(map-get($theme-colors, 'info'), 10%) !important;
+  }
+}

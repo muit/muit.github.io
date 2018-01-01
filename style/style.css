@@ -5457,3 +5457,14 @@ body > * {
   background: url(../images/bck.dots.png); }
   .bg-points.soft {
     background: url("../images/bck.dots.soft.png"); }
+
+a:hover {
+  text-decoration-line: none; }
+
+a .card:hover {
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  text-decoration-line: none;
+  background-color: #c4c4c4 !important; }
