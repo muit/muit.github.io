@@ -185,7 +185,6 @@ body > * {
 }
 
 a {
-  
   &:hover {
   	text-decoration-line: none;
   }
@@ -196,4 +195,8 @@ a {
 	  text-decoration-line: none;
     background-color: darken(map-get($theme-colors, 'info'), 10%) !important;
   }
+}
+
+.hidden {
+	display: none;
 }

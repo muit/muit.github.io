@@ -5468,3 +5468,6 @@ a .card:hover {
   transition: all 0.2s ease-in-out;
   text-decoration-line: none;
   background-color: #c4c4c4 !important; }
+
+.hidden {
+  display: none; }
