@@ -1,0 +1,15 @@
+{
+	"version": 3,
+	"file": "commento.css",
+	"sourceRoot": "/home/runner/work/muit.github.io/muit.github.io",
+	"sources": [
+		"themes/hello-friend-ng/assets/scss/commento.scss",
+		"themes/hello-friend-ng/assets/scss/_variables.scss"
+	],
+	"sourcesContent": [
+		"\n@import \"variables\";\n\n.commento-card\n{\n    border-top: 1px solid $light-background-secondary;\n\n    .dark-theme & {\n        border-top: 1px solid $dark-background-secondary;\n    }\n}\n\n.commento-root *,\n.commento-root .commento-logged-container .commento-logged-in-as .commento-name\n{\n    color: $light-color;\n    .dark-theme & {\n        color: $dark-color;\n    }\n}\n\n.commento-root .commento-card .commento-name\n{\n    color: $light-color;\n    .dark-theme & {\n        color: $dark-color;\n    }\n}\n\n.commento-root textarea\n{\n    background: $light-background-secondary;\n    border-radius: 0px;\n    .dark-theme & {\n        background: $dark-background-secondary;\n    }\n}\n\n.commento-root .commento-button\n{\n    border-radius: 0px;\n}\n\n\n.commento-option-sticky,\n.commento-option-edit,\n.commento-option-upvote,\n.commento-option-downvote\n{\n    background: $light-background-secondary !important;\n    .dark-theme & {\n        background: $dark-background-secondary !important;\n    }\n}\n",
+		"@charset \"UTF-8\";\n\n/* Light theme color */\n$light-background: #fff;\n$light-background-secondary: #eaeaea;\n$light-background-header: #fafafa;\n$light-color: #222;\n$light-color-secondary: #999;\n$light-border-color: #dcdcdc;\n$light-table-color: #dcdcdc;\n\n/* Dark theme colors */\n$dark-background: #232425;\n$dark-background-secondary: #3b3d42;\n$dark-background-header: #1b1c1d;\n$dark-color: #a9a9b3;\n$dark-color-secondary: #b3b3bd;\n$dark-border-color: #4e4e57;\n$dark-table-color: #4e4e57;\n\n$media-size-phone: \"(max-width: 684px)\";\n$media-size-tablet: \"(max-width: 900px)\";\n\n/* Variables for js, must be the same as these in @custom-media queries */\n:root {\n  --phoneWidth: (max-width: 684px);\n  --tabletWidth: (max-width: 900px);\n}\n\n/* Content */\n$max-width: 860px;"
+	],
+	"names": [],
+	"mappings": "CCwBC,AAAD,IAAK,AAAC,CACJ,YAAY,CAAA,mBAAC,CACb,aAAa,CAAA,mBAAC,CACf,ADxBD,AAAA,cAAc,AACd,CACI,UAAU,CAAE,GAAG,CAAC,KAAK,CCDI,OAAO,CDMnC,AAHG,AAAA,WAAW,CAJf,cAAc,AAII,CACV,UAAU,CAAE,GAAG,CAAC,KAAK,CCKD,OAAO,CDJ9B,AAGL,AAAA,cAAc,CAAC,CAAC,CAChB,cAAc,CAAC,0BAA0B,CAAC,sBAAsB,CAAC,cAAc,AAC/E,CACI,KAAK,CCTK,IAAI,CDajB,AAHG,AAAA,WAAW,CAJf,cAAc,CAAC,CAAC,CAIZ,WAAW,CAHf,cAAc,CAAC,0BAA0B,CAAC,sBAAsB,CAAC,cAAc,AAG7D,CACV,KAAK,CCFA,OAAO,CDGf,AAGL,AAAA,cAAc,CAAC,cAAc,CAAC,cAAc,AAC5C,CACI,KAAK,CCjBK,IAAI,CDqBjB,AAHG,AAAA,WAAW,CAHf,cAAc,CAAC,cAAc,CAAC,cAAc,AAG1B,CACV,KAAK,CCVA,OAAO,CDWf,AAGL,AAAA,cAAc,CAAC,QAAQ,AACvB,CACI,UAAU,CC3Be,OAAO,CD4BhC,aAAa,CAAE,GAAG,CAIrB,AAHG,AAAA,WAAW,CAJf,cAAc,CAAC,QAAQ,AAIL,CACV,UAAU,CCrBU,OAAO,CDsB9B,AAGL,AAAA,cAAc,CAAC,gBAAgB,AAC/B,CACI,aAAa,CAAE,GAAG,CACrB,AAGD,AAAA,uBAAuB,CACvB,qBAAqB,CACrB,uBAAuB,CACvB,yBAAyB,AACzB,CACI,UAAU,CC7Ce,OAAO,CD6CQ,UAAU,CAIrD,AAHG,AAAA,WAAW,CANf,uBAAuB,CAMnB,WAAW,CALf,qBAAqB,CAKjB,WAAW,CAJf,uBAAuB,CAInB,WAAW,CAHf,yBAAyB,AAGP,CACV,UAAU,CCtCU,OAAO,CDsCY,UAAU,CACpD"
+}
