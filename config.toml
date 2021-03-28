@@ -1,4 +1,4 @@
-baseurl      = "localhost"
+baseurl      = "muit.github.io"
 title        = "Muit"
 languageCode = "en-us"
 theme        = "hello-friend-ng"
@@ -27,7 +27,7 @@ paginate     = 10
   enableSharingButtons = true
 
   # Metadata mostly used in document's head
-  description = "My new homepage or blog"
+  description = "Muit's portfolio & blog"
   keywords = "homepage, blog, portfolio, unreal engine, C++"
   images = [""]
 
