@@ -12,7 +12,7 @@ other = "Доступно на "
 
 # 404.html
 #
-[archives]
+[posts]
 other = "Архивы"
 
 [home]

@@ -12,8 +12,8 @@ other = "También disponible en"
 
 # 404.html
 #
-[archives]
-other = "Archivo"
+[posts]
+other = "Entradas"
 
 [home]
 other = "Home"
