@@ -1,0 +1,90 @@
+baseurl      = "localhost"
+title        = "Muit"
+languageCode = "en-us"
+theme        = "hello-friend-ng"
+
+PygmentsCodeFences = true
+PygmentsStyle = "monokai"
+
+paginate     = 10
+
+[permalinks]
+  posts = "/posts/:year/:month/:title/"
+
+[params]
+  dateform        = "Jan 2, 2006"
+  dateformShort   = "Jan 2"
+  dateformNum     = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04"
+
+  # Subtitle for home
+  homeSubtitle = "Game systems programmer"
+
+  # Set disableReadOtherPosts to true in order to hide the links to other posts.
+  disableReadOtherPosts = false
+
+  # Enable sharing buttons, if you like
+  enableSharingButtons = true
+
+  # Metadata mostly used in document's head
+  description = "My new homepage or blog"
+  keywords = "homepage, blog, portfolio, unreal engine, C++"
+  images = [""]
+
+  # Default theme "light" or "dark"
+  defaultTheme = "dark"
+
+  justifyContent = true # Set "text-align: justify" to .post-content.
+
+  [params.commento]
+    url = "https://comments.piperift.com"
+
+
+  [[params.social]]
+    name = "linkedin"
+    url  = "https://www.linkedin.com/in/muitxer/"
+
+  [[params.social]]
+    name = "github"
+    url  = "https://github.com/muit"
+
+  [[params.social]]
+    name = "twitter"
+    url  = "https://twitter.com/muitxer"
+
+  [[params.social]]
+    name = "email"
+    url  = "mailto:muit@piperift.com"
+
+
+
+[taxonomies]
+    category = "blog"
+    tag      = "tags"
+    series   = "series"
+
+[languages]
+  [languages.en]
+    title = "Miguel Fernandez"
+    # subtitle = "A simple theme for Hugo"
+    keywords = ""
+    copyright = '<a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce</a>'
+    readOtherPosts = "Read other posts"
+
+    [languages.en.params.logo]
+      logoText = "Miguel Fernandez"
+      logoHomeLink = "/"
+    # or
+    #
+    # path = "/img/your-example-logo.svg"
+    # alt = "Your example logo alt text"
+
+  [[menu.main]]
+    identifier = "posts"
+    name       = "Posts"
+    url        = "/posts"
+
+  [[menu.main]]
+    identifier = "about"
+    name       = "About"
+    url        = "/about"

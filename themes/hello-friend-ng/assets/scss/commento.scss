@@ -1,0 +1,54 @@
+
+@import "variables";
+
+.commento-card
+{
+    border-top: 1px solid $light-background-secondary;
+
+    .dark-theme & {
+        border-top: 1px solid $dark-background-secondary;
+    }
+}
+
+.commento-root *,
+.commento-root .commento-logged-container .commento-logged-in-as .commento-name
+{
+    color: $light-color;
+    .dark-theme & {
+        color: $dark-color;
+    }
+}
+
+.commento-root .commento-card .commento-name
+{
+    color: $light-color;
+    .dark-theme & {
+        color: $dark-color;
+    }
+}
+
+.commento-root textarea
+{
+    background: $light-background-secondary;
+    border-radius: 0px;
+    .dark-theme & {
+        background: $dark-background-secondary;
+    }
+}
+
+.commento-root .commento-button
+{
+    border-radius: 0px;
+}
+
+
+.commento-option-sticky,
+.commento-option-edit,
+.commento-option-upvote,
+.commento-option-downvote
+{
+    background: $light-background-secondary !important;
+    .dark-theme & {
+        background: $dark-background-secondary !important;
+    }
+}
