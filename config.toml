@@ -1,4 +1,4 @@
-baseurl      = "muit.github.io"
+baseurl      = "https://muit.github.io"
 title        = "Muit"
 languageCode = "en-us"
 theme        = "hello-friend-ng"
