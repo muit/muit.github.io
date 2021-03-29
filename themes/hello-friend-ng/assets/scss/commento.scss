@@ -10,7 +10,6 @@
     }
 }
 
-.commento-root *,
 .commento-root .commento-logged-container .commento-logged-in-as .commento-name
 {
     color: $light-color;
@@ -19,7 +18,7 @@
     }
 }
 
-.commento-root .commento-card .commento-name
+.commento-root .commento-card *
 {
     color: $light-color;
     .dark-theme & {
