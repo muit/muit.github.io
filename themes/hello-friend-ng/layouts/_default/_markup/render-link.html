@@ -1,0 +1,11 @@
+{{ $parsedTitle := split .Title " || " }}
+{{ $title := index $parsedTitle 0 }}
+{{ $tags := split (replace (index $parsedTitle 1) " " "") "," }}
+
+{{ $blank := false }}
+{{ range $tag := $tags }}
+    {{ if eq $tag "blank" }}
+        {{ $blank = true }}
+    {{ end }}
+{{ end }}
+<a href="{{ .Destination }}" {{ with $title}}title="{{ . }}"{{ end }} {{ if $blank }} target="_blank"{{end}}>{{ .Text | safeHTML }}</a>
