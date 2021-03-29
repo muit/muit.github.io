@@ -6,19 +6,19 @@
         </div>
 
         <div class="pagination__buttons">
-            {{ if .NextInSection }}
-            <span class="button previous">
-                <a href="{{ .NextInSection.Permalink }}">
+            {{ with .PrevInSection }}
+            <span class="button prev">
+                <a href="{{ .Permalink }}">
                     <span class="button__icon">←</span>
-                    <span class="button__text">{{ .NextInSection.Title }}</span>
+                    <span class="button__text">{{ .Title }}</span>
                 </a>
             </span>
             {{ end }}
 
-            {{ if .PrevInSection }}
+            {{ with .NextInSection }}
             <span class="button next">
-                <a href="{{ .PrevInSection.Permalink }}">
-                    <span class="button__text">{{ .PrevInSection.Title }}</span>
+                <a href="{{ .Permalink }}">
+                    <span class="button__text">{{ .Title }}</span>
                     <span class="button__icon">→</span>
                 </a>
             </span>
