@@ -3,6 +3,8 @@ title        = "Muit"
 languageCode = "en-us"
 theme        = "hello-friend-ng"
 
+GoogleAnalytics = "G-D66MJWXCKK"
+
 PygmentsCodeFences = true
 PygmentsStyle = "monokai"
 
@@ -93,3 +95,7 @@ paginate     = 10
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+
+[privacy]
+  [privacy.googleAnalytics]
+    disable = false
