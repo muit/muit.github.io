@@ -59,7 +59,7 @@ Each of them brings benefits as well as limitations.</p>
 <h3 id="linear">Linear</h3>
 <p><img src="/img/linear-allocator.png" alt="Linear Allocator"></p>
 <p>A <strong>Linear allocator</strong> reserves a big block of memory and then moves an offset to the next available position when allocating.
-It doesn&rsquo;t keep track of previous allocations, therefore that they <strong>can&rsquo;t be freed</strong>.</p>
+Since it doesn&rsquo;t keep track of previous allocations, a linear allocator <strong>can&rsquo;t be freed</strong>.</p>
 <p>This algorithm is by far the most performant due to its simplicity.
 But it also has the most limitations, so its use in real world is very specific.</p>
 <h3 id="stack">Stack</h3>
@@ -67,15 +67,38 @@ But it also has the most limitations, so its use in real world is very specific.
 <strong>Stack</strong> is one step more advanced than Linear. It knows the size of all allocations, allowing us to free the <strong>last</strong> allocation.</p>
 <h3 id="pool">Pool</h3>
 <p><img src="/img/pool-allocator.png" alt="Pool Allocator"></p>
-<p>A <strong>Pool</strong> allocator contains a list of same size slots. All allocations must be smaller than a slot.</p>
-<p>A bitset can be used to track which allocations are free.
-They is very performant and compact.</p>
-<p>Some implementations keep track of allocations using a linked list,
-however this means we need to iterate over the entire memory block. It also introduces 8 extra bytes for each allocation.</p>
+<p>A <strong>Pool</strong> allocator contains a list of same size slots. All allocations must be smaller than one slot.</p>
+<p>To track which slots are available, we can use a bitset.
+They are very performant and compact containers where 1 bit represents one occupied slot.</p>
+<p>Some implementations keep track of allocations using a linked list.
+However, this means we need to iterate over the entire memory block. It also introduces 8 extra bytes for each allocation.</p>
+<h3 id="general">General</h3>
+<p>A <strong>general</strong> allocator is one that can be used for all cases, and doesn&rsquo;t have any big limitation.
+I will publish soon how I implemented a general arena that is up to <strong>130x</strong> faster than <code>malloc</code>.</p>
 <h3 id="many-more">Many more!</h3>
-<p>Those were the simplest allocators. However algorithms are limitless.
-Each of them will have advantages and disadvantages, so we have to find the balance for what we need.</p>
-<p>I will soon write about how I implemented a general arena that is up to <strong>130x</strong> faster than <code>malloc</code> ;)</p>
+<p>Those were not all allocators that exist. There are many more.
+Each algorithm has advantages and disadvantages, and it&rsquo;s up to us to choose the best one for the job.</p>
+<p>Some I didn&rsquo;t mention:</p>
+<ul>
+<li>
+
+
+
+
+
+    
+
+<a href="https://en.wikipedia.org/wiki/Buddy_memory_allocation"  >Buddy allocator</a></li>
+<li>
+
+
+
+
+
+    
+
+<a href="https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/"  >Slab allocation</a></li>
+</ul>
 <h2 id="native-allocation-replacements">Native allocation replacements</h2>
 <p>Some libraries just provide an extra layer between us and <code>malloc</code> but not necessarily using the concepts we described before.
 They still lack context about our use-case and need to solve every problem just like <code>malloc</code>. However, they manage to be considerably faster than the default solution.</p>
