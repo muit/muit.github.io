@@ -14,22 +14,26 @@ When we use <code>malloc</code> or <code>new</code> we are getting this block of
 <p>The definition of an allocator is somewhat flexible. It involves the encapsulation of allocation and deallocation of memory.</p>
 <p>The allocators provided by the STD (the C++ standard library) are templated objects bound to a type.
 For example, <code>std::vector</code> can have different allocators.</p>
-<p>In game development, we still use allocators in containers, but it is also frequent to see them as global managers of memory.
+<p>In game development, we also use allocators as global memory managers.
 Using them, we can optimize allocations for specific parts of a game engine.
 For example, we can have an allocator that contains one render frame of data and gets cleared when a new frame starts.</p>
-<p>But&hellip; Isn&rsquo;t it confusing to call both of these concepts allocators?
-I believe it is, and I don&rsquo;t seem to be the only one because some engines call the second type <em>arenas</em>.</p>
-<p>As you might imagine already, it is a thin line that separates them, but it&rsquo;s an important distinction for code design.</p>
-<p>Therefore, let&rsquo;s stick with the following:</p>
-<ul>
-<li><strong>Arenas</strong> are independent (often global) objects that provide allocation and deallocation for any use.</li>
-<li><strong>Allocators</strong> are stateful objects that manage allocations and deallocations of a container. They can point to an arena.</li>
-</ul>
+<p>But&hellip; Isn&rsquo;t it confusing to call everything an allocator?
+I believe it is, and I don&rsquo;t seem to be the only one because some engines call the global memory allocators <em>arenas</em>.</p>
+<p>Therefore, let&rsquo;s stick with the following terminology:</p>
+<blockquote>
+<p><strong>Allocators</strong> are objects that encapsulate allocation and deallocation of memory</p>
+</blockquote>
+<blockquote>
+<p><strong>Arenas</strong> are independent (often global) allocators</p>
+</blockquote>
+<blockquote>
+<p><strong>Container Allocators</strong> are stateful allocators that manage the memory used by a container</p>
+</blockquote>
 <h2 id="why-are-they-necessary">Why are they necessary?</h2>
 <p>Native allocation needs to work in all scenarios.
 It behaves like a general-purpose arena, meaning it can&rsquo;t have limitations, and it must be good enough at doing everything.
 All this, while lacking any context about our particular use case.</p>
-<p>Knowing that, I can think of three performance benefits from arenas and allocators:
+<p>Knowing this, I can think of three performance benefits from allocators:
 <strong>Allocation/free cost</strong>, <strong>memory locality</strong> and <strong>fragmentation</strong>.</p>
 <blockquote>
 <p><strong>Allocation/Free Cost</strong></p>
@@ -42,18 +46,18 @@ For example, sometimes it will need to request more memory from the Kernel, and 
 Since data is retrieved in blocks into the caches, if the data we need is cohesive, it&rsquo;s much more likely that it will be already cached.
 Accessing RAM instead of CPU cache can be hundreds of times slower.</p>
 <p>Since <code>malloc</code> and <code>new</code> don&rsquo;t have context about our memory use-cases, the pointers allocated can be anywhere.
-However, arenas can give us much better memory locality.</p>
+However, allocators can give us much better memory locality.</p>
 </blockquote>
 <blockquote>
 <p><strong>Fragmentation</strong>
 <img src="/img/fragmentation.png" alt="Fragmentation">
 Fragmentation occurs when we have allocated and freed multiple times leaving gaps that are not big enough to fit new allocations.</p>
-<p>This means we will need to request more memory. Some arena algorithms dont have fragmentation at all, others have the information to reduce it further than <code>malloc</code> can.</p>
+<p>This means we will need to request more memory. Some allocator algorithms don&rsquo;t have fragmentation at all. Others have the information to reduce it further than <code>malloc</code> can.</p>
 </blockquote>
 <p>From a technical design standpoint, we will also simplify code, <em>visualizing</em> where memory is held at all times and under which rules.
 We can use the arena that fits our problem and change it if needed.</p>
-<h2 id="types-of-allocators-and-arenas">Types of Allocators and Arenas</h2>
-<p>There are many types of allocators/arenas based on their algorithms.
+<h2 id="types-of-allocators">Types of Allocators</h2>
+<p>There are many types of allocators based on their algorithms.
 Each of them brings benefits as well as limitations.</p>
 <p>There is no way I could explain all of them, but let me give you a quick rundown of the simplest ones.</p>
 <h3 id="linear">Linear</h3>
@@ -61,20 +65,20 @@ Each of them brings benefits as well as limitations.</p>
 <p>A <strong>Linear allocator</strong> reserves a big block of memory and then moves an offset to the next available position when allocating.
 Since it doesn&rsquo;t keep track of previous allocations, a linear allocator <strong>can&rsquo;t be freed</strong>.</p>
 <p>This algorithm is by far the most performant due to its simplicity.
-But it also has the most limitations, so its use in real world is very specific.</p>
+But it also has the most limitations, so its use in the real world is very specific.</p>
 <h3 id="stack">Stack</h3>
 <p><img src="/img/stack-allocator.png" alt="Stack Allocator">
 <strong>Stack</strong> is one step more advanced than Linear. It knows the size of all allocations, allowing us to free the <strong>last</strong> allocation.</p>
 <h3 id="pool">Pool</h3>
 <p><img src="/img/pool-allocator.png" alt="Pool Allocator"></p>
-<p>A <strong>Pool</strong> allocator contains a list of same size slots. All allocations must be smaller than one slot.</p>
+<p>A <strong>Pool</strong> <em>allocator</em> contains a list of same size slots. All allocations must be smaller than one slot.</p>
 <p>To track which slots are available, we can use a bitset.
 They are very performant and compact containers where 1 bit represents one occupied slot.</p>
 <p>Some implementations keep track of allocations using a linked list.
 However, this means we need to iterate over the entire memory block. It also introduces 8 extra bytes for each allocation.</p>
 <h3 id="general">General</h3>
-<p>A <strong>general</strong> allocator is one that can be used for all cases, and doesn&rsquo;t have any big limitation.
-I will publish soon how I implemented a general arena that is up to <strong>130x</strong> faster than <code>malloc</code>.</p>
+<p>A <strong>general</strong> allocator can be used for all use-cases and doesn&rsquo;t have any big limitation.
+I will soon publish how I implemented a general arena that is up to <strong>130x</strong> faster than <code>malloc</code>.</p>
 <h3 id="many-more">Many more!</h3>
 <p>Those were not all allocators that exist. There are many more.
 Each algorithm has advantages and disadvantages, and it&rsquo;s up to us to choose the best one for the job.</p>
@@ -97,12 +101,12 @@ Each algorithm has advantages and disadvantages, and it&rsquo;s up to us to choo
 
     
 
-<a href="https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/"  >Slab allocation</a></li>
+<a href="https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/"  >Slab allocator</a></li>
 </ul>
 <h2 id="native-allocation-replacements">Native allocation replacements</h2>
 <p>Some libraries just provide an extra layer between us and <code>malloc</code> but not necessarily using the concepts we described before.
 They still lack context about our use-case and need to solve every problem just like <code>malloc</code>. However, they manage to be considerably faster than the default solution.</p>
-<p>Depending on what you do, they can be a good drop-and-forget solution. However, setup is not always as intuitive and straight-forward as it should be.</p>
+<p>Depending on what you do, these libraries might be enough. However, setup is not always as intuitive and straight-forward as it should be.</p>
 <p>One example is 
 
 
