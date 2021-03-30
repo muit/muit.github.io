@@ -88,7 +88,7 @@ There is no way I could explain all of them, but let me give you a quick rundown
 ![Linear Allocator](/img/linear-allocator.png)
 
 A **Linear allocator** reserves a big block of memory and then moves an offset to the next available position when allocating.
-It doesn't keep track of previous allocations, therefore that they **can't be freed**.
+Since it doesn't keep track of previous allocations, a linear allocator **can't be freed**.
 
 This algorithm is by far the most performant due to its simplicity.
 But it also has the most limitations, so its use in real world is very specific.
@@ -100,19 +100,25 @@ But it also has the most limitations, so its use in real world is very specific.
 ### Pool
 ![Pool Allocator](/img/pool-allocator.png)
 
-A **Pool** allocator contains a list of same size slots. All allocations must be smaller than a slot.
+A **Pool** allocator contains a list of same size slots. All allocations must be smaller than one slot.
 
-A bitset can be used to track which allocations are free.
-They is very performant and compact.
+To track which slots are available, we can use a bitset.
+They are very performant and compact containers where 1 bit represents one occupied slot.
 
-Some implementations keep track of allocations using a linked list,
-however this means we need to iterate over the entire memory block. It also introduces 8 extra bytes for each allocation.
+Some implementations keep track of allocations using a linked list.
+However, this means we need to iterate over the entire memory block. It also introduces 8 extra bytes for each allocation.
+
+### General
+A **general** allocator is one that can be used for all cases, and doesn't have any big limitation.
+I will publish soon how I implemented a general arena that is up to **130x** faster than `malloc`.
 
 ### Many more!
-Those were the simplest allocators. However algorithms are limitless.
-Each of them will have advantages and disadvantages, so we have to find the balance for what we need.
+Those were not all allocators that exist. There are many more.
+Each algorithm has advantages and disadvantages, and it's up to us to choose the best one for the job.
 
-I will soon write about how I implemented a general arena that is up to **130x** faster than `malloc` ;)
+Some I didn't mention:
+- [Buddy allocator](https://en.wikipedia.org/wiki/Buddy_memory_allocation)
+- [Slab allocation](https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/)
 
 ## Native allocation replacements
 
