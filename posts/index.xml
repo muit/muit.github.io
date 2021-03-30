@@ -1,1 +1,133 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez</title><link>https://muit.github.io/posts/</link><description>Recent content in Posts on Miguel Fernandez</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Sun, 28 Mar 2021 22:59:45 +0200</lastBuildDate><atom:link href="https://muit.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementing a General Allocator</title><link>https://muit.github.io/posts/2021/03/implementing-a-general-allocator/</link><pubDate>Sun, 28 Mar 2021 22:59:45 +0200</pubDate><guid>https://muit.github.io/posts/2021/03/implementing-a-general-allocator/</guid><description>Soon!</description><content type="html">&lt;p>Soon!&lt;/p></content></item></channel></rss>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez</title><link>https://muit.github.io/posts/</link><description>Recent content in Posts on Miguel Fernandez</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://muit.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Introduction to allocators and arenas</title><link>https://muit.github.io/posts/2021/03/introduction-to-allocators-and-arenas/</link><pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.github.io/posts/2021/03/introduction-to-allocators-and-arenas/</guid><description>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
+Wow! Stop right there, Miguel. This line already deserves some introductions! Let&amp;rsquo;s talk about allocators.
+Crash course on allocations To keep this brief, I will assume that we have some experience with C++ and heap allocation (malloc and new).
+An allocation is when we request a pointer to a block of memory of a specified size.</description><content type="html"><![CDATA[<p><img style="width: 100%" src="/img/storage.png" /></p>
+<p>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.</p>
+<p>Wow! Stop right there, Miguel. This line already deserves some introductions!
+Let&rsquo;s talk about allocators.</p>
+<h2 id="crash-course-on-allocations">Crash course on allocations</h2>
+<p>To keep this brief, I will assume that we have some experience with C++ and heap allocation (<code>malloc</code> and <code>new</code>).</p>
+<p>An <strong>allocation</strong> is when we request a pointer to a block of memory of a specified size.
+When we use <code>malloc</code> or <code>new</code> we are getting this block of memory from the heap.</p>
+<p>When we <strong>deallocate</strong> a pointer (calling <code>free</code> or <code>delete</code>) its block of memory becomes once again available and no longer needed by us.</p>
+<h2 id="what-are-allocators-and-arenas">What are Allocators and Arenas</h2>
+<p>The definition of an allocator is somewhat flexible. It involves the encapsulation of allocation and deallocation of memory.</p>
+<p>The allocators provided by the STD (the C++ standard library) are templated objects bound to a type.
+For example, <code>std::vector</code> can have different allocators.</p>
+<p>In game development, we still use allocators in containers, but it is also frequent to see them as global managers of memory.
+Using them, we can optimize allocations for specific parts of a game engine.
+For example, we can have an allocator that contains one render frame of data and gets cleared when a new frame starts.</p>
+<p>But&hellip; Isn&rsquo;t it confusing to call both of these concepts allocators?
+I believe it is, and I don&rsquo;t seem to be the only one because some engines call the second type <em>arenas</em>.</p>
+<p>As you might imagine already, it is a thin line that separates them, but it&rsquo;s an important distinction for code design.</p>
+<p>Therefore, let&rsquo;s stick with the following:</p>
+<ul>
+<li><strong>Arenas</strong> are independent (often global) objects that provide allocation and deallocation for any use.</li>
+<li><strong>Allocators</strong> are stateful objects that manage allocations and deallocations of a container. They can point to an arena.</li>
+</ul>
+<h2 id="why-are-they-necessary">Why are they necessary?</h2>
+<p>Native allocation needs to work in all scenarios.
+It behaves like a general-purpose arena, meaning it can&rsquo;t have limitations, and it must be good enough at doing everything.
+All this, while lacking any context about our particular use case.</p>
+<p>Knowing that, I can think of three performance benefits from arenas and allocators:
+<strong>Allocation/free cost</strong>, <strong>memory locality</strong> and <strong>fragmentation</strong>.</p>
+<blockquote>
+<p><strong>Allocation/Free Cost</strong></p>
+<p><code>malloc</code> acts as the intermediary between the program and the OS.
+For example, sometimes it will need to request more memory from the Kernel, and that is very slow</p>
+</blockquote>
+<blockquote>
+<p><strong>Memory Locality</strong></p>
+<p>Very briefly speaking, modern CPUs have cache-lines, caches and RAM.
+Since data is retrieved in blocks into the caches, if the data we need is cohesive, it&rsquo;s much more likely that it will be already cached.
+Accessing RAM instead of CPU cache can be hundreds of times slower.</p>
+<p>Since <code>malloc</code> and <code>new</code> don&rsquo;t have context about our memory use-cases, the pointers allocated can be anywhere.
+However, arenas can give us much better memory locality.</p>
+</blockquote>
+<blockquote>
+<p><strong>Fragmentation</strong>
+<img src="/img/fragmentation.png" alt="Fragmentation">
+Fragmentation occurs when we have allocated and freed multiple times leaving gaps that are not big enough to fit new allocations.</p>
+<p>This means we will need to request more memory. Some arena algorithms dont have fragmentation at all, others have the information to reduce it further than <code>malloc</code> can.</p>
+</blockquote>
+<p>From a technical design standpoint, we will also simplify code, <em>visualizing</em> where memory is held at all times and under which rules.
+We can use the arena that fits our problem and change it if needed.</p>
+<h2 id="types-of-allocators-and-arenas">Types of Allocators and Arenas</h2>
+<p>There are many types of allocators/arenas based on their algorithms.
+Each of them brings benefits as well as limitations.</p>
+<p>There is no way I could explain all of them, but let me give you a quick rundown of the simplest ones.</p>
+<h3 id="linear">Linear</h3>
+<p><img src="/img/linear-allocator.png" alt="Linear Allocator"></p>
+<p>A <strong>Linear allocator</strong> reserves a big block of memory and then moves an offset to the next available position when allocating.
+It doesn&rsquo;t keep track of previous allocations, therefore that they <strong>can&rsquo;t be freed</strong>.</p>
+<p>This algorithm is by far the most performant due to its simplicity.
+But it also has the most limitations, so its use in real world is very specific.</p>
+<h3 id="stack">Stack</h3>
+<p><img src="/img/stack-allocator.png" alt="Stack Allocator">
+<strong>Stack</strong> is one step more advanced than Linear. It knows the size of all allocations, allowing us to free the <strong>last</strong> allocation.</p>
+<h3 id="pool">Pool</h3>
+<p><img src="/img/pool-allocator.png" alt="Pool Allocator"></p>
+<p>A <strong>Pool</strong> allocator contains a list of same size slots. All allocations must be smaller than a slot.</p>
+<p>A bitset can be used to track which allocations are free.
+They is very performant and compact.</p>
+<p>Some implementations keep track of allocations using a linked list,
+however this means we need to iterate over the entire memory block. It also introduces 8 extra bytes for each allocation.</p>
+<h3 id="many-more">Many more!</h3>
+<p>Those were the simplest allocators. However algorithms are limitless.
+Each of them will have advantages and disadvantages, so we have to find the balance for what we need.</p>
+<p>I will soon write about how I implemented a general arena that is up to <strong>130x</strong> faster than <code>malloc</code> ;)</p>
+<h2 id="native-allocation-replacements">Native allocation replacements</h2>
+<p>Some libraries just provide an extra layer between us and <code>malloc</code> but not necessarily using the concepts we described before.
+They still lack context about our use-case and need to solve every problem just like <code>malloc</code>. However, they manage to be considerably faster than the default solution.</p>
+<p>Depending on what you do, they can be a good drop-and-forget solution. However, setup is not always as intuitive and straight-forward as it should be.</p>
+<p>One example is 
+
+
+
+
+
+    
+        
+    
+
+<a href="https://github.com/microsoft/mimalloc"   target="_blank">microsoft/mimalloc</a>.</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li>
+
+
+
+
+
+    
+
+<a href="https://gamasutra.com/blogs/MichaelKissner/20151104/258271/Writing_a_Game_Engine_from_Scratch__Part_2_Memory.php"  >Writing a Game Engine from Scratch - Part 2: Memory</a></li>
+<li>
+
+
+
+
+
+    
+
+<a href="https://youtu.be/rX0ItVEVjHc?t=1830"  >CppCon 2014: Mike Acton &ldquo;Data-Oriented Design and C++&quot;</a></li>
+<li>
+
+
+
+
+
+    
+
+<a href="https://www.gamasutra.com/blogs/ThomasYoung/20141002/226898/Custom_Vector_Allocation.php"  >Custom Vector Allocation</a></li>
+<li>Some allocator implementation examples: 
+
+
+
+
+
+    
+
+<a href="https://github.com/mtrebi/memory-allocators"  >mtrebi/memory-allocators</a></li>
+</ul>
+]]></content></item></channel></rss>
