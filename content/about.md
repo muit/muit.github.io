@@ -10,6 +10,6 @@ Hi!
 
 I'm **Miguel**, also known as **muit**.
 
-The majority of my work is centered around the design and implementation of videogame systems and tools in C++. If you like to code, stay around and have a look!
+The majority of my work is centered around the design and implementation of videogame systems and tools in C++. If you like to code, stick around and have a look!
 
-Many of these projects are **open-source** and can be found at [**Piperift**](https://github.com/piperift)
+Most of my projects are **open-source** and can be found at [**Piperift**](https://github.com/piperift). Currently working at Ubisoft, previously EA DICE and Splash Damage.

@@ -28,7 +28,7 @@ paginate     = 10
 
   # Metadata mostly used in document's head
   description = "Muit's portfolio & blog"
-  keywords = "homepage, blog, portfolio, unreal engine, C++"
+  keywords = "muitxer, homepage, blog, portfolio, unreal engine, C++"
   images = [""]
 
   # Default theme "light" or "dark"
@@ -66,7 +66,7 @@ paginate     = 10
 [languages]
   [languages.en]
     title = "Miguel Fernandez"
-    # subtitle = "A simple theme for Hugo"
+    subtitle = "Game systems programmer"
     keywords = ""
     copyright = '<a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce</a>'
     readOtherPosts = "Read other posts"
