@@ -1,4 +1,25 @@
 {
     "markdown.extension.completion.root": "static",
-    "markdown.extension.italic.indicator": "_"
+    "markdown.extension.italic.indicator": "_",
+    "grammarly.overrides": [
+        {
+            "files": [
+                "**/content/posts/memory/creating-a-general-arena.md"
+            ],
+            "config": {
+                "audience": "general",
+                "dialect": "american",
+                "domain": "general",
+                "emotions": [
+                    "confident",
+                    "joyful",
+                    "analytical"
+                ],
+                "goals": [
+                    "inform",
+                    "convince"
+                ]
+            }
+        }
+    ]
 }
