@@ -1,0 +1,297 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez</title><link>https://muit.tech/posts/</link><description>Recent content in Posts on Miguel Fernandez</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Sat, 03 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://muit.tech/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementing a General Arena</title><link>https://muit.tech/posts/2021/04/implementing-a-general-arena/</link><pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate><guid>https://muit.tech/posts/2021/04/implementing-a-general-arena/</guid><description>Now that we have learned about arenas and allocators, we can get our hands dirty with an implementation of an arena.
+Best Fit Arena You see, for the last couple of months, I&amp;rsquo;ve been updating RiftCore with new features. RiftCore is a cross-platform framework I use for C++ projects, and it lacked some memory management.
+So the time came to design a general-purpose arena!
+This article will describe the design and implementation of a Best Fit Arena.</description><content type="html"><![CDATA[<p>Now that we have learned about <strong>
+
+
+
+
+
+    
+
+<a href="/posts/2021/03/introduction-to-allocators-and-arenas/"  >arenas and allocators</a></strong>, we can get our hands dirty with an implementation of an arena.</p>
+<h2 id="best-fit-arena">Best Fit Arena</h2>
+<p>You see, for the last couple of months, I&rsquo;ve been updating 
+
+
+
+
+
+    
+
+<a href="https://github.com/PipeRift/rift-core"  ><strong>RiftCore</strong></a> with new features.
+<strong>RiftCore</strong> is a cross-platform framework I use for C++ projects, and it lacked some memory management.</p>
+<p>So the time came to design a general-purpose arena!</p>
+<p>This article will describe the design and implementation of a <strong>Best Fit Arena</strong>.
+Feel free to come up with a better name though (and put it in the comments below!)</p>
+<h2 id="general-purpose">General-purpose?</h2>
+<p>A general-purpose allocator (or arena) must be able to work on all scenarios with out any big limitation.
+As such, it has to be able to:</p>
+<ul>
+<li><strong>Allocate</strong> in any order and any size</li>
+<li><strong>Deallocate</strong> in any order</li>
+<li>Use (and reuse) all space available</li>
+<li>Minimize fragmentation</li>
+</ul>
+<p>In RiftCore, Arenas always carry the <code>size</code> of the pointer in their <code>Free()</code> function.
+This opens the door to some optimizations, but, don&rsquo;t worry, the BestFitArena can be adapted to avoid this pattern.</p>
+<h2 id="implementation">Implementation</h2>
+<p>A <strong>BestFitArena</strong> works by <strong>tracking all unused spaces</strong>, called free slots.
+<img src="/img/best-fit-arena-slot-ids.png" alt="BestFitArena"></p>
+<p>Let&rsquo;s go through what we see in this picture:</p>
+<ul>
+<li>Like most allocators, we have one or multiple memory blocks of pre-allocated memory.</li>
+<li>We also keep a list of <code>FreeSlots</code>, sorted by size. Bigger first.</li>
+<li>We don&rsquo;t track allocations in any way. No headers, no offsets and no sizes.</li>
+</ul>
+<p><img src="/img/best-fit-arena-slot-ptrs.png" alt="BestFitArena Slot Pointers">
+Seen in more detail, each slot points to the start of an slot, and its size.</p>
+<p>This algorithm has <strong>zero overhead</strong> when fragmentation is low. The less fragmentation, the more performant it is.
+However, it is also designed to minimize it, and, as you will see later, even in an scenario with a lot of fragmentation, performance is still excellent.</p>
+<h3 id="allocation">Allocation</h3>
+<p><img src="/img/best-fit-arena-allocation.png" alt="BestFitArena Slot Pointers"></p>
+<p><strong>Allocation</strong> will always pick the smallest free slot possible and extract the pointer from it.
+Then, this slot is reduced removing the used space from it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// note: Alignment has been omitted for simplicity
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> BestFitArena<span style="color:#f92672">::</span>Allocate(<span style="color:#66d9ef">const</span> sizet size)
+{
+    <span style="color:#66d9ef">const</span> u32 slotIndex <span style="color:#f92672">=</span> FindSmallestSlot(size);
+    <span style="color:#66d9ef">if</span> (slotIndex <span style="color:#f92672">&gt;=</span> freeSlots.Size())
+    {
+        <span style="color:#75715e">// error: &#34;Couldn&#39;t fit {} bytes&#34;, size
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>;
+    }
+
+    Slot<span style="color:#f92672">&amp;</span> slot      <span style="color:#f92672">=</span> freeSlots[slotIndex];
+    u8<span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> start <span style="color:#f92672">=</span> slot.start;
+    u8<span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> end   <span style="color:#f92672">=</span> start <span style="color:#f92672">+</span> size;
+
+    ReduceSlot(slotIndex, slot, start, end);
+    <span style="color:#66d9ef">return</span> start;
+}
+</code></pre></div><h4 id="find-smallest-slot">Find Smallest Slot</h4>
+<p>Before anything else, we check if the arena is marked as pending sort.
+This is an optimization that prevents unneccesary sorts on consequent Free calls.
+But we also perform shrink on the slots if neccessary.</p>
+<p>Once we know all slots are sorted, we perform a 
+
+
+
+
+
+    
+
+<a href="https://www.geeksforgeeks.org/binary-search/"  >binary search</a> by size.
+The binary search will provide a complexity of O(logN).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">i32 BestFitArena<span style="color:#f92672">::</span>FindSmallestSlot(sizet neededSize)
+{
+    <span style="color:#66d9ef">if</span> (pendingSort) <span style="color:#a6e22e">[[unlikely]]</span>
+    {
+        pendingSort <span style="color:#f92672">=</span> false;
+        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">float</span>(freeSlots.Size()) <span style="color:#f92672">/</span> freeSlots.MaxSize() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0.25f</span>)
+        {
+            <span style="color:#75715e">// Dont shrink until there is 75% of unused slots
+</span><span style="color:#75715e"></span>            freeSlots.Shrink();
+        }
+        <span style="color:#75715e">// Sort slots by size. Small first
+</span><span style="color:#75715e"></span>        freeSlots.Sort([](<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> a, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> b) {
+            <span style="color:#66d9ef">return</span> a.size <span style="color:#f92672">&gt;</span> b.size;
+        });
+    }
+
+    <span style="color:#75715e">// Find smallest slot fitting our required size
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> Algorithms<span style="color:#f92672">::</span>LowerBoundSearch(
+        freeSlots.Data(), freeSlots.Size(), [neededSize](<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> slot) {
+            <span style="color:#66d9ef">return</span> neededSize <span style="color:#f92672">&lt;=</span> slot.size;
+        });
+}
+</code></pre></div><h4 id="reduce-slot">Reduce Slot</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> BestFitArena<span style="color:#f92672">::</span>ReduceSlot(
+    i32 slotIndex, Slot<span style="color:#f92672">&amp;</span> slot, u8<span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> allocationStart, u8<span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> allocationEnd)
+{
+    <span style="color:#66d9ef">if</span> (allocationEnd <span style="color:#f92672">==</span> slot.GetEnd())    <span style="color:#75715e">// Slot would become empty
+</span><span style="color:#75715e"></span>    {
+        <span style="color:#66d9ef">if</span> (allocationStart <span style="color:#f92672">&gt;</span> slot.start)    <span style="color:#75715e">// Slot can still fill alignment gap
+</span><span style="color:#75715e"></span>        {
+            slot.size <span style="color:#f92672">=</span> allocationEnd <span style="color:#f92672">-</span> allocationStart;
+            pendingSort <span style="color:#f92672">=</span> true;
+        }
+        <span style="color:#66d9ef">else</span>
+        {
+            freeSlots.RemoveAtChecked(slotIndex, false);
+        }
+        <span style="color:#66d9ef">return</span>;
+    }
+
+    u8<span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> oldSlotStart <span style="color:#f92672">=</span> slot.start;
+    slot.size <span style="color:#f92672">+=</span> slot.start <span style="color:#f92672">-</span> allocationEnd;
+    slot.start <span style="color:#f92672">=</span> allocationEnd;
+
+    <span style="color:#75715e">// If alignment leaves a gap in the slot, save this space as a new slot
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (allocationStart <span style="color:#f92672">&gt;</span> oldSlotStart)
+    {
+        freeSlots.Add({oldSlotStart, sizet(allocationStart <span style="color:#f92672">-</span> oldSlotStart)});
+    }
+    pendingSort <span style="color:#f92672">=</span> true;
+}
+</code></pre></div><h3 id="free">Free</h3>
+]]></content></item><item><title>Introduction to allocators and arenas</title><link>https://muit.tech/posts/2021/03/introduction-to-allocators-and-arenas/</link><pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.tech/posts/2021/03/introduction-to-allocators-and-arenas/</guid><description>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
+Wow! Stop right there, Miguel. This line already deserves some introductions! Let&amp;rsquo;s talk about allocators.
+Crash course on allocations To keep this brief, I will assume that we have some experience with C++ and heap allocation (malloc and new).
+An allocation is when we request a pointer to a block of memory of a specified size.</description><content type="html"><![CDATA[<p><img style="width: 100%" src="/img/storage.png" /></p>
+<p>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.</p>
+<p>Wow! Stop right there, Miguel. This line already deserves some introductions!
+Let&rsquo;s talk about allocators.</p>
+<h2 id="crash-course-on-allocations">Crash course on allocations</h2>
+<p>To keep this brief, I will assume that we have some experience with C++ and heap allocation (<code>malloc</code> and <code>new</code>).</p>
+<p>An <strong>allocation</strong> is when we request a pointer to a block of memory of a specified size.
+When we use <code>malloc</code> or <code>new</code> we are getting this block of memory from the heap.</p>
+<p>When we <strong>deallocate</strong> a pointer (calling <code>free</code> or <code>delete</code>) its block of memory becomes once again available and no longer needed by us.</p>
+<h2 id="what-are-allocators-and-arenas">What are Allocators and Arenas</h2>
+<p>The definition of an allocator is somewhat flexible. It involves the encapsulation of allocation and deallocation of memory.</p>
+<p>The allocators provided by the STD (the C++ standard library) are templated objects bound to a type.
+For example, <code>std::vector</code> can have different allocators.</p>
+<p>In game development, we also use allocators as global memory managers.
+Using them, we can optimize allocations for specific parts of a game engine.
+For example, we can have an allocator that contains one render frame of data and gets cleared when a new frame starts.</p>
+<p>But&hellip; Isn&rsquo;t it confusing to call everything an allocator?
+I believe it is, and I don&rsquo;t seem to be the only one because some engines call the global memory allocators <em>arenas</em>.</p>
+<p>Therefore, let&rsquo;s stick with the following terminology:</p>
+<blockquote>
+<p><strong>Allocators</strong> are objects that encapsulate allocation and deallocation of memory</p>
+</blockquote>
+<blockquote>
+<p><strong>Arenas</strong> are independent (often global) allocators</p>
+</blockquote>
+<blockquote>
+<p><strong>Container Allocators</strong> are stateful allocators that manage the memory used by a container</p>
+</blockquote>
+<h2 id="why-are-they-necessary">Why are they necessary?</h2>
+<p>Native allocation needs to work in all scenarios.
+It behaves like a general-purpose arena, meaning it can&rsquo;t have limitations, and it must be good enough at doing everything.
+All this, while lacking any context about our particular use case.</p>
+<p>Knowing this, I can think of three performance benefits from allocators:
+<strong>Allocation/free cost</strong>, <strong>memory locality</strong> and <strong>fragmentation</strong>.</p>
+<blockquote>
+<p><strong>Allocation/Free Cost</strong></p>
+<p><code>malloc</code> acts as the intermediary between the program and the OS.
+For example, sometimes it will need to request more memory from the Kernel, and that is very slow</p>
+</blockquote>
+<blockquote>
+<p><strong>Memory Locality</strong></p>
+<p>Very briefly speaking, modern CPUs have cache-lines, caches and RAM.
+Since data is retrieved in blocks into the caches, if the data we need is cohesive, it&rsquo;s much more likely that it will be already cached.
+Accessing RAM instead of CPU cache can be hundreds of times slower.</p>
+<p>Since <code>malloc</code> and <code>new</code> don&rsquo;t have context about our memory use-cases, the pointers allocated can be anywhere.
+However, allocators can give us much better memory locality.</p>
+</blockquote>
+<blockquote>
+<p><strong>Fragmentation</strong>
+<img src="/img/fragmentation.png" alt="Fragmentation">
+Fragmentation occurs when we have allocated and freed multiple times leaving gaps that are not big enough to fit new allocations.</p>
+<p>This means we will need to request more memory. Some allocator algorithms don&rsquo;t have fragmentation at all. Others have the information to reduce it further than <code>malloc</code> can.</p>
+</blockquote>
+<p>From a technical design standpoint, we will also simplify code, <em>visualizing</em> where memory is held at all times and under which rules.
+We can use the arena that fits our problem and change it if needed.</p>
+<h2 id="types-of-allocators">Types of Allocators</h2>
+<p>There are many types of allocators based on their algorithms.
+Each of them brings benefits as well as limitations.</p>
+<p>There is no way I could explain all of them, but let me give you a quick rundown of the simplest ones.</p>
+<h3 id="linear">Linear</h3>
+<p><img src="/img/linear-allocator.png" alt="Linear Allocator"></p>
+<p>A <strong>Linear allocator</strong> reserves a big block of memory and then moves an offset to the next available position when allocating.
+Since it doesn&rsquo;t keep track of previous allocations, a linear allocator <strong>can&rsquo;t be freed</strong>.</p>
+<p>This algorithm is by far the most performant due to its simplicity.
+But it also has the most limitations, so its use in the real world is very specific.</p>
+<h3 id="stack">Stack</h3>
+<p><img src="/img/stack-allocator.png" alt="Stack Allocator">
+<strong>Stack</strong> is one step more advanced than Linear. It knows the size of all allocations, allowing us to free the <strong>last</strong> allocation.</p>
+<h3 id="pool">Pool</h3>
+<p><img src="/img/pool-allocator.png" alt="Pool Allocator"></p>
+<p>A <strong>Pool</strong> <em>allocator</em> contains a list of same size slots. All allocations must be smaller than one slot.</p>
+<p>To track which slots are available, we can use a bitset.
+They are very performant and compact containers where 1 bit represents one occupied slot.</p>
+<p>Some implementations keep track of allocations using a linked list.
+However, this means we need to iterate over the entire memory block. It also introduces 8 extra bytes for each allocation.</p>
+<h3 id="general">General</h3>
+<p>A <strong>general</strong> allocator can be used for all use-cases and doesn&rsquo;t have any big limitation.
+I will soon publish how I implemented a general arena that is up to <strong>130x</strong> faster than <code>malloc</code>.</p>
+<h3 id="many-more">Many more!</h3>
+<p>Those were not all allocators that exist. There are many more.
+Each algorithm has advantages and disadvantages, and it&rsquo;s up to us to choose the best one for the job.</p>
+<p>Some I didn&rsquo;t mention:</p>
+<ul>
+<li>
+
+
+
+
+
+    
+
+<a href="https://en.wikipedia.org/wiki/Buddy_memory_allocation"  >Buddy allocator</a></li>
+<li>
+
+
+
+
+
+    
+
+<a href="https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/"  >Slab allocator</a></li>
+</ul>
+<h2 id="native-allocation-replacements">Native allocation replacements</h2>
+<p>Some libraries just provide an extra layer between us and <code>malloc</code> but not necessarily using the concepts we described before.
+They still lack context about our use-case and need to solve every problem just like <code>malloc</code>. However, they manage to be considerably faster than the default solution.</p>
+<p>Depending on what you do, these libraries might be enough. However, setup is not always as intuitive and straight-forward as it should be.</p>
+<p>One example is 
+
+
+
+
+
+    
+        
+    
+
+<a href="https://github.com/microsoft/mimalloc"   target="_blank">microsoft/mimalloc</a>.</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li>
+
+
+
+
+
+    
+
+<a href="https://gamasutra.com/blogs/MichaelKissner/20151104/258271/Writing_a_Game_Engine_from_Scratch__Part_2_Memory.php"  >Writing a Game Engine from Scratch - Part 2: Memory</a></li>
+<li>
+
+
+
+
+
+    
+
+<a href="https://youtu.be/rX0ItVEVjHc?t=1830"  >CppCon 2014: Mike Acton &ldquo;Data-Oriented Design and C++&quot;</a></li>
+<li>
+
+
+
+
+
+    
+
+<a href="https://www.gamasutra.com/blogs/ThomasYoung/20141002/226898/Custom_Vector_Allocation.php"  >Custom Vector Allocation</a></li>
+<li>Some allocator implementation examples: 
+
+
+
+
+
+    
+
+<a href="https://github.com/mtrebi/memory-allocators"  >mtrebi/memory-allocators</a></li>
+</ul>
+]]></content></item></channel></rss>
