@@ -24,7 +24,7 @@ jobs:
         run: hugo --minify
 
       - name: Build drafts(/drafts)
-        run: hugo --minify -D -d "public/drafts"
+        run: hugo --minify -D -d "public/drafts" --baseurl "https://muit.tech/drafts"
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
