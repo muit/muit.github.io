@@ -1,7 +1,7 @@
 ---
-title: "Implementing a General Arena"
-date: 2021-04-03
-draft: true
+title: "Implementing a general-use arena"
+date: 2022-02-03
+draft: false
 series:
 - memory
 ---
@@ -44,36 +44,18 @@ Let's go through what we see in this picture:
 - We don't track allocations in any way. No headers, no offsets and no sizes.
 
 ![BestFitArena Slot Pointers](/img/best-fit-arena-slot-ptrs.png)
-Seen in more detail, each slot points to the start of an slot, and its size.
+Seen in more detail, each slot points to the start of its memory and its size.
 
 
 This algorithm has **zero overhead** when fragmentation is low. The less fragmentation, the more performant it is.
 However, it is also designed to minimize it, and, as you will see later, even in an scenario with a lot of fragmentation, performance is still excellent.
 
 ### Allocation
-![BestFitArena Slot Pointers](/img/best-fit-arena-allocation.png)
 
 **Allocation** will always pick the smallest free slot possible and extract the pointer from it.
 Then, this slot is reduced removing the used space from it.
-```cpp
-// note: Alignment has been omitted for simplicity
-void* BestFitArena::Allocate(const sizet size)
-{
-    const u32 slotIndex = FindSmallestSlot(size);
-    if (slotIndex >= freeSlots.Size())
-    {
-        // error: "Couldn't fit {} bytes", size
-        return nullptr;
-    }
 
-    Slot& slot      = freeSlots[slotIndex];
-    u8* const start = slot.start;
-    u8* const end   = start + size;
-
-    ReduceSlot(slotIndex, slot, start, end);
-    return start;
-}
-```
+![BestFitArena Allocate](/img/best-fit-arena-allocation.png)
 
 #### Find Smallest Slot
 
@@ -84,65 +66,17 @@ But we also perform shrink on the slots if neccessary.
 Once we know all slots are sorted, we perform a [binary search](https://www.geeksforgeeks.org/binary-search/) by size.
 The binary search will provide a complexity of O(logN).
 
-```cpp
-i32 BestFitArena::FindSmallestSlot(sizet neededSize)
-{
-    if (pendingSort) [[unlikely]]
-    {
-        pendingSort = false;
-        if (float(freeSlots.Size()) / freeSlots.MaxSize() < 0.25f)
-        {
-            // Dont shrink until there is 75% of unused slots
-            freeSlots.Shrink();
-        }
-        // Sort slots by size. Small first
-        freeSlots.Sort([](const auto& a, const auto& b) {
-            return a.size > b.size;
-        });
-    }
-
-    // Find smallest slot fitting our required size
-    return Algorithms::LowerBoundSearch(
-        freeSlots.Data(), freeSlots.Size(), [neededSize](const auto& slot) {
-            return neededSize <= slot.size;
-        });
-}
-```
-
-#### Reduce Slot
-```cpp
-void BestFitArena::ReduceSlot(
-    i32 slotIndex, Slot& slot, u8* const allocationStart, u8* const allocationEnd)
-{
-    if (allocationEnd == slot.GetEnd())    // Slot would become empty
-    {
-        if (allocationStart > slot.start)    // Slot can still fill alignment gap
-        {
-            slot.size = allocationEnd - allocationStart;
-            pendingSort = true;
-        }
-        else
-        {
-            freeSlots.RemoveAtChecked(slotIndex, false);
-        }
-        return;
-    }
-
-    u8* const oldSlotStart = slot.start;
-    slot.size += slot.start - allocationEnd;
-    slot.start = allocationEnd;
-
-    // If alignment leaves a gap in the slot, save this space as a new slot
-    if (allocationStart > oldSlotStart)
-    {
-        freeSlots.Add({oldSlotStart, sizet(allocationStart - oldSlotStart)});
-    }
-    pendingSort = true;
-}
-```
-
-
 ### Free
+
+**Free** expands the free slots that "touch" the freed memory, absorb it and growing the slot.
+
+We know of the size of the allocation because it is contained on the free slots list which we check anyway.
+
+![BestFitArena Free](/img/best-fit-arena-free.png)
+
+<br>
+
+*PS*: This is a post I never published when I wrote it. So some details might be missing but feel free to ask any questions :)
 
 
 
