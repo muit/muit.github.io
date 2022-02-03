@@ -1,7 +1,81 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez</title><link>https://muit.tech/posts/</link><description>Recent content in Posts on Miguel Fernandez</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://muit.tech/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Introduction to allocators and arenas</title><link>https://muit.tech/posts/2021/03/introduction-to-allocators-and-arenas/</link><pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.tech/posts/2021/03/introduction-to-allocators-and-arenas/</guid><description>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez</title><link>https://muit.tech/posts/</link><description>Recent content in Posts on Miguel Fernandez</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Thu, 03 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://muit.tech/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementing a general-use arena</title><link>https://muit.tech/posts/2022/02/implementing-a-general-use-arena/</link><pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.tech/posts/2022/02/implementing-a-general-use-arena/</guid><description>Now that we have learned about arenas and allocators, we can get our hands dirty with an implementation of an arena.
+Best Fit Arena You see, for the last couple of months, I&amp;rsquo;ve been updating RiftCore with new features. RiftCore is a cross-platform framework I use for C++ projects, and it lacked some memory management.
+So the time came to design a general-purpose arena!
+This article will describe the design and implementation of a Best Fit Arena.</description><content type="html"><![CDATA[<p>Now that we have learned about <strong>
+
+
+
+
+
+    
+
+<a href="/posts/2021/03/introduction-to-allocators-and-arenas/"  >arenas and allocators</a></strong>, we can get our hands dirty with an implementation of an arena.</p>
+<h2 id="best-fit-arena">Best Fit Arena</h2>
+<p>You see, for the last couple of months, I&rsquo;ve been updating 
+
+
+
+
+
+    
+
+<a href="https://github.com/PipeRift/rift-core"  ><strong>RiftCore</strong></a> with new features.
+<strong>RiftCore</strong> is a cross-platform framework I use for C++ projects, and it lacked some memory management.</p>
+<p>So the time came to design a general-purpose arena!</p>
+<p>This article will describe the design and implementation of a <strong>Best Fit Arena</strong>.
+Feel free to come up with a better name though (and put it in the comments below!)</p>
+<h2 id="general-purpose">General-purpose?</h2>
+<p>A general-purpose allocator (or arena) must be able to work on all scenarios with out any big limitation.
+As such, it has to be able to:</p>
+<ul>
+<li><strong>Allocate</strong> in any order and any size</li>
+<li><strong>Deallocate</strong> in any order</li>
+<li>Use (and reuse) all space available</li>
+<li>Minimize fragmentation</li>
+</ul>
+<p>In RiftCore, Arenas always carry the <code>size</code> of the pointer in their <code>Free()</code> function.
+This opens the door to some optimizations, but, don&rsquo;t worry, the BestFitArena can be adapted to avoid this pattern.</p>
+<h2 id="implementation">Implementation</h2>
+<p>A <strong>BestFitArena</strong> works by <strong>tracking all unused spaces</strong>, called free slots.
+<img src="/img/best-fit-arena-slot-ids.png" alt="BestFitArena"></p>
+<p>Let&rsquo;s go through what we see in this picture:</p>
+<ul>
+<li>Like most allocators, we have one or multiple memory blocks of pre-allocated memory.</li>
+<li>We also keep a list of <code>FreeSlots</code>, sorted by size. Bigger first.</li>
+<li>We don&rsquo;t track allocations in any way. No headers, no offsets and no sizes.</li>
+</ul>
+<p><img src="/img/best-fit-arena-slot-ptrs.png" alt="BestFitArena Slot Pointers">
+Seen in more detail, each slot points to the start of its memory and its size.</p>
+<p>This algorithm has <strong>zero overhead</strong> when fragmentation is low. The less fragmentation, the more performant it is.
+However, it is also designed to minimize it, and, as you will see later, even in an scenario with a lot of fragmentation, performance is still excellent.</p>
+<h3 id="allocation">Allocation</h3>
+<p><strong>Allocation</strong> will always pick the smallest free slot possible and extract the pointer from it.
+Then, this slot is reduced removing the used space from it.</p>
+<p><img src="/img/best-fit-arena-allocation.png" alt="BestFitArena Allocate"></p>
+<h4 id="find-smallest-slot">Find Smallest Slot</h4>
+<p>Before anything else, we check if the arena is marked as pending sort.
+This is an optimization that prevents unneccesary sorts on consequent Free calls.
+But we also perform shrink on the slots if neccessary.</p>
+<p>Once we know all slots are sorted, we perform a 
+
+
+
+
+
+    
+
+<a href="https://www.geeksforgeeks.org/binary-search/"  >binary search</a> by size.
+The binary search will provide a complexity of O(logN).</p>
+<h3 id="free">Free</h3>
+<p><strong>Free</strong> expands the free slots that &ldquo;touch&rdquo; the freed memory, absorb it and growing the slot.</p>
+<p>We know of the size of the allocation because it is contained on the free slots list which we check anyway.</p>
+<p><img src="/img/best-fit-arena-free.png" alt="BestFitArena Free"></p>
+<br>
+<p><em>PS</em>: This is a post I never published when I wrote it. So some details might be missing but feel free to ask any questions :)</p>
+]]></content></item><item><title>Introduction to allocators and arenas</title><link>https://muit.tech/posts/2021/03/introduction-to-allocators-and-arenas/</link><pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.tech/posts/2021/03/introduction-to-allocators-and-arenas/</guid><description>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
 Wow! Stop right there, Miguel. This line already deserves some introductions! Let&amp;rsquo;s talk about allocators.
 Crash course on allocations To keep this brief, I will assume that we have some experience with C++ and heap allocation (malloc and new).
-An allocation is when we request a pointer to a block of memory of a specified size.</description><content type="html"><![CDATA[<p><img style="width: 100%" src="/img/storage.png" /></p>
+An allocation is when we request a pointer to a block of memory of a specified size.</description><content type="html"><![CDATA[<img style="width: 100%" src="/img/storage.png" />
 <p>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.</p>
 <p>Wow! Stop right there, Miguel. This line already deserves some introductions!
 Let&rsquo;s talk about allocators.</p>
