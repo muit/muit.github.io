@@ -1,3 +1,4 @@
 resources
 *.png.back
 .hugo_build.lock
+public
