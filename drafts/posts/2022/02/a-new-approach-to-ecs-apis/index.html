@@ -4,7 +4,7 @@
 <meta http-equiv=x-ua-compatible content="ie=edge">
 <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
 <meta name=author content>
-<meta name=description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data oriented design), where you have 3 main elements:
+<meta name=description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
  Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type).">
 <meta name=keywords content>
 <meta name=robots content="noodp">
@@ -16,18 +16,18 @@ A new approach to ECS APIs :: Miguel Fernandez — Game systems programmer
 <link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css rel=stylesheet type=text/css>
 <link rel=stylesheet href=/drafts/main.1c3fb6dc8092adbcaaed4b9b4e1abb720132e31e26691d6ed2ffdc8f66ac9653.css>
 <meta itemprop=name content="A new approach to ECS APIs">
-<meta itemprop=description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data oriented design), where you have 3 main elements:
+<meta itemprop=description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
  Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type)."><meta itemprop=datePublished content="2022-02-10T00:00:00+00:00">
 <meta itemprop=dateModified content="2022-02-10T00:00:00+00:00">
-<meta itemprop=wordCount content="1809"><meta itemprop=image content="https://muit.tech/drafts">
+<meta itemprop=wordCount content="1860"><meta itemprop=image content="https://muit.tech/drafts">
 <meta itemprop=keywords content>
 <meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://muit.tech/drafts">
 <meta name=twitter:title content="A new approach to ECS APIs">
-<meta name=twitter:description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data oriented design), where you have 3 main elements:
+<meta name=twitter:description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
  Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type).">
 <meta property="og:title" content="A new approach to ECS APIs">
-<meta property="og:description" content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data oriented design), where you have 3 main elements:
+<meta property="og:description" content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
  Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type).">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://muit.tech/drafts/posts/2022/02/a-new-approach-to-ecs-apis/"><meta property="og:image" content="https://muit.tech/drafts"><meta property="article:section" content="posts">
@@ -75,22 +75,22 @@ A new approach to ECS APIs :: Miguel Fernandez — Game systems programmer
 <br>
 Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.
 <h1 id=what-is-ecs-you-ask>What is ECS you ask?</h1>
-<p>Fair question! <strong>ECS</strong> (as Entity-Component-System) is an architectural pattern based on DOD (data oriented design), where you have 3 main elements:</p>
+<p>Fair question! <strong>ECS</strong> (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:</p>
 <ul>
 <li><strong>Entities</strong>: They are just an identifier and don’t hold any data.</li>
 <li><strong>Components</strong>: Structs of data associated with a single entity (1 entity can have 1 component of each type). They don’t have any code/logic.</li>
 <li><strong>Systems</strong>: Functions executed operating entities and components.</li>
 </ul>
 <p>I could explain ECS in greater detail, but there are plenty of resources online already that will do a better job than me.
-<a href=#ZgotmplZ>This talk</a> is a good start, and for more resources, you can
+<a href="https://www.youtube.com/watch?v=0_Byw9UMn9g">This talk</a> is a good start, and for more resources, you can also
 <a href=https://github.com/SanderMertens/ecs-faq>read this</a>.</p>
 <p>I personally also like to consider <strong>Utilities</strong> as the forth secret child of ECS.
-Utilities are functions that can be reused between systems. Any code that is not part of a system is an utility. One example could be <em>hierarchy</em> where we can <em>add, remove, or transfer children from entities</em> from multiple systems.</p>
+Utilities are functions that can be reused between systems. Any code that is not part of a system is a utility. One example could be <em>hierarchy</em> where we can <em>add, remove, or transfer children from entities</em> from multiple systems.</p>
 <h1 id=current-approach-to-ecs-apis>Current approach to ECS APIs</h1>
-<p>Now that we know what ECS is and the basics of how it works, lets talk about how we could improve it.</p>
+<p>Now that we know what ECS is and the basics of how it works, let&rsquo;s talk about how we could improve it.</p>
 <p>In most ECS libraries I have used so far, there is always the concept of a <strong>view</strong>, or a <strong>filter</strong>.
-This is a tool that allows fast iteration of entities following a set of conditions. You can say for example “iterate all entities with ‘Player’ and ‘Movement’ components, but ignore those with ‘Frozen’ component”.</p>
-<p>Implementation details may differ, but I will be using using the popular library <strong>entt</strong> as an example (it’s great, check it out). In this library a “view” caches pools from the world when it is created, and uses them to check for entities matching some included and excluded components.</p>
+This is a tool that allows fast iteration of entities following a set of conditions. You can say, for example, &ldquo;iterate all entities with &lsquo;Player&rsquo; and &lsquo;Movement&rsquo; components, but ignore those with &lsquo;Frozen&rsquo; component&rdquo;.</p>
+<p>Implementation details may differ, but I will be using using the popular library <strong>entt</strong> as an example (it&rsquo;s great, check it out). In this library, a “view” caches pools from the world when it is created, and uses them to check for entities matching some included and excluded components.</p>
 <h3 id=problems-sharing-code>Problems sharing code</h3>
 <p>So lets make an example with <strong>entt</strong> where we move agents (a system):</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveAgents</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
@@ -106,8 +106,8 @@ This is a tool that allows fast iteration of entities following a set of conditi
 		transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
 	}
 }
-</code></pre></div><p>Okay, so far we are just fine.
-But, what if we have props that can move? But only when they are enabled.</p>
+</code></pre></div><p>Okay, so far, we are just fine.
+But what if we have props that can move? But only when they are enabled.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
 {
 	<span style=color:#66d9ef>auto</span> view <span style=color:#f92672>=</span> registry.view<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop, <span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span>();
@@ -123,7 +123,7 @@ But, what if we have props that can move? But only when they are enabled.</p>
 		}
 	}
 }
-</code></pre></div><p>Well, we get some duplicated code, we could export this into an utility. But how?</p>
+</code></pre></div><p>Well, we get some duplicated code, we could export this into a utility. But how?</p>
 <p>If we wanted to share code as utilities, we would be extremely limited, specially if we want to track which data we are reading and writing, which is crucial for scheduling (more on that later).</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#75715e>// We could use references, but it&#39;s not very practical since we need to get the components outside anyway
 </span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(<span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&amp;</span> movement, Transform<span style=color:#f92672>&amp;</span> transform, <span style=color:#66d9ef>float</span> deltaTime)
@@ -132,7 +132,7 @@ But, what if we have props that can move? But only when they are enabled.</p>
 }
 
 <span style=color:#75715e>// We could pass the registry, but then we lose the fast access to pools from views.
-</span><span style=color:#75715e>// Also, we don&#39;t know from outside which components we are reading and writing
+</span><span style=color:#75715e>// Also, we do not know from outside which components we are reading and writing
 </span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
 {
 	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> registry.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity); <span style=color:#75715e>// Accessing component directly through world is slow
@@ -140,7 +140,10 @@ But, what if we have props that can move? But only when they are enabled.</p>
 	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
 }
 
-<span style=color:#75715e>// We could pass the view as a template parameter... hell no, I&#39;m not even going to explain why this is a bad idea
+<span style=color:#75715e>// We could pass the view as a template parameter.
+</span><span style=color:#75715e>// But templates need to be declared where they are used, meaning all shared functions will need to be most likely on a header.
+</span><span style=color:#75715e>// To that, you add different views for the same function, and you get slower compile times.
+</span><span style=color:#75715e>// Outside of templates, Views also are not intended to control access, and they can not do all the things you can do with the world.
 </span><span style=color:#75715e></span><span style=color:#66d9ef>template</span><span style=color:#f92672>&lt;</span><span style=color:#66d9ef>typename</span> View<span style=color:#f92672>&gt;</span>
 <span style=color:#66d9ef>void</span> ApplyMovement(View view, <span style=color:#66d9ef>float</span> deltaTime)
 {
@@ -150,18 +153,18 @@ But, what if we have props that can move? But only when they are enabled.</p>
 }
 </code></pre></div><p>Along with the problems sharing code (utilities) between systems, you will also have a really hard time tracking dependencies as your project grows if you want to do any sort of scheduling.</p>
 <h3 id=problems-scheduling>Problems scheduling</h3>
-<p>As I mention on the previous step, scheduling is a huge problem, and we should simplify it.</p>
+<p>As I mentioned in the previous step, scheduling is a huge problem, and we should simplify it.</p>
 <p>Scheduling helps us organize hundreds of system functions to execute safely in multithreading. To achieve that, we need to know where we read and modify components:</p>
 <ul>
 <li>We can safely <strong>read</strong> components of the same type from many threads at the same time.</li>
-<li>We can’t safely <strong>read</strong> components of the same type <strong>while</strong> any other thread is <strong>writing</strong> them.</li>
+<li>We can&rsquo;t safely <strong>read</strong> components of the same type <strong>while</strong> any other thread is <strong>writing</strong> them.</li>
 </ul>
-<p>We can of course schedule by hand, but this quickly becomes unmaintainable. That’s why there are many ways to automate it. But, as I said, you need to be able to know what you are doing inside a function from outside or this wont be possible.</p>
+<p>We can, of course, schedule by hand, but this quickly becomes unmaintainable. That&rsquo;s why there are many ways to automate it. But, as I said, you need to be able to know what you are doing inside a function from outside, or this won&rsquo;t be possible.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#75715e>// If we pass around the registry, we don&#39;t know our dependencies
 </span><span style=color:#75715e>// We don&#39;t know which components this function is accessing and modifying
 </span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime) {}
-</code></pre></div><h3 id=problems-controling-over-data-flow>Problems controling over data flow</h3>
-<p>One of the points of DOD is that all code serves a single purpose: It converts data (input) into other data (output). “Its all about the data.”</p>
+</code></pre></div><h3 id=problems-controlling-data-flow>Problems controlling data-flow</h3>
+<p>One of the points of DOD is that all code serves a single purpose: It converts data (input) into other data (output). “It&rsquo;s all about the data.”</p>
 <p>Having a view that we mostly only iterate is limiting us if we want to do proper algorithms where we use multiple steps to (efficiently) operate data.</p>
 <h1 id=fixing-the-problems>Fixing the problems</h1>
 <p>Lets see what we need:</p>
@@ -172,9 +175,9 @@ But, what if we have props that can move? But only when they are enabled.</p>
 <li>It has to be blazing fast</li>
 <li>Errors must be <strong>simple</strong> and straight forward <em>&mldr;proceeds to look at templates with disapproval</em></li>
 </ul>
-<p>I have been experimenting with this for a while, and ended up implementing it in
+<p>I experimented with a solution to this for a while and ended up implementing it in
 <a href=https://github.com/PipeRift/rift><strong>Rift</strong></a>.
-The solution I came with solves all the points above, so lets have a look rebuilding the previous examples with it:</p>
+This solution I came up with solves all the points above, so let&rsquo;s have a look rebuilding the previous examples with it:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#75715e>// We pass an Access with the types we can write, and those we can only read (const)
 </span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(TAccess<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop, <span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span> access, <span style=color:#66d9ef>float</span> deltaTime)
 {
@@ -194,8 +197,8 @@ The solution I came with solves all the points above, so lets have a look rebuil
 	}
 }
 
-<span style=color:#75715e>// The parent access (MoveProps) must have this components.
-</span><span style=color:#75715e>// If it doesn&#39;t, we will get proper errors telling us whats missing.
+<span style=color:#75715e>// The parent access (MoveProps) must have these components.
+</span><span style=color:#75715e>// If it doesn&#39;t, we will get proper errors telling us what&#39;s missing.
 </span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(TAccess<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span> access, Id entity, <span style=color:#66d9ef>float</span> deltaTime)
 {
 	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> access.Get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
@@ -203,17 +206,17 @@ The solution I came with solves all the points above, so lets have a look rebuil
 	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
 }
 </code></pre></div><h3 id=access>Access</h3>
-<p>An access represents a set of components for efficient access and dependency tracking. It also can’t be directly iterated (by design). We have other tools for that.</p>
+<p>A access represents a set of components for efficient access and dependency tracking. It also can’t be directly iterated (by design). We have other tools for that.</p>
 <ul>
 <li>It is very cheap to copy (only a pool pointer copy for each component type)</li>
 <li>It provides instant access into component pools</li>
 <li>Extremely simpler and less template-heavy than views</li>
 <li>Can be constructed implicitly from the ECS world or other bigger accesses.</li>
 </ul>
-<p>Access can have two flavours. Compile-time assisted <code>TAccess&lt;Types></code> or runtime based <code>Access</code></p>
-<p>It also makes sense to pass them as const reference to functions. They are cheap to copy yes, but we might not need to do it at all. That&rsquo;s why I added an alias <code>TAccessRef&lt;Types></code> which is essentially the same as <code>const TAccess&lt;Types>&</code>. Its just easier to write.</p>
+<p>Access can have two flavors. Compile-time assisted <code>TAccess&lt;Types></code> or runtime based <code>Access</code></p>
+<p>It also makes sense to pass them as const reference to functions. They are cheap to copy yes, but we might not need to do it at all. That&rsquo;s why I added an alias <code>TAccessRef&lt;Types></code> which is essentially the same as <code>const TAccess&lt;Types>&</code>. It&rsquo;s just easier to write.</p>
 <h3 id=filtering-entities>Filtering entities</h3>
-<p>If an access can&rsquo;t iterate on its own, how do we do it?</p>
+<p>If a access can&rsquo;t iterate on its own, how do we do it?</p>
 <p>Iteration is done by creating and modifying lists of ids:</p>
 <ul>
 <li><code>ListAll&lt;Types>(access)</code>: Returns all entity ids containing all the provided components.</li>
@@ -224,13 +227,14 @@ The solution I came with solves all the points above, so lets have a look rebuil
 <li><code>RemoveIf&lt;Types>(access, ids)</code>: Exclude entities not having a component</li>
 <li><code>RemoveIfNot&lt;Types>(access, ids)</code>: Exclude entities having a component</li>
 </ul>
-<p>Should be mentioned that this functions dont ensure order is kept by default (for performance) but we can use their counterparts for that:</p>
+<p>It should be mentioned that these functions don&rsquo;t ensure the order is kept by default (for performance), but we can use their counterparts for that:</p>
 <ul>
 <li><code>RemoveIfStable&lt;Types>(access, ids)</code>: Exclude entities not having a component</li>
 <li><code>RemoveIfNotStable&lt;Types>(access, ids)</code>: Exclude entities having a component</li>
 </ul>
 <p>The potential of this is that we are just operating a list of indexes, and we are not limited by the functions above on what we can do. Its just &ldquo;filtering&rdquo; lists of ids.</p>
-<p>One example could be in wirft, where the compiler precaches two lists, one for classes and one for structs:</p>
+<p>One example could be in
+<a href=https://github.com/PipeRift/rift>Rift</a>, where the compiler precaches two lists, one for classes and one for structs:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp>TArray<span style=color:#f92672>&lt;</span>AST<span style=color:#f92672>::</span>Id<span style=color:#f92672>&gt;</span> classes, structs;
 AST<span style=color:#f92672>::</span>Hierarchy<span style=color:#f92672>::</span>GetChildren(ast, moduleId, classes);
 AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;</span>CType<span style=color:#f92672>&gt;</span>(ast, classes);
@@ -251,9 +255,9 @@ AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;<
 <p><img src=/img/ecs-access-release.png alt="Access in Release"></p>
 <p>Should be noted that this benchmark runs an empty iteration loop. For views, this means their pool checks are very close in execution. In other words, it is their <strong>ideal scenario</strong>. It is unrealistically in their favor. However, they seem to run slower. Why is that?</p>
 <h3 id=why-is-it-faster>Why is it faster?</h3>
-<p>Unlike views, accesses don&rsquo;t need to find their pools again and again every time they get created. Most of the times an access is created from another, which is literally just copying the relevant pool pointers.</p>
+<p>Unlike views, accesses don&rsquo;t need to find their pools, again and again, every time they get created. Most of the time, a access is created from another, which is literally just copying the relevant pool pointers.</p>
 <p>However this is not where most of the performance benefit comes from.</p>
-<p>It comes from the fact that, while in viewd, each entity is checked at once against all the pools to filter, with <strong>ListAll</strong> all ids are checked pool after pool:</p>
+<p>It comes from the fact that, while in views, each entity is checked at once against all the pools to filter, with <strong>ListAll</strong> all ids are checked pool after pool:</p>
 <p><strong>Views</strong></p>
 <ul>
 <li>Iterate all ids in smallest pool
@@ -269,17 +273,17 @@ AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;<
 <li>Remove those that don&rsquo;t have component B</li>
 <li>Remove those that don&rsquo;t have component C</li>
 </ul>
-<p>This uses a single pool and its hash-set at a time, making it more cache friendly.</p>
+<p>This uses a single pool and its hash-set at a time, making it more cache-friendly.</p>
 <br>
-<p>I hope this post was not too dense. It is quite a specific topic after all!</p>
+<p>I hope this post was not too dense. It is quite a specific topic, after all.</p>
 <p>Consider having a look at
-<a href=https://github.com/PipeRift/rift><strong>Rift</strong></a>, and if you like it, it would be incredibly helpful to get new ideas, feedback and/or code.</p>
+<a href=https://github.com/PipeRift/rift><strong>Rift</strong></a>. It would be incredibly helpful to get your ideas, feedback and/or code contributions!</p>
 </div>
 </article>
 <hr>
 <div class=post-info>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-1809 Words
+1860 Words
 </p>
 <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
 2022-02-10 00:00
