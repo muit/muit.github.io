@@ -247,20 +247,12 @@ This solution I came up with solves all the points above, so let&rsquo;s have a 
     
 
 <a href="https://github.com/PipeRift/rift"  ><strong>Rift</strong></a>. It would be incredibly helpful to get your ideas, feedback and/or code contributions!</p>
-]]></content></item><item><title>Implementing a general-use arena</title><link>https://muit.xyz/drafts/posts/2022/02/implementing-a-general-use-arena/</link><pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/drafts/posts/2022/02/implementing-a-general-use-arena/</guid><description>Now that we have learned about arenas and allocators, we can get our hands dirty with an implementation of an arena.
+]]></content></item><item><title>Implementing a general-use arena</title><link>https://muit.xyz/drafts/posts/2022/02/implementing-a-general-use-arena/</link><pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/drafts/posts/2022/02/implementing-a-general-use-arena/</guid><description>Now that we have learned about [arenas and allocators](/drafts/posts/2021/03/introduction-to-allocators-and-arenas/), we can get our hands dirty with an implementation of an arena.
 Best Fit Arena You see, for the last couple of months, I&amp;rsquo;ve been updating RiftCore with new features. RiftCore is a cross-platform framework I use for C++ projects, and it lacked some memory management.
 So the time came to design a general-purpose arena!
-This article will describe the design and implementation of a Best Fit Arena.</description><content type="html"><![CDATA[<p>Now that we have learned about <strong>
-
-
-
-
-
-    
-
-<a href="/drafts/posts/2021/03/introduction-to-allocators-and-arenas/"  >arenas and allocators</a></strong>, we can get our hands dirty with an implementation of an arena.</p>
+This article will describe the design and implementation of a Best Fit Arena.</description><content type="html"><![CDATA[<p>Now that we have learned about <strong>[arenas and allocators](/drafts/posts/2021/03/introduction-to-allocators-and-arenas/)</strong>, we can get our hands dirty with an implementation of an arena.</p>
 <h2 id="best-fit-arena">Best Fit Arena</h2>
-<p>You see, for the last couple of months, I&rsquo;ve been updating 
+<p>You see, for the last couple of months, I&rsquo;ve been updating <strong>
 
 
 
@@ -268,7 +260,7 @@ This article will describe the design and implementation of a Best Fit Arena.</d
 
     
 
-<a href="https://github.com/PipeRift/rift-core"  ><strong>RiftCore</strong></a> with new features.
+<a href="https://github.com/PipeRift/rift-core"  >RiftCore</a></strong> with new features.
 <strong>RiftCore</strong> is a cross-platform framework I use for C++ projects, and it lacked some memory management.</p>
 <p>So the time came to design a general-purpose arena!</p>
 <p>This article will describe the design and implementation of a <strong>Best Fit Arena</strong>.
@@ -299,8 +291,8 @@ Seen in more detail, each slot points to the start of its memory and its size.</
 However, it is also designed to minimize it, and, as you will see later, even in an scenario with a lot of fragmentation, performance is still excellent.</p>
 <h3 id="allocation">Allocation</h3>
 <p><strong>Allocation</strong> will always pick the smallest free slot possible and extract the pointer from it.
-Then, this slot is reduced removing the used space from it.</p>
-<p><img src="/img/best-fit-arena-allocation.png" alt="BestFitArena Allocate"></p>
+Then, this slot is reduced removing the used space from it.
+<img src="/img/best-fit-arena-allocation.png" alt="BestFitArena Allocate"></p>
 <h4 id="find-smallest-slot">Find Smallest Slot</h4>
 <p>Before anything else, we check if the arena is marked as pending sort.
 This is an optimization that prevents unneccesary sorts on consequent Free calls.
@@ -317,8 +309,8 @@ But we also perform shrink on the slots if neccessary.</p>
 The binary search will provide a complexity of O(logN).</p>
 <h3 id="free">Free</h3>
 <p><strong>Free</strong> expands the free slots that &ldquo;touch&rdquo; the freed memory, absorb it and growing the slot.</p>
-<p>We know of the size of the allocation because it is contained on the free slots list which we check anyway.</p>
-<p><img src="/img/best-fit-arena-free.png" alt="BestFitArena Free"></p>
+<p>We know of the size of the allocation because it is contained on the free slots list which we check anyway.
+<img src="/img/best-fit-arena-free.png" alt="BestFitArena Free"></p>
 <br>
 <p><em>PS</em>: This is a post I never published when I wrote it. So some details might be missing but feel free to ask any questions :)</p>
 ]]></content></item><item><title>Introduction to allocators and arenas</title><link>https://muit.xyz/drafts/posts/2021/03/introduction-to-allocators-and-arenas/</link><pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.xyz/drafts/posts/2021/03/introduction-to-allocators-and-arenas/</guid><description>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
