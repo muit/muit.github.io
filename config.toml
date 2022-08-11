@@ -1,101 +1,68 @@
-baseurl      = "https://muit.xyz"
-title        = "Muit"
-languageCode = "en-us"
-theme        = "hello-friend-ng"
-
 GoogleAnalytics = "G-D66MJWXCKK"
-
 PygmentsCodeFences = true
 PygmentsStyle = "monokai"
-
-paginate     = 10
-
-[permalinks]
-  posts = "/posts/:year/:month/:title/"
-
+baseurl = "https://muit.xyz"
+languageCode = "en-us"
+paginate = 10
+theme = "hello-friend-ng"
+title = "Muit"
+[languages.en]
+copyright = "<a href=\"https://github.com/muit\" rel=\"noopener\">Miguel Fernandez Arce</a>"
+keywords = ""
+readOtherPosts = "Read other posts"
+subtitle = "Game systems programmer"
+title = "Miguel Fernandez"
+[languages.en.params.logo]
+logoHomeLink = "/"
+logoText = "Miguel Fernandez"
+[markup.goldmark.renderer]
+unsafe = true
+[[menu.main]]
+name = "GitHub"
+url = "https://github.com/muit"
+weight = 3
+[[menu.main]]
+identifier = "about"
+name = "About"
+url = "/about"
+weight = 1
+[[menu.main]]
+identifier = "posts"
+name = "Posts"
+url = "/posts"
+weight = 2
 [params]
-  dateform        = "Jan 2, 2006"
-  dateformShort   = "Jan 2"
-  dateformNum     = "2006-01-02"
-  dateformNumTime = "2006-01-02 15:04"
-
-  # Subtitle for home
-  homeSubtitle = "Game systems programmer"
-
-  # Set disableReadOtherPosts to true in order to hide the links to other posts.
-  disableReadOtherPosts = false
-
-  # Enable sharing buttons, if you like
-  enableSharingButtons = true
-
-  # Metadata mostly used in document's head
-  description = "Muit's portfolio & blog"
-  keywords = "muitxer, homepage, blog, portfolio, unreal engine, C++"
-  images = [""]
-
-  # Default theme "light" or "dark"
-  defaultTheme = "dark"
-
-  justifyContent = true # Set "text-align: justify" to .post-content.
-
-  [params.commento]
-    url = "https://comments.piperift.com"
-
-
-  [[params.social]]
-    name = "linkedin"
-    url  = "https://www.linkedin.com/in/muitxer/"
-
-  [[params.social]]
-    name = "github"
-    url  = "https://github.com/muit"
-
-  [[params.social]]
-    name = "twitter"
-    url  = "https://twitter.com/muitxer"
-
-  [[params.social]]
-    name = "email"
-    url  = "mailto:muit@piperift.com"
-
-
-
+dateform = "Jan 2, 2006"
+dateformNum = "2006-01-02"
+dateformNumTime = "2006-01-02 15:04"
+dateformShort = "Jan 2"
+defaultTheme = "dark"
+description = "Muit's portfolio & blog"
+disableReadOtherPosts = false
+enableSharingButtons = true
+homeSubtitle = "Game systems programmer"
+images = [""]
+justifyContent = true
+keywords = "muitxer, homepage, blog, portfolio, unreal engine, C++"
+[params.commento]
+url = "https://comments.piperift.com"
+[[params.social]]
+name = "linkedin"
+url = "https://www.linkedin.com/in/muitxer/"
+[[params.social]]
+name = "github"
+url = "https://github.com/muit"
+[[params.social]]
+name = "twitter"
+url = "https://twitter.com/muitxer"
+[[params.social]]
+name = "email"
+url = "mailto:muit@piperift.com"
+[permalinks]
+posts = "/posts/:year/:month/:title/"
+[privacy.googleAnalytics]
+disable = false
 [taxonomies]
-    category = "blog"
-    tag      = "tags"
-    series   = "series"
-
-[languages]
-  [languages.en]
-    title = "Miguel Fernandez"
-    subtitle = "Game systems programmer"
-    keywords = ""
-    copyright = '<a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce</a>'
-    readOtherPosts = "Read other posts"
-
-    [languages.en.params.logo]
-      logoText = "Miguel Fernandez"
-      logoHomeLink = "/"
-    # or
-    #
-    # path = "/img/your-example-logo.svg"
-    # alt = "Your example logo alt text"
-
-  [[menu.main]]
-    identifier = "posts"
-    name       = "Posts"
-    url        = "/posts"
-
-  [[menu.main]]
-    identifier = "about"
-    name       = "About"
-    url        = "/about"
-
-[markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      unsafe = true
-
-[privacy]
-  [privacy.googleAnalytics]
-    disable = false
+category = "blog"
+series = "series"
+tag = "tags"
