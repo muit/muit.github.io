@@ -1,12 +1,12 @@
 ---
 title: Introduction to allocators and arenas
 date: 2021-03-30
+draft: false
+cover: /img/covers/storage.png
 series:
 - memory
-
 ---
-<img style="width: 100%" src="/img/covers/storage.png" />
-<br>
+
 Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
 
 Wow! Stop right there, Miguel. This line already deserves some introductions!

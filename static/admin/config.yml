@@ -11,11 +11,13 @@ public_folder: "/img"
 collections:
   - name: "posts"
     label: "Posts"
+    label_singular: 'Post'
     folder: "content/posts"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "date" }
-      - { label: "Featured Image", name: "image", widget: "image"}
+      - { label: "Cover Image", name: "cover", widget: "image", required: false}
+      - { label: "Cover Caption", name: "cover_caption", widget: "string", required: false}
+      - { label: "Series", name: "series", widget: "list", required: false}
       - { label: "Body", name: "body", widget: "markdown" }

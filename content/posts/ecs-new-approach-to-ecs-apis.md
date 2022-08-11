@@ -2,12 +2,11 @@
 title: "A new approach to ECS APIs"
 date: 2022-02-10
 draft: false
+cover: /img/covers/patterns.png
 series:
 - ecs
 ---
 
-<img style="width: 100%" src="/img/covers/patterns.png" />
-<br>
 Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.
 
 

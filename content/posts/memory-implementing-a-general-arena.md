@@ -2,11 +2,12 @@
 title: "Implementing a general-use arena"
 date: 2022-02-03
 draft: false
+cover: /img/covers/storage.png
 series:
 - memory
 ---
 
-Now that we have learned about **[arenas and allocators]({{< relref "introduction-to-allocators-and-arenas" >}})**, we can get our hands dirty with an implementation of an arena.
+Now that we have learned about **[arenas and allocators]({{< relref "memory-introduction-to-allocators-and-arenas" >}})**, we can get our hands dirty with an implementation of an arena.
 
 ## Best Fit Arena
 
