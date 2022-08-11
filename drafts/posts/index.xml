@@ -35,65 +35,65 @@ This is a tool that allows fast iteration of entities following a set of conditi
 <p>Implementation details may differ, but I will be using using the popular library <strong>entt</strong> as an example (it&rsquo;s great, check it out). In this library, a “view” caches pools from the world when it is created, and uses them to check for entities matching some included and excluded components.</p>
 <h3 id="problems-sharing-code">Problems sharing code</h3>
 <p>So lets make an example with <strong>entt</strong> where we move agents (a system):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveAgents</span>(entt<span style="color:#f92672">::</span>registry<span style="color:#f92672">&amp;</span> registry, <span style="color:#66d9ef">float</span> deltaTime)
-{
-	<span style="color:#75715e">// We create a view matching all agents with movement and transform components
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">auto</span> view <span style="color:#f92672">=</span> registry.view<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Agent, <span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span>();
-	<span style="color:#75715e">// We iterate all entities in the view
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span>(Id entity : view)
-	{
-		<span style="color:#75715e">// We get components and apply position based on velocity
-</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity);
-		<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
-		transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
-	}
-}
-</code></pre></div><p>Okay, so far, we are just fine.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveAgents</span>(entt<span style="color:#f92672">::</span>registry<span style="color:#f92672">&amp;</span> registry, <span style="color:#66d9ef">float</span> deltaTime)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// We create a view matching all agents with movement and transform components
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">auto</span> view <span style="color:#f92672">=</span> registry.view<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Agent, <span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// We iterate all entities in the view
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span>(Id entity : view)
+</span></span><span style="display:flex;"><span>	{
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// We get components and apply position based on velocity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>		transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Okay, so far, we are just fine.
 But what if we have props that can move? But only when they are enabled.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveProps</span>(entt<span style="color:#f92672">::</span>registry<span style="color:#f92672">&amp;</span> registry, <span style="color:#66d9ef">float</span> deltaTime)
-{
-	<span style="color:#66d9ef">auto</span> view <span style="color:#f92672">=</span> registry.view<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop, <span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span>();
-	<span style="color:#66d9ef">for</span>(Id entity : view)
-	{
-		<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> prop <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop<span style="color:#f92672">&gt;</span>(entity);
-		<span style="color:#66d9ef">if</span> (prop.isEnabled)
-		{
-			<span style="color:#75715e">// Can we reuse this?
-</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity);
-			<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
-			transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
-		}
-	}
-}
-</code></pre></div><p>Well, we get some duplicated code, we could export this into a utility. But how?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveProps</span>(entt<span style="color:#f92672">::</span>registry<span style="color:#f92672">&amp;</span> registry, <span style="color:#66d9ef">float</span> deltaTime)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">auto</span> view <span style="color:#f92672">=</span> registry.view<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop, <span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span>(Id entity : view)
+</span></span><span style="display:flex;"><span>	{
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> prop <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (prop.isEnabled)
+</span></span><span style="display:flex;"><span>		{
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// Can we reuse this?
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>			transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Well, we get some duplicated code, we could export this into a utility. But how?</p>
 <p>If we wanted to share code as utilities, we would be extremely limited, specially if we want to track which data we are reading and writing, which is crucial for scheduling (more on that later).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// We could use references, but it&#39;s not very practical since we need to get the components outside anyway
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ApplyMovement</span>(<span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&amp;</span> movement, Transform<span style="color:#f92672">&amp;</span> transform, <span style="color:#66d9ef">float</span> deltaTime)
-{
-	transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
-}
-
-<span style="color:#75715e">// We could pass the registry, but then we lose the fast access to pools from views.
-</span><span style="color:#75715e">// Also, we do not know from outside which components we are reading and writing
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ApplyMovement</span>(entt<span style="color:#f92672">::</span>registry<span style="color:#f92672">&amp;</span> registry, <span style="color:#66d9ef">float</span> deltaTime)
-{
-	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> registry.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity); <span style="color:#75715e">// Accessing component directly through world is slow
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> registry.get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
-	transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
-}
-
-<span style="color:#75715e">// We could pass the view as a template parameter.
-</span><span style="color:#75715e">// But templates need to be declared where they are used, meaning all shared functions will need to be most likely on a header.
-</span><span style="color:#75715e">// To that, you add different views for the same function, and you get slower compile times.
-</span><span style="color:#75715e">// Outside of templates, Views also are not intended to control access, and they can not do all the things you can do with the world.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> View<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> ApplyMovement(View view, <span style="color:#66d9ef">float</span> deltaTime)
-{
-	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity);
-	<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
-	transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
-}
-</code></pre></div><p>Along with the problems sharing code (utilities) between systems, you will also have a really hard time tracking dependencies as your project grows if you want to do any sort of scheduling.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// We could use references, but it&#39;s not very practical since we need to get the components outside anyway
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ApplyMovement</span>(<span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&amp;</span> movement, Transform<span style="color:#f92672">&amp;</span> transform, <span style="color:#66d9ef">float</span> deltaTime)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// We could pass the registry, but then we lose the fast access to pools from views.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Also, we do not know from outside which components we are reading and writing
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ApplyMovement</span>(entt<span style="color:#f92672">::</span>registry<span style="color:#f92672">&amp;</span> registry, <span style="color:#66d9ef">float</span> deltaTime)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> registry.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity); <span style="color:#75715e">// Accessing component directly through world is slow
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> registry.get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>	transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// We could pass the view as a template parameter.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// But templates need to be declared where they are used, meaning all shared functions will need to be most likely on a header.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// To that, you add different views for the same function, and you get slower compile times.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Outside of templates, Views also are not intended to control access, and they can not do all the things you can do with the world.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> View<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> ApplyMovement(View view, <span style="color:#66d9ef">float</span> deltaTime)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> view.get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>	transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Along with the problems sharing code (utilities) between systems, you will also have a really hard time tracking dependencies as your project grows if you want to do any sort of scheduling.</p>
 <h3 id="problems-scheduling">Problems scheduling</h3>
 <p>As I mentioned in the previous step, scheduling is a huge problem, and we should simplify it.</p>
 <p>Scheduling helps us organize hundreds of system functions to execute safely in multithreading. To achieve that, we need to know where we read and modify components:</p>
@@ -102,10 +102,10 @@ But what if we have props that can move? But only when they are enabled.</p>
 <li>We can&rsquo;t safely <strong>read</strong> components of the same type <strong>while</strong> any other thread is <strong>writing</strong> them.</li>
 </ul>
 <p>We can, of course, schedule by hand, but this quickly becomes unmaintainable. That&rsquo;s why there are many ways to automate it. But, as I said, you need to be able to know what you are doing inside a function from outside, or this won&rsquo;t be possible.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// If we pass around the registry, we don&#39;t know our dependencies
-</span><span style="color:#75715e">// We don&#39;t know which components this function is accessing and modifying
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveProps</span>(entt<span style="color:#f92672">::</span>registry<span style="color:#f92672">&amp;</span> registry, <span style="color:#66d9ef">float</span> deltaTime) {}
-</code></pre></div><h3 id="problems-controlling-data-flow">Problems controlling data-flow</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// If we pass around the registry, we don&#39;t know our dependencies
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// We don&#39;t know which components this function is accessing and modifying
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveProps</span>(entt<span style="color:#f92672">::</span>registry<span style="color:#f92672">&amp;</span> registry, <span style="color:#66d9ef">float</span> deltaTime) {}
+</span></span></code></pre></div><h3 id="problems-controlling-data-flow">Problems controlling data-flow</h3>
 <p>One of the points of DOD is that all code serves a single purpose: It converts data (input) into other data (output). “It&rsquo;s all about the data.”</p>
 <p>Having a view that we mostly only iterate is limiting us if we want to do proper algorithms where we use multiple steps to (efficiently) operate data.</p>
 <h1 id="fixing-the-problems">Fixing the problems</h1>
@@ -127,34 +127,34 @@ But what if we have props that can move? But only when they are enabled.</p>
 
 <a href="https://github.com/PipeRift/rift"  ><strong>Rift</strong></a>.
 This solution I came up with solves all the points above, so let&rsquo;s have a look rebuilding the previous examples with it:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// We pass an Access with the types we can write, and those we can only read (const)
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveProps</span>(TAccess<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop, <span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span> access, <span style="color:#66d9ef">float</span> deltaTime)
-{
-	<span style="color:#66d9ef">for</span>(Id entity : ListAll<span style="color:#f92672">&lt;</span>Prop, Movement, Transform<span style="color:#f92672">&gt;</span>(access))
-	{
-		<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> prop <span style="color:#f92672">=</span> access.Get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop<span style="color:#f92672">&gt;</span>(entity);
-		<span style="color:#66d9ef">if</span> (prop.isEnabled)
-		{
-			<span style="color:#75715e">// Can we reuse this? Yes
-</span><span style="color:#75715e"></span>			<span style="color:#75715e">//const auto&amp; movement = access.Get&lt;const Movement&gt;(entity);
-</span><span style="color:#75715e"></span>			<span style="color:#75715e">//auto&amp; transform = access.Get&lt;Transform&gt;(entity);
-</span><span style="color:#75715e"></span>			<span style="color:#75715e">//transform.position += movement.velocity * deltaTime;
-</span><span style="color:#75715e"></span>
-			<span style="color:#75715e">// So, lets reuse it
-</span><span style="color:#75715e"></span>			ApplyMovement(access, entity, deltaTime);
-		}
-	}
-}
-
-<span style="color:#75715e">// The parent access (MoveProps) must have these components.
-</span><span style="color:#75715e">// If it doesn&#39;t, we will get proper errors telling us what&#39;s missing.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ApplyMovement</span>(TAccess<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span> access, Id entity, <span style="color:#66d9ef">float</span> deltaTime)
-{
-	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> access.Get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity);
-	<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> access.Get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
-	transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
-}
-</code></pre></div><h3 id="access">Access</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// We pass an Access with the types we can write, and those we can only read (const)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveProps</span>(TAccess<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop, <span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span> access, <span style="color:#66d9ef">float</span> deltaTime)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span>(Id entity : ListAll<span style="color:#f92672">&lt;</span>Prop, Movement, Transform<span style="color:#f92672">&gt;</span>(access))
+</span></span><span style="display:flex;"><span>	{
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> prop <span style="color:#f92672">=</span> access.Get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (prop.isEnabled)
+</span></span><span style="display:flex;"><span>		{
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// Can we reuse this? Yes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#75715e">//const auto&amp; movement = access.Get&lt;const Movement&gt;(entity);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#75715e">//auto&amp; transform = access.Get&lt;Transform&gt;(entity);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#75715e">//transform.position += movement.velocity * deltaTime;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// So, lets reuse it
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			ApplyMovement(access, entity, deltaTime);
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// The parent access (MoveProps) must have these components.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// If it doesn&#39;t, we will get proper errors telling us what&#39;s missing.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ApplyMovement</span>(TAccess<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span> access, Id entity, <span style="color:#66d9ef">float</span> deltaTime)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> movement <span style="color:#f92672">=</span> access.Get<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Movement<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> transform <span style="color:#f92672">=</span> access.Get<span style="color:#f92672">&lt;</span>Transform<span style="color:#f92672">&gt;</span>(entity);
+</span></span><span style="display:flex;"><span>	transform.position <span style="color:#f92672">+=</span> movement.velocity <span style="color:#f92672">*</span> deltaTime;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="access">Access</h3>
 <p>A access represents a set of components for efficient access and dependency tracking. It also can’t be directly iterated (by design). We have other tools for that.</p>
 <ul>
 <li>It is very cheap to copy (only a pool pointer copy for each component type)</li>
@@ -191,14 +191,14 @@ This solution I came up with solves all the points above, so let&rsquo;s have a 
     
 
 <a href="https://github.com/PipeRift/rift"  >Rift</a>, where the compiler precaches two lists, one for classes and one for structs:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">TArray<span style="color:#f92672">&lt;</span>AST<span style="color:#f92672">::</span>Id<span style="color:#f92672">&gt;</span> classes, structs;
-AST<span style="color:#f92672">::</span>Hierarchy<span style="color:#f92672">::</span>GetChildren(ast, moduleId, classes);
-AST<span style="color:#f92672">::</span>RemoveIfNot<span style="color:#f92672">&lt;</span>CType<span style="color:#f92672">&gt;</span>(ast, classes);
-structs <span style="color:#f92672">=</span> classes;
-
-AST<span style="color:#f92672">::</span>RemoveIfNot<span style="color:#f92672">&lt;</span>CClassDecl<span style="color:#f92672">&gt;</span>(ast, classes);
-AST<span style="color:#f92672">::</span>RemoveIfNot<span style="color:#f92672">&lt;</span>CStructDecl<span style="color:#f92672">&gt;</span>(ast, structs);
-</code></pre></div><p>As you can see, it is filtering different components to finish with those two lists of types.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>TArray<span style="color:#f92672">&lt;</span>AST<span style="color:#f92672">::</span>Id<span style="color:#f92672">&gt;</span> classes, structs;
+</span></span><span style="display:flex;"><span>AST<span style="color:#f92672">::</span>Hierarchy<span style="color:#f92672">::</span>GetChildren(ast, moduleId, classes);
+</span></span><span style="display:flex;"><span>AST<span style="color:#f92672">::</span>RemoveIfNot<span style="color:#f92672">&lt;</span>CType<span style="color:#f92672">&gt;</span>(ast, classes);
+</span></span><span style="display:flex;"><span>structs <span style="color:#f92672">=</span> classes;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>AST<span style="color:#f92672">::</span>RemoveIfNot<span style="color:#f92672">&lt;</span>CClassDecl<span style="color:#f92672">&gt;</span>(ast, classes);
+</span></span><span style="display:flex;"><span>AST<span style="color:#f92672">::</span>RemoveIfNot<span style="color:#f92672">&lt;</span>CStructDecl<span style="color:#f92672">&gt;</span>(ast, structs);
+</span></span></code></pre></div><p>As you can see, it is filtering different components to finish with those two lists of types.</p>
 <p>It also shows how filtering can also be done directly from the world (ast in the example) without an access. You wont get the benefit of cached pools, but it will still be really fast to iterate: <br>
 <code>ListAll&lt;Types&gt;(world)</code> <code>RemoveIf&lt;Types&gt;(world, ids)</code> <code>RemoveIfNot&lt;Types&gt;(world, ids)</code></p>
 <h2 id="performance">Performance</h2>
@@ -461,7 +461,7 @@ They still lack context about our use-case and need to solve every problem just 
 
     
 
-<a href="https://youtu.be/rX0ItVEVjHc?t=1830"  >CppCon 2014: Mike Acton &ldquo;Data-Oriented Design and C++&quot;</a></li>
+<a href="https://youtu.be/rX0ItVEVjHc?t=1830"  >CppCon 2014: Mike Acton &ldquo;Data-Oriented Design and C++&rdquo;</a></li>
 <li>
 
 

@@ -1,389 +1,113 @@
-<!doctype html><html lang=en>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="ie=edge">
-<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
-<meta name=author content>
-<meta name=description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
- Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type).">
-<meta name=keywords content>
-<meta name=robots content="noodp">
-<meta name=theme-color content>
-<link rel=canonical href=https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/>
-<title>
-A new approach to ECS APIs :: Miguel Fernandez — Game systems programmer
-</title>
-<link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css rel=stylesheet type=text/css>
-<link rel=stylesheet href=/drafts/main.1c3fb6dc8092adbcaaed4b9b4e1abb720132e31e26691d6ed2ffdc8f66ac9653.css>
-<meta itemprop=name content="A new approach to ECS APIs">
-<meta itemprop=description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
- Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type)."><meta itemprop=datePublished content="2022-02-10T00:00:00+00:00">
-<meta itemprop=dateModified content="2022-02-10T00:00:00+00:00">
-<meta itemprop=wordCount content="1860"><meta itemprop=image content="https://muit.xyz/drafts">
-<meta itemprop=keywords content>
-<meta name=twitter:card content="summary_large_image">
-<meta name=twitter:image content="https://muit.xyz/drafts">
-<meta name=twitter:title content="A new approach to ECS APIs">
-<meta name=twitter:description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
- Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type).">
-<meta property="og:title" content="A new approach to ECS APIs">
-<meta property="og:description" content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
- Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type).">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/"><meta property="og:image" content="https://muit.xyz/drafts"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2022-02-10T00:00:00+00:00">
-<meta property="article:modified_time" content="2022-02-10T00:00:00+00:00"><meta property="og:site_name" content="Miguel Fernandez">
-<meta property="article:published_time" content="2022-02-10 00:00:00 +0000 UTC">
-</head>
-<body class=dark-theme>
-<div class=container>
-<header class=header>
-<span class=header__inner>
-<a href=/ style=text-decoration:none>
-<div class=logo>
-<span class=logo__mark>></span>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
+Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type)."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/><title>A new approach to ECS APIs :: Miguel Fernandez — Game systems programmer</title><link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css rel=stylesheet type=text/css><link rel=stylesheet href=/drafts/main.1c3fb6dc8092adbcaaed4b9b4e1abb720132e31e26691d6ed2ffdc8f66ac9653.css><meta itemprop=name content="A new approach to ECS APIs"><meta itemprop=description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
+Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type)."><meta itemprop=datePublished content="2022-02-10T00:00:00+00:00"><meta itemprop=dateModified content="2022-02-10T00:00:00+00:00"><meta itemprop=wordCount content="1860"><meta itemprop=image content="https://muit.xyz/drafts"><meta itemprop=keywords content><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://muit.xyz/drafts"><meta name=twitter:title content="A new approach to ECS APIs"><meta name=twitter:description content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
+Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type)."><meta property="og:title" content="A new approach to ECS APIs"><meta property="og:description" content="Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data. What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
+Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type)."><meta property="og:type" content="article"><meta property="og:url" content="https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/"><meta property="og:image" content="https://muit.xyz/drafts"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-02-10T00:00:00+00:00"><meta property="article:modified_time" content="2022-02-10T00:00:00+00:00"><meta property="og:site_name" content="Miguel Fernandez"><meta property="article:published_time" content="2022-02-10 00:00:00 +0000 UTC"></head><body class=dark-theme><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>Miguel Fernandez</span>
-<span class=logo__cursor>
-</span>
-</div>
-</a>
-<span class=header__right>
-<nav class=menu>
-<ul class=menu__inner><li><a href=/drafts/drafts/about>About</a></li><li><a href=/drafts/drafts/posts>Posts</a></li>
-</ul>
-</nav>
-<span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-</span>
-<span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 41c10.4934.0 19-8.5066 19-19C41 11.5066 32.4934 3 22 3 11.5066 3 3 11.5066 3 22s8.5066 19 19 19zM7 22C7 13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22z"/></svg>
-</span>
-</span>
-</span>
-</header>
-<div class=content>
-<main class=post>
-<div class=post-info>
-<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-9 minutes
-</p>
-</div>
-<article>
-<h1 class=post-title>
-<a href=https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/>A new approach to ECS APIs</a>
-</h1>
-<div class=post-content>
-<img style=width:100% src=/img/covers/patterns.png>
-<br>
-Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.
-<h1 id=what-is-ecs-you-ask>What is ECS you ask?</h1>
-<p>Fair question! <strong>ECS</strong> (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:</p>
-<ul>
-<li><strong>Entities</strong>: They are just an identifier and don’t hold any data.</li>
-<li><strong>Components</strong>: Structs of data associated with a single entity (1 entity can have 1 component of each type). They don’t have any code/logic.</li>
-<li><strong>Systems</strong>: Functions executed operating entities and components.</li>
-</ul>
-<p>I could explain ECS in greater detail, but there are plenty of resources online already that will do a better job than me.
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/drafts/about>About</a></li><li><a href=/drafts/posts>Posts</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span><span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 41c10.4934.0 19-8.5066 19-19C41 11.5066 32.4934 3 22 3 11.5066 3 3 11.5066 3 22s8.5066 19 19 19zM7 22C7 13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>9 minutes</p></div><article><h1 class=post-title><a href=https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/>A new approach to ECS APIs</a></h1><div class=post-content><img style=width:100% src=/img/covers/patterns.png><br>Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.<h1 id=what-is-ecs-you-ask>What is ECS you ask?</h1><p>Fair question! <strong>ECS</strong> (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:</p><ul><li><strong>Entities</strong>: They are just an identifier and don’t hold any data.</li><li><strong>Components</strong>: Structs of data associated with a single entity (1 entity can have 1 component of each type). They don’t have any code/logic.</li><li><strong>Systems</strong>: Functions executed operating entities and components.</li></ul><p>I could explain ECS in greater detail, but there are plenty of resources online already that will do a better job than me.
 <a href="https://www.youtube.com/watch?v=0_Byw9UMn9g">This talk</a> is a good start, and for more resources, you can also
-<a href=https://github.com/SanderMertens/ecs-faq>read this</a>.</p>
-<p>I personally also like to consider <strong>Utilities</strong> as the forth secret child of ECS.
-Utilities are functions that can be reused between systems. Any code that is not part of a system is a utility. One example could be <em>hierarchy</em> where we can <em>add, remove, or transfer children from entities</em> from multiple systems.</p>
-<h1 id=current-approach-to-ecs-apis>Current approach to ECS APIs</h1>
-<p>Now that we know what ECS is and the basics of how it works, let&rsquo;s talk about how we could improve it.</p>
-<p>In most ECS libraries I have used so far, there is always the concept of a <strong>view</strong>, or a <strong>filter</strong>.
-This is a tool that allows fast iteration of entities following a set of conditions. You can say, for example, &ldquo;iterate all entities with &lsquo;Player&rsquo; and &lsquo;Movement&rsquo; components, but ignore those with &lsquo;Frozen&rsquo; component&rdquo;.</p>
-<p>Implementation details may differ, but I will be using using the popular library <strong>entt</strong> as an example (it&rsquo;s great, check it out). In this library, a “view” caches pools from the world when it is created, and uses them to check for entities matching some included and excluded components.</p>
-<h3 id=problems-sharing-code>Problems sharing code</h3>
-<p>So lets make an example with <strong>entt</strong> where we move agents (a system):</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveAgents</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
-{
-	<span style=color:#75715e>// We create a view matching all agents with movement and transform components
-</span><span style=color:#75715e></span>	<span style=color:#66d9ef>auto</span> view <span style=color:#f92672>=</span> registry.view<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Agent, <span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span>();
-	<span style=color:#75715e>// We iterate all entities in the view
-</span><span style=color:#75715e></span>	<span style=color:#66d9ef>for</span>(Id entity : view)
-	{
-		<span style=color:#75715e>// We get components and apply position based on velocity
-</span><span style=color:#75715e></span>		<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
-		<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
-		transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
-	}
-}
-</code></pre></div><p>Okay, so far, we are just fine.
-But what if we have props that can move? But only when they are enabled.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
-{
-	<span style=color:#66d9ef>auto</span> view <span style=color:#f92672>=</span> registry.view<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop, <span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span>();
-	<span style=color:#66d9ef>for</span>(Id entity : view)
-	{
-		<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> prop <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop<span style=color:#f92672>&gt;</span>(entity);
-		<span style=color:#66d9ef>if</span> (prop.isEnabled)
-		{
-			<span style=color:#75715e>// Can we reuse this?
-</span><span style=color:#75715e></span>			<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
-			<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
-			transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
-		}
-	}
-}
-</code></pre></div><p>Well, we get some duplicated code, we could export this into a utility. But how?</p>
-<p>If we wanted to share code as utilities, we would be extremely limited, specially if we want to track which data we are reading and writing, which is crucial for scheduling (more on that later).</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#75715e>// We could use references, but it&#39;s not very practical since we need to get the components outside anyway
-</span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(<span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&amp;</span> movement, Transform<span style=color:#f92672>&amp;</span> transform, <span style=color:#66d9ef>float</span> deltaTime)
-{
-	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
-}
-
-<span style=color:#75715e>// We could pass the registry, but then we lose the fast access to pools from views.
-</span><span style=color:#75715e>// Also, we do not know from outside which components we are reading and writing
-</span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
-{
-	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> registry.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity); <span style=color:#75715e>// Accessing component directly through world is slow
-</span><span style=color:#75715e></span>	<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> registry.get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
-	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
-}
-
-<span style=color:#75715e>// We could pass the view as a template parameter.
-</span><span style=color:#75715e>// But templates need to be declared where they are used, meaning all shared functions will need to be most likely on a header.
-</span><span style=color:#75715e>// To that, you add different views for the same function, and you get slower compile times.
-</span><span style=color:#75715e>// Outside of templates, Views also are not intended to control access, and they can not do all the things you can do with the world.
-</span><span style=color:#75715e></span><span style=color:#66d9ef>template</span><span style=color:#f92672>&lt;</span><span style=color:#66d9ef>typename</span> View<span style=color:#f92672>&gt;</span>
-<span style=color:#66d9ef>void</span> ApplyMovement(View view, <span style=color:#66d9ef>float</span> deltaTime)
-{
-	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
-	<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
-	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
-}
-</code></pre></div><p>Along with the problems sharing code (utilities) between systems, you will also have a really hard time tracking dependencies as your project grows if you want to do any sort of scheduling.</p>
-<h3 id=problems-scheduling>Problems scheduling</h3>
-<p>As I mentioned in the previous step, scheduling is a huge problem, and we should simplify it.</p>
-<p>Scheduling helps us organize hundreds of system functions to execute safely in multithreading. To achieve that, we need to know where we read and modify components:</p>
-<ul>
-<li>We can safely <strong>read</strong> components of the same type from many threads at the same time.</li>
-<li>We can&rsquo;t safely <strong>read</strong> components of the same type <strong>while</strong> any other thread is <strong>writing</strong> them.</li>
-</ul>
-<p>We can, of course, schedule by hand, but this quickly becomes unmaintainable. That&rsquo;s why there are many ways to automate it. But, as I said, you need to be able to know what you are doing inside a function from outside, or this won&rsquo;t be possible.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#75715e>// If we pass around the registry, we don&#39;t know our dependencies
-</span><span style=color:#75715e>// We don&#39;t know which components this function is accessing and modifying
-</span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime) {}
-</code></pre></div><h3 id=problems-controlling-data-flow>Problems controlling data-flow</h3>
-<p>One of the points of DOD is that all code serves a single purpose: It converts data (input) into other data (output). “It&rsquo;s all about the data.”</p>
-<p>Having a view that we mostly only iterate is limiting us if we want to do proper algorithms where we use multiple steps to (efficiently) operate data.</p>
-<h1 id=fixing-the-problems>Fixing the problems</h1>
-<p>Lets see what we need:</p>
-<ul>
-<li>We need to be able to <strong>easily</strong> share code</li>
-<li>We need to express dependencies when reading and writing components, allowing us to schedule</li>
-<li>We need to be able to apply complex data flows, allowing more cache and cpu friendly code</li>
-<li>It has to be blazing fast</li>
-<li>Errors must be <strong>simple</strong> and straight forward <em>&mldr;proceeds to look at templates with disapproval</em></li>
-</ul>
-<p>I experimented with a solution to this for a while and ended up implementing it in
+<a href=https://github.com/SanderMertens/ecs-faq>read this</a>.</p><p>I personally also like to consider <strong>Utilities</strong> as the forth secret child of ECS.
+Utilities are functions that can be reused between systems. Any code that is not part of a system is a utility. One example could be <em>hierarchy</em> where we can <em>add, remove, or transfer children from entities</em> from multiple systems.</p><h1 id=current-approach-to-ecs-apis>Current approach to ECS APIs</h1><p>Now that we know what ECS is and the basics of how it works, let&rsquo;s talk about how we could improve it.</p><p>In most ECS libraries I have used so far, there is always the concept of a <strong>view</strong>, or a <strong>filter</strong>.
+This is a tool that allows fast iteration of entities following a set of conditions. You can say, for example, &ldquo;iterate all entities with &lsquo;Player&rsquo; and &lsquo;Movement&rsquo; components, but ignore those with &lsquo;Frozen&rsquo; component&rdquo;.</p><p>Implementation details may differ, but I will be using using the popular library <strong>entt</strong> as an example (it&rsquo;s great, check it out). In this library, a “view” caches pools from the world when it is created, and uses them to check for entities matching some included and excluded components.</p><h3 id=problems-sharing-code>Problems sharing code</h3><p>So lets make an example with <strong>entt</strong> where we move agents (a system):</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveAgents</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// We create a view matching all agents with movement and transform components
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>auto</span> view <span style=color:#f92672>=</span> registry.view<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Agent, <span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span>();
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// We iterate all entities in the view
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>for</span>(Id entity : view)
+</span></span><span style=display:flex><span>	{
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// We get components and apply position based on velocity
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>		<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>		transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Okay, so far, we are just fine.
+But what if we have props that can move? But only when they are enabled.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>auto</span> view <span style=color:#f92672>=</span> registry.view<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop, <span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span>();
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(Id entity : view)
+</span></span><span style=display:flex><span>	{
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> prop <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> (prop.isEnabled)
+</span></span><span style=display:flex><span>		{
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// Can we reuse this?
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>			transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Well, we get some duplicated code, we could export this into a utility. But how?</p><p>If we wanted to share code as utilities, we would be extremely limited, specially if we want to track which data we are reading and writing, which is crucial for scheduling (more on that later).</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#75715e>// We could use references, but it&#39;s not very practical since we need to get the components outside anyway
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(<span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&amp;</span> movement, Transform<span style=color:#f92672>&amp;</span> transform, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// We could pass the registry, but then we lose the fast access to pools from views.
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// Also, we do not know from outside which components we are reading and writing
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> registry.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity); <span style=color:#75715e>// Accessing component directly through world is slow
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> registry.get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// We could pass the view as a template parameter.
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// But templates need to be declared where they are used, meaning all shared functions will need to be most likely on a header.
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// To that, you add different views for the same function, and you get slower compile times.
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// Outside of templates, Views also are not intended to control access, and they can not do all the things you can do with the world.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>template</span><span style=color:#f92672>&lt;</span><span style=color:#66d9ef>typename</span> View<span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> ApplyMovement(View view, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> view.get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Along with the problems sharing code (utilities) between systems, you will also have a really hard time tracking dependencies as your project grows if you want to do any sort of scheduling.</p><h3 id=problems-scheduling>Problems scheduling</h3><p>As I mentioned in the previous step, scheduling is a huge problem, and we should simplify it.</p><p>Scheduling helps us organize hundreds of system functions to execute safely in multithreading. To achieve that, we need to know where we read and modify components:</p><ul><li>We can safely <strong>read</strong> components of the same type from many threads at the same time.</li><li>We can&rsquo;t safely <strong>read</strong> components of the same type <strong>while</strong> any other thread is <strong>writing</strong> them.</li></ul><p>We can, of course, schedule by hand, but this quickly becomes unmaintainable. That&rsquo;s why there are many ways to automate it. But, as I said, you need to be able to know what you are doing inside a function from outside, or this won&rsquo;t be possible.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#75715e>// If we pass around the registry, we don&#39;t know our dependencies
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// We don&#39;t know which components this function is accessing and modifying
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(entt<span style=color:#f92672>::</span>registry<span style=color:#f92672>&amp;</span> registry, <span style=color:#66d9ef>float</span> deltaTime) {}
+</span></span></code></pre></div><h3 id=problems-controlling-data-flow>Problems controlling data-flow</h3><p>One of the points of DOD is that all code serves a single purpose: It converts data (input) into other data (output). “It&rsquo;s all about the data.”</p><p>Having a view that we mostly only iterate is limiting us if we want to do proper algorithms where we use multiple steps to (efficiently) operate data.</p><h1 id=fixing-the-problems>Fixing the problems</h1><p>Lets see what we need:</p><ul><li>We need to be able to <strong>easily</strong> share code</li><li>We need to express dependencies when reading and writing components, allowing us to schedule</li><li>We need to be able to apply complex data flows, allowing more cache and cpu friendly code</li><li>It has to be blazing fast</li><li>Errors must be <strong>simple</strong> and straight forward <em>&mldr;proceeds to look at templates with disapproval</em></li></ul><p>I experimented with a solution to this for a while and ended up implementing it in
 <a href=https://github.com/PipeRift/rift><strong>Rift</strong></a>.
-This solution I came up with solves all the points above, so let&rsquo;s have a look rebuilding the previous examples with it:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#75715e>// We pass an Access with the types we can write, and those we can only read (const)
-</span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(TAccess<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop, <span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span> access, <span style=color:#66d9ef>float</span> deltaTime)
-{
-	<span style=color:#66d9ef>for</span>(Id entity : ListAll<span style=color:#f92672>&lt;</span>Prop, Movement, Transform<span style=color:#f92672>&gt;</span>(access))
-	{
-		<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> prop <span style=color:#f92672>=</span> access.Get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop<span style=color:#f92672>&gt;</span>(entity);
-		<span style=color:#66d9ef>if</span> (prop.isEnabled)
-		{
-			<span style=color:#75715e>// Can we reuse this? Yes
-</span><span style=color:#75715e></span>			<span style=color:#75715e>//const auto&amp; movement = access.Get&lt;const Movement&gt;(entity);
-</span><span style=color:#75715e></span>			<span style=color:#75715e>//auto&amp; transform = access.Get&lt;Transform&gt;(entity);
-</span><span style=color:#75715e></span>			<span style=color:#75715e>//transform.position += movement.velocity * deltaTime;
-</span><span style=color:#75715e></span>
-			<span style=color:#75715e>// So, lets reuse it
-</span><span style=color:#75715e></span>			ApplyMovement(access, entity, deltaTime);
-		}
-	}
-}
-
-<span style=color:#75715e>// The parent access (MoveProps) must have these components.
-</span><span style=color:#75715e>// If it doesn&#39;t, we will get proper errors telling us what&#39;s missing.
-</span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(TAccess<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span> access, Id entity, <span style=color:#66d9ef>float</span> deltaTime)
-{
-	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> access.Get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
-	<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> access.Get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
-	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
-}
-</code></pre></div><h3 id=access>Access</h3>
-<p>A access represents a set of components for efficient access and dependency tracking. It also can’t be directly iterated (by design). We have other tools for that.</p>
-<ul>
-<li>It is very cheap to copy (only a pool pointer copy for each component type)</li>
-<li>It provides instant access into component pools</li>
-<li>Extremely simpler and less template-heavy than views</li>
-<li>Can be constructed implicitly from the ECS world or other bigger accesses.</li>
-</ul>
-<p>Access can have two flavors. Compile-time assisted <code>TAccess&lt;Types></code> or runtime based <code>Access</code></p>
-<p>It also makes sense to pass them as const reference to functions. They are cheap to copy yes, but we might not need to do it at all. That&rsquo;s why I added an alias <code>TAccessRef&lt;Types></code> which is essentially the same as <code>const TAccess&lt;Types>&</code>. It&rsquo;s just easier to write.</p>
-<h3 id=filtering-entities>Filtering entities</h3>
-<p>If a access can&rsquo;t iterate on its own, how do we do it?</p>
-<p>Iteration is done by creating and modifying lists of ids:</p>
-<ul>
-<li><code>ListAll&lt;Types>(access)</code>: Returns all entity ids containing all the provided components.</li>
-<li><code>ListAny&lt;Types>(access)</code>: Returns all entity ids containing at least one of the provided components</li>
-</ul>
-<p>Then we can also apply new filters like excluding components:</p>
-<ul>
-<li><code>RemoveIf&lt;Types>(access, ids)</code>: Exclude entities not having a component</li>
-<li><code>RemoveIfNot&lt;Types>(access, ids)</code>: Exclude entities having a component</li>
-</ul>
-<p>It should be mentioned that these functions don&rsquo;t ensure the order is kept by default (for performance), but we can use their counterparts for that:</p>
-<ul>
-<li><code>RemoveIfStable&lt;Types>(access, ids)</code>: Exclude entities not having a component</li>
-<li><code>RemoveIfNotStable&lt;Types>(access, ids)</code>: Exclude entities having a component</li>
-</ul>
-<p>The potential of this is that we are just operating a list of indexes, and we are not limited by the functions above on what we can do. Its just &ldquo;filtering&rdquo; lists of ids.</p>
-<p>One example could be in
-<a href=https://github.com/PipeRift/rift>Rift</a>, where the compiler precaches two lists, one for classes and one for structs:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp>TArray<span style=color:#f92672>&lt;</span>AST<span style=color:#f92672>::</span>Id<span style=color:#f92672>&gt;</span> classes, structs;
-AST<span style=color:#f92672>::</span>Hierarchy<span style=color:#f92672>::</span>GetChildren(ast, moduleId, classes);
-AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;</span>CType<span style=color:#f92672>&gt;</span>(ast, classes);
-structs <span style=color:#f92672>=</span> classes;
-
-AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;</span>CClassDecl<span style=color:#f92672>&gt;</span>(ast, classes);
-AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;</span>CStructDecl<span style=color:#f92672>&gt;</span>(ast, structs);
-</code></pre></div><p>As you can see, it is filtering different components to finish with those two lists of types.</p>
-<p>It also shows how filtering can also be done directly from the world (ast in the example) without an access. You wont get the benefit of cached pools, but it will still be really fast to iterate: <br>
-<code>ListAll&lt;Types>(world)</code> <code>RemoveIf&lt;Types>(world, ids)</code> <code>RemoveIfNot&lt;Types>(world, ids)</code></p>
-<h2 id=performance>Performance</h2>
-<p>I mentioned many reasons why this style of API is attractive, but there is another one. It is fast.</p>
-<p>When I implemented accesses for
-<a href=https://github.com/PipeRift/rift><strong>Rift</strong></a>, I already had filters (very similar to entt’s views). So I took the chance to do a one to one comparison with the following results:</p>
-<p>In <strong>debug</strong> access filtering gets up to 3 times faster iterating than views.</p>
-<p><img src=/img/ecs-access-debug.png alt="Access in Debug"></p>
-<p>While in <strong>release</strong> the difference is tighter, between 35% to 50% faster in most runs.</p>
-<p><img src=/img/ecs-access-release.png alt="Access in Release"></p>
-<p>Should be noted that this benchmark runs an empty iteration loop. For views, this means their pool checks are very close in execution. In other words, it is their <strong>ideal scenario</strong>. It is unrealistically in their favor. However, they seem to run slower. Why is that?</p>
-<h3 id=why-is-it-faster>Why is it faster?</h3>
-<p>Unlike views, accesses don&rsquo;t need to find their pools, again and again, every time they get created. Most of the time, a access is created from another, which is literally just copying the relevant pool pointers.</p>
-<p>However this is not where most of the performance benefit comes from.</p>
-<p>It comes from the fact that, while in views, each entity is checked at once against all the pools to filter, with <strong>ListAll</strong> all ids are checked pool after pool:</p>
-<p><strong>Views</strong></p>
-<ul>
-<li>Iterate all ids in smallest pool
-<ul>
-<li>Check that the id has components A, B, C</li>
-</ul>
-</li>
-</ul>
-<p><strong>Access Filtering</strong></p>
-<ul>
-<li>Get all ids from smallest pool</li>
-<li>Remove those that don&rsquo;t have component A</li>
-<li>Remove those that don&rsquo;t have component B</li>
-<li>Remove those that don&rsquo;t have component C</li>
-</ul>
-<p>This uses a single pool and its hash-set at a time, making it more cache-friendly.</p>
-<br>
-<p>I hope this post was not too dense. It is quite a specific topic, after all.</p>
-<p>Consider having a look at
-<a href=https://github.com/PipeRift/rift><strong>Rift</strong></a>. It would be incredibly helpful to get your ideas, feedback and/or code contributions!</p>
-</div>
-</article>
-<hr>
-<div class=post-info>
-<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-1860 Words
-</p>
-<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-2022-02-10 00:00
-</p>
-</div>
-<hr>
-<div class=sharing-buttons>
-<a class=resp-sharing-button__link href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on facebook">
-<div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on twitter">
-<div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
-<div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9.0 01-3.14 1.53 4.48 4.48.0 00-7.86 3v1A10.66 10.66.0 013 4s-4 9 5 13a11.64 11.64.0 01-7 2c9 5 20 0 20-11.5a4.5 4.5.0 00-.08-.83A7.72 7.72.0 0023 3z"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="https://www.tumblr.com/widgets/share/tool?posttype=link&title=A%20new%20approach%20to%20ECS%20APIs&caption=A%20new%20approach%20to%20ECS%20APIs&canonicalUrl=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on tumblr">
-<div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
-<div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093.0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941.0 9.999.0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="mailto:?subject=A%20new%20approach%20to%20ECS%20APIs&body=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_self rel=noopener aria-label title="Share via email">
-<div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f&media=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f;description=A%20new%20approach%20to%20ECS%20APIs" target=_blank rel=noopener aria-label title="Share on pinterest">
-<div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none"><path d="M12.017.0C5.396.0.029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024.0 1.518.769 1.518 1.688.0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128.0 3.768-2.245 3.768-5.487.0-2.861-2.063-4.869-5.008-4.869-3.41.0-5.409 2.562-5.409 5.199.0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646.0-3.776 2.748-7.252 7.92-7.252 4.158.0 7.392 2.967 7.392 6.923.0 4.135-2.607 7.462-6.233 7.462-1.214.0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607.0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017.0z"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f&title=A%20new%20approach%20to%20ECS%20APIs&summary=A%20new%20approach%20to%20ECS%20APIs&source=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on linkedin">
-<div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="https://reddit.com/submit/?url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f&resubmit=true&title=A%20new%20approach%20to%20ECS%20APIs" target=_blank rel=noopener aria-label title="Share on reddit">
-<div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none"><path d="M12 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm5.01 4.744c.688.0 1.25.561 1.25 1.249a1.25 1.25.0 01-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968.0 1.754.786 1.754 1.754.0.716-.435 1.333-1.01 1.614a3.111 3.111.0 01.042.52c0 2.694-3.13 4.87-7.004 4.87s-7.004-2.176-7.004-4.87c0-.183.015-.366.043-.534A1.748 1.748.0 014.028 12c0-.968.786-1.754 1.754-1.754.463.0.898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342.0 01.14-.197.35.35.0 01.238-.042l2.906.617a1.214 1.214.0 011.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687.0 1.248-.561 1.248-1.249S9.937 12 9.249 12zm5.5.0c-.687.0-1.248.561-1.248 1.25.0.687.561 1.248 1.249 1.248S16 13.937 16 13.249c0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327.0 00-.231.094.33.33.0 000 .463c.842.842 2.484.913 2.961.913s2.105-.056 2.961-.913a.361.361.0 00.029-.463.33.33.0 00-.464.0c-.547.533-1.684.73-2.512.73-.828.0-1.979-.196-2.512-.73a.326.326.0 00-.232-.095z"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f;title=A%20new%20approach%20to%20ECS%20APIs" target=_blank rel=noopener aria-label title="Share on xing">
-<div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none"><path d="M18.188.0c-.517.0-.741.325-.927.66.0.0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211.0.375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016.0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894.0 21.686.0h-3.498zM3.648 4.74c-.211.0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016.0.021L1.86 16.051c-.099.188-.093.381.0.529.085.142.239.234.45.234h3.461c.518.0.766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="whatsapp://send?text=A%20new%20approach%20to%20ECS%20APIs%20https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on whatsapp">
-<div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198.0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479.0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87.0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86.0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64.0 5.122 1.03 6.988 2.898a9.825 9.825.0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815.0 0012.05.0C5.495.0.16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882.0 005.683 1.448h.005c6.554.0 11.89-5.335 11.893-11.893a11.821 11.821.0 00-3.48-8.413z"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f&t=A%20new%20approach%20to%20ECS%20APIs" target=_blank rel=noopener aria-label title="Share on hacker news">
-<div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
-</div>
-</div>
-</a>
-<a class=resp-sharing-button__link href="https://telegram.me/share/url?text=A%20new%20approach%20to%20ECS%20APIs&url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on telegram">
-<div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-</div>
-</div>
-</a>
-</div>
-<div class=pagination>
-<div class=pagination__title>
-<span class=pagination__title-h>Read other posts</span>
-<hr>
-</div>
-<div class=pagination__buttons>
-<span class="button prev">
-<a href=https://muit.xyz/drafts/posts/2022/02/implementing-a-general-use-arena/>
-<span class=button__icon>←</span>
-<span class=button__text>Implementing a general-use arena</span>
-</a>
-</span>
-</div>
-</div>
-<script defer src=https://comments.piperift.com/js/commento.js data-css-override=/drafts/commento.033d34c6537c61b1d36519027ee02930e7fe12fd35809f2b5fa5b3a46db1f36e.css></script>
-<div id=commento></div>
-</main>
-</div>
-<footer class=footer>
-<div class=footer__inner>
-<div class=footer__content>
-<span>&copy; 2022</span>
-<span><a href=https://github.com/muit rel=noopener>Miguel Fernandez Arce</a></span><span><a href=https://muit.xyz/drafts/posts/index.xml target=_blank title=rss><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></span>
-</div>
-</div>
-<div class=footer__inner>
-<div class=footer__content>
-<span>Powered by <a href=http://gohugo.io>Hugo</a></span>
-<span>Theme by <a href=https://github.com/piperift>Piperift</a></span>
-</div>
-</div>
-</footer>
-</div>
-<script type=text/javascript src=/drafts/bundle.min.e4eeb1afde37a56e9880da2d2dae33164ac4e493a7c42ba475aca29672e1584151386a5cdbf8903e3221ea0fa6bd064c02032b79eabe57026aa727e4899ef432.js integrity="sha512-5O6xr943pW6YgNotLa4zFkrE5JOnxCukdayilnLhWEFROGpc2/iQPjIh6g+mvQZMAgMreeq+VwJqpyfkiZ70Mg=="></script>
+This solution I came up with solves all the points above, so let&rsquo;s have a look rebuilding the previous examples with it:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#75715e>// We pass an Access with the types we can write, and those we can only read (const)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>MoveProps</span>(TAccess<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop, <span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span> access, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(Id entity : ListAll<span style=color:#f92672>&lt;</span>Prop, Movement, Transform<span style=color:#f92672>&gt;</span>(access))
+</span></span><span style=display:flex><span>	{
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> prop <span style=color:#f92672>=</span> access.Get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Prop<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> (prop.isEnabled)
+</span></span><span style=display:flex><span>		{
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// Can we reuse this? Yes
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			<span style=color:#75715e>//const auto&amp; movement = access.Get&lt;const Movement&gt;(entity);
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			<span style=color:#75715e>//auto&amp; transform = access.Get&lt;Transform&gt;(entity);
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			<span style=color:#75715e>//transform.position += movement.velocity * deltaTime;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// So, lets reuse it
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			ApplyMovement(access, entity, deltaTime);
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// The parent access (MoveProps) must have these components.
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// If it doesn&#39;t, we will get proper errors telling us what&#39;s missing.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ApplyMovement</span>(TAccess<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement, Transform<span style=color:#f92672>&gt;</span> access, Id entity, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> movement <span style=color:#f92672>=</span> access.Get<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>const</span> Movement<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>auto</span><span style=color:#f92672>&amp;</span> transform <span style=color:#f92672>=</span> access.Get<span style=color:#f92672>&lt;</span>Transform<span style=color:#f92672>&gt;</span>(entity);
+</span></span><span style=display:flex><span>	transform.position <span style=color:#f92672>+=</span> movement.velocity <span style=color:#f92672>*</span> deltaTime;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=access>Access</h3><p>A access represents a set of components for efficient access and dependency tracking. It also can’t be directly iterated (by design). We have other tools for that.</p><ul><li>It is very cheap to copy (only a pool pointer copy for each component type)</li><li>It provides instant access into component pools</li><li>Extremely simpler and less template-heavy than views</li><li>Can be constructed implicitly from the ECS world or other bigger accesses.</li></ul><p>Access can have two flavors. Compile-time assisted <code>TAccess&lt;Types></code> or runtime based <code>Access</code></p><p>It also makes sense to pass them as const reference to functions. They are cheap to copy yes, but we might not need to do it at all. That&rsquo;s why I added an alias <code>TAccessRef&lt;Types></code> which is essentially the same as <code>const TAccess&lt;Types>&</code>. It&rsquo;s just easier to write.</p><h3 id=filtering-entities>Filtering entities</h3><p>If a access can&rsquo;t iterate on its own, how do we do it?</p><p>Iteration is done by creating and modifying lists of ids:</p><ul><li><code>ListAll&lt;Types>(access)</code>: Returns all entity ids containing all the provided components.</li><li><code>ListAny&lt;Types>(access)</code>: Returns all entity ids containing at least one of the provided components</li></ul><p>Then we can also apply new filters like excluding components:</p><ul><li><code>RemoveIf&lt;Types>(access, ids)</code>: Exclude entities not having a component</li><li><code>RemoveIfNot&lt;Types>(access, ids)</code>: Exclude entities having a component</li></ul><p>It should be mentioned that these functions don&rsquo;t ensure the order is kept by default (for performance), but we can use their counterparts for that:</p><ul><li><code>RemoveIfStable&lt;Types>(access, ids)</code>: Exclude entities not having a component</li><li><code>RemoveIfNotStable&lt;Types>(access, ids)</code>: Exclude entities having a component</li></ul><p>The potential of this is that we are just operating a list of indexes, and we are not limited by the functions above on what we can do. Its just &ldquo;filtering&rdquo; lists of ids.</p><p>One example could be in
+<a href=https://github.com/PipeRift/rift>Rift</a>, where the compiler precaches two lists, one for classes and one for structs:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=display:flex><span>TArray<span style=color:#f92672>&lt;</span>AST<span style=color:#f92672>::</span>Id<span style=color:#f92672>&gt;</span> classes, structs;
+</span></span><span style=display:flex><span>AST<span style=color:#f92672>::</span>Hierarchy<span style=color:#f92672>::</span>GetChildren(ast, moduleId, classes);
+</span></span><span style=display:flex><span>AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;</span>CType<span style=color:#f92672>&gt;</span>(ast, classes);
+</span></span><span style=display:flex><span>structs <span style=color:#f92672>=</span> classes;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;</span>CClassDecl<span style=color:#f92672>&gt;</span>(ast, classes);
+</span></span><span style=display:flex><span>AST<span style=color:#f92672>::</span>RemoveIfNot<span style=color:#f92672>&lt;</span>CStructDecl<span style=color:#f92672>&gt;</span>(ast, structs);
+</span></span></code></pre></div><p>As you can see, it is filtering different components to finish with those two lists of types.</p><p>It also shows how filtering can also be done directly from the world (ast in the example) without an access. You wont get the benefit of cached pools, but it will still be really fast to iterate:<br><code>ListAll&lt;Types>(world)</code> <code>RemoveIf&lt;Types>(world, ids)</code> <code>RemoveIfNot&lt;Types>(world, ids)</code></p><h2 id=performance>Performance</h2><p>I mentioned many reasons why this style of API is attractive, but there is another one. It is fast.</p><p>When I implemented accesses for
+<a href=https://github.com/PipeRift/rift><strong>Rift</strong></a>, I already had filters (very similar to entt’s views). So I took the chance to do a one to one comparison with the following results:</p><p>In <strong>debug</strong> access filtering gets up to 3 times faster iterating than views.</p><p><img src=/img/ecs-access-debug.png alt="Access in Debug"></p><p>While in <strong>release</strong> the difference is tighter, between 35% to 50% faster in most runs.</p><p><img src=/img/ecs-access-release.png alt="Access in Release"></p><p>Should be noted that this benchmark runs an empty iteration loop. For views, this means their pool checks are very close in execution. In other words, it is their <strong>ideal scenario</strong>. It is unrealistically in their favor. However, they seem to run slower. Why is that?</p><h3 id=why-is-it-faster>Why is it faster?</h3><p>Unlike views, accesses don&rsquo;t need to find their pools, again and again, every time they get created. Most of the time, a access is created from another, which is literally just copying the relevant pool pointers.</p><p>However this is not where most of the performance benefit comes from.</p><p>It comes from the fact that, while in views, each entity is checked at once against all the pools to filter, with <strong>ListAll</strong> all ids are checked pool after pool:</p><p><strong>Views</strong></p><ul><li>Iterate all ids in smallest pool<ul><li>Check that the id has components A, B, C</li></ul></li></ul><p><strong>Access Filtering</strong></p><ul><li>Get all ids from smallest pool</li><li>Remove those that don&rsquo;t have component A</li><li>Remove those that don&rsquo;t have component B</li><li>Remove those that don&rsquo;t have component C</li></ul><p>This uses a single pool and its hash-set at a time, making it more cache-friendly.</p><br><p>I hope this post was not too dense. It is quite a specific topic, after all.</p><p>Consider having a look at
+<a href=https://github.com/PipeRift/rift><strong>Rift</strong></a>. It would be incredibly helpful to get your ideas, feedback and/or code contributions!</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>1860 Words</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>2022-02-10 00:00</p></div><hr><div class=sharing-buttons><a class=resp-sharing-button__link href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on facebook"><div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on twitter"><div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9.0 01-3.14 1.53 4.48 4.48.0 00-7.86 3v1A10.66 10.66.0 013 4s-4 9 5 13a11.64 11.64.0 01-7 2c9 5 20 0 20-11.5a4.5 4.5.0 00-.08-.83A7.72 7.72.0 0023 3z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://www.tumblr.com/widgets/share/tool?posttype=link&title=A%20new%20approach%20to%20ECS%20APIs&caption=A%20new%20approach%20to%20ECS%20APIs&canonicalUrl=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on tumblr"><div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093.0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941.0 9.999.0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg></div></div></a><a class=resp-sharing-button__link href="mailto:?subject=A%20new%20approach%20to%20ECS%20APIs&body=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_self rel=noopener aria-label title="Share via email"><div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div></div></a><a class=resp-sharing-button__link href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f&media=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f;description=A%20new%20approach%20to%20ECS%20APIs" target=_blank rel=noopener aria-label title="Share on pinterest"><div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none"><path d="M12.017.0C5.396.0.029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024.0 1.518.769 1.518 1.688.0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128.0 3.768-2.245 3.768-5.487.0-2.861-2.063-4.869-5.008-4.869-3.41.0-5.409 2.562-5.409 5.199.0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646.0-3.776 2.748-7.252 7.92-7.252 4.158.0 7.392 2.967 7.392 6.923.0 4.135-2.607 7.462-6.233 7.462-1.214.0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607.0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017.0z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f&title=A%20new%20approach%20to%20ECS%20APIs&summary=A%20new%20approach%20to%20ECS%20APIs&source=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on linkedin"><div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div></div></a><a class=resp-sharing-button__link href="https://reddit.com/submit/?url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f&resubmit=true&title=A%20new%20approach%20to%20ECS%20APIs" target=_blank rel=noopener aria-label title="Share on reddit"><div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none"><path d="M12 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm5.01 4.744c.688.0 1.25.561 1.25 1.249a1.25 1.25.0 01-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968.0 1.754.786 1.754 1.754.0.716-.435 1.333-1.01 1.614a3.111 3.111.0 01.042.52c0 2.694-3.13 4.87-7.004 4.87s-7.004-2.176-7.004-4.87c0-.183.015-.366.043-.534A1.748 1.748.0 014.028 12c0-.968.786-1.754 1.754-1.754.463.0.898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342.0 01.14-.197.35.35.0 01.238-.042l2.906.617a1.214 1.214.0 011.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687.0 1.248-.561 1.248-1.249S9.937 12 9.249 12zm5.5.0c-.687.0-1.248.561-1.248 1.25.0.687.561 1.248 1.249 1.248S16 13.937 16 13.249c0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327.0 00-.231.094.33.33.0 000 .463c.842.842 2.484.913 2.961.913s2.105-.056 2.961-.913a.361.361.0 00.029-.463.33.33.0 00-.464.0c-.547.533-1.684.73-2.512.73-.828.0-1.979-.196-2.512-.73a.326.326.0 00-.232-.095z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f;title=A%20new%20approach%20to%20ECS%20APIs" target=_blank rel=noopener aria-label title="Share on xing"><div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none"><path d="M18.188.0c-.517.0-.741.325-.927.66.0.0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211.0.375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016.0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894.0 21.686.0h-3.498zM3.648 4.74c-.211.0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016.0.021L1.86 16.051c-.099.188-.093.381.0.529.085.142.239.234.45.234h3.461c.518.0.766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg></div></div></a><a class=resp-sharing-button__link href="whatsapp://send?text=A%20new%20approach%20to%20ECS%20APIs%20https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on whatsapp"><div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198.0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479.0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87.0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86.0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64.0 5.122 1.03 6.988 2.898a9.825 9.825.0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815.0 0012.05.0C5.495.0.16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882.0 005.683 1.448h.005c6.554.0 11.89-5.335 11.893-11.893a11.821 11.821.0 00-3.48-8.413z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f&t=A%20new%20approach%20to%20ECS%20APIs" target=_blank rel=noopener aria-label title="Share on hacker news"><div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://telegram.me/share/url?text=A%20new%20approach%20to%20ECS%20APIs&url=https%3a%2f%2fmuit.xyz%2fdrafts%2fposts%2f2022%2f02%2fa-new-approach-to-ecs-apis%2f" target=_blank rel=noopener aria-label title="Share on telegram"><div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div></div></a></div><div class=pagination><div class=pagination__title><span class=pagination__title-h>Read other posts</span><hr></div><div class=pagination__buttons><span class="button prev"><a href=https://muit.xyz/drafts/posts/2022/02/implementing-a-general-use-arena/><span class=button__icon>←</span>
+<span class=button__text>Implementing a general-use arena</span></a></span></div></div><script defer src=https://comments.piperift.com/js/commento.js data-css-override=/drafts/commento.033d34c6537c61b1d36519027ee02930e7fe12fd35809f2b5fa5b3a46db1f36e.css></script><div id=commento></div></main></div><footer class=footer><div class=footer__inner><div class=footer__content><span>&copy; 2022</span>
+<span><a href=https://github.com/muit rel=noopener>Miguel Fernandez Arce</a></span><span><a href=https://muit.xyz/drafts/posts/index.xml target=_blank title=rss><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></span></div></div><div class=footer__inner><div class=footer__content><span>Powered by <a href=http://gohugo.io>Hugo</a></span>
+<span>Theme by <a href=https://github.com/piperift>Piperift</a></span></div></div></footer></div><script type=text/javascript src=/drafts/bundle.min.694c3b56caa7fe84821f8924710978926c83cdecf81ee09508f2fb507ee6efd3a5d048d8c711e29821ce83a5f76fe3471592e3ac458a915f29585d8571087f45.js integrity="sha512-aUw7Vsqn/oSCH4kkcQl4kmyDzez4HuCVCPL7UH7m79Ol0EjYxxHimCHOg6X3b+NHFZLjrEWKkV8pWF2FcQh/RQ=="></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D66MJWXCKK"></script>
-<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-D66MJWXCKK',{anonymize_ip:!1})}</script>
-</body>
-</html>
+<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-D66MJWXCKK",{anonymize_ip:!1})}</script></body></html>
