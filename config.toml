@@ -11,10 +11,10 @@ copyright = "<a href=\"https://github.com/muit\" rel=\"noopener\">Miguel Fernand
 keywords = ""
 readOtherPosts = "Read other posts"
 subtitle = "Game systems programmer"
-title = "Miguel Fernandez"
+title = "Miguel Fernandez Arce"
 [languages.en.params.logo]
 logoHomeLink = "/"
-logoText = "Miguel Fernandez"
+logoText = "Miguel Fernandez Arce"
 [markup.goldmark.renderer]
 unsafe = true
 [[menu.main]]
