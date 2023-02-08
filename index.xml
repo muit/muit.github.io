@@ -8,5 +8,12 @@ Wow! Stop right there, Miguel. This line already deserves some introductions! Le
 Crash course on allocations To keep this brief, I will assume that we have some experience with C++ and heap allocation (malloc and new).
 An allocation is when we request a pointer to a block of memory of a specified size.</description></item><item><title>About</title><link>https://muit.xyz/about/</link><pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.xyz/about/</guid><description>Hi!
 I&amp;rsquo;m Miguel, also known as muit.
-The majority of my work is centered around the design and implementation of videogame systems and tools in C++. If you like to code, stick around and have a look!
-Most of my projects are open-source and can be found at Piperift. Currently working at Ubisoft Stockholm, previously EA DICE and Splash Damage.</description></item></channel></rss>
+Game programmer &amp;amp; voice actor.
+The majority of my work in videogames is centered around the design and implementation of videogame systems and tools in C++. If you like to code, stick around and have a look at my posts!
+Many of my projects are open-source and can be found at Piperift. Currently working at CI Games, previously Ubisoft Stockholm, EA DICE &amp;amp; Splash Damage.</description></item><item><title>Voice Acting</title><link>https://muit.xyz/voice/</link><pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.xyz/voice/</guid><description>Demos All demos recorded in one take.
+Effects: de-noiser
+Spanish A - Happy, Angry, Sad, Shy . . . . . . soon
+B - Registros, Tonos . . . soon
+English A - Happy, Angry, Sad, Shy . . . . . . soon
+B - Registers, Tones . . . soon
+Studies Polford - Curso Integral 2022-2023 Had the chance to learn closely from three legendary voice actors. Luis Posada, Oscar Barberán &amp;amp; Jordi Brau who often voice actors like Robin Williams, Johnny Depp, Jim Carrey, Leonardo DiCaprio and many more in spanish.</description></item></channel></rss>
