@@ -1,13 +1,12 @@
 ---
-title: "Introduction to allocators and arenas"
+title: Introduction to allocators and arenas
 date: 2021-03-30
 draft: false
+cover: /img/covers/storage.png
 series:
 - memory
 ---
 
-<img style="width: 100%" src="/img/covers/storage.png" />
-<br>
 Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
 
 Wow! Stop right there, Miguel. This line already deserves some introductions!
@@ -22,7 +21,6 @@ When we use `malloc` or `new` we are getting this block of memory from the heap.
 
 When we **deallocate** a pointer (calling `free` or `delete`) its block of memory becomes once again available and no longer needed by us.
 
-
 ## What are Allocators and Arenas
 
 The definition of an allocator is somewhat flexible. It involves the encapsulation of allocation and deallocation of memory.
@@ -35,7 +33,7 @@ Using them, we can optimize allocations for specific parts of a game engine.
 For example, we can have an allocator that contains one render frame of data and gets cleared when a new frame starts.
 
 But... Isn't it confusing to call everything an allocator?
-I believe it is, and I don't seem to be the only one because some engines call the global memory allocators *arenas*.
+I believe it is, and I don't seem to be the only one because some engines call the global memory allocators _arenas_.
 
 Therefore, let's stick with the following terminology:
 
@@ -74,9 +72,8 @@ Knowing this, I can think of three performance benefits from allocators:
 >
 > This means we will need to request more memory. Some allocator algorithms don't have fragmentation at all. Others have the information to reduce it further than `malloc` can.
 
-From a technical design standpoint, we will also simplify code, *visualizing* where memory is held at all times and under which rules.
+From a technical design standpoint, we will also simplify code, _visualizing_ where memory is held at all times and under which rules.
 We can use the arena that fits our problem and change it if needed.
-
 
 ## Types of Allocators
 
@@ -86,6 +83,7 @@ Each of them brings benefits as well as limitations.
 There is no way I could explain all of them, but let me give you a quick rundown of the simplest ones.
 
 ### Linear
+
 ![Linear Allocator](/img/linear-allocator.png)
 
 A **Linear allocator** reserves a big block of memory and then moves an offset to the next available position when allocating.
@@ -95,10 +93,12 @@ This algorithm is by far the most performant due to its simplicity.
 But it also has the most limitations, so its use in the real world is very specific.
 
 ### Stack
+
 ![Stack Allocator](/img/stack-allocator.png)
 **Stack** is one step more advanced than Linear. It knows the size of all allocations, allowing us to free the **last** allocation.
 
 ### Pool
+
 ![Pool Allocator](/img/pool-allocator.png)
 
 A **Pool** _allocator_ contains a list of same size slots. All allocations must be smaller than one slot.
@@ -110,16 +110,19 @@ Some implementations keep track of allocations using a linked list.
 However, this means we need to iterate over the entire memory block. It also introduces 8 extra bytes for each allocation.
 
 ### General
+
 A **general** allocator can be used for all use-cases and doesn't have any big limitation.
 I will soon publish how I implemented a general arena that is up to **130x** faster than `malloc`.
 
 ### Many more!
+
 Those were not all allocators that exist. There are many more.
 Each algorithm has advantages and disadvantages, and it's up to us to choose the best one for the job.
 
 Some I didn't mention:
-- [Buddy allocator](https://en.wikipedia.org/wiki/Buddy_memory_allocation)
-- [Slab allocator](https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/)
+
+* [Buddy allocator](https://en.wikipedia.org/wiki/Buddy_memory_allocation)
+* [Slab allocator](https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/)
 
 ## Native allocation replacements
 
@@ -130,9 +133,9 @@ Depending on what you do, these libraries might be enough. However, setup is not
 
 One example is [microsoft/mimalloc](https://github.com/microsoft/mimalloc "||blank").
 
-
 ## Resources
-- [Writing a Game Engine from Scratch - Part 2: Memory](https://gamasutra.com/blogs/MichaelKissner/20151104/258271/Writing_a_Game_Engine_from_Scratch__Part_2_Memory.php)
-- [CppCon 2014: Mike Acton "Data-Oriented Design and C++"](https://youtu.be/rX0ItVEVjHc?t=1830)
-- [Custom Vector Allocation](https://www.gamasutra.com/blogs/ThomasYoung/20141002/226898/Custom_Vector_Allocation.php)
-- Some allocator implementation examples: [mtrebi/memory-allocators](https://github.com/mtrebi/memory-allocators)
+
+* [Writing a Game Engine from Scratch - Part 2: Memory](https://gamasutra.com/blogs/MichaelKissner/20151104/258271/Writing_a_Game_Engine_from_Scratch__Part_2_Memory.php)
+* [CppCon 2014: Mike Acton "Data-Oriented Design and C++"](https://youtu.be/rX0ItVEVjHc?t=1830)
+* [Custom Vector Allocation](https://www.gamasutra.com/blogs/ThomasYoung/20141002/226898/Custom_Vector_Allocation.php)
+* Some allocator implementation examples: [mtrebi/memory-allocators](https://github.com/mtrebi/memory-allocators)

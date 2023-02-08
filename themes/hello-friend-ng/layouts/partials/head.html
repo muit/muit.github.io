@@ -23,7 +23,7 @@
     type="text/css">
 
 {{ $options := (dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" true) }}
-{{ $style := resources.Get "scss/main.scss" | resources.ToCSS $options | resources.Fingerprint }}
+{{ $style := resources.Get "scss/main.scss" | resources.ToCSS $options }}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}">
 
 {{ range $val := $.Site.Params.customCSS }}
@@ -66,3 +66,5 @@
 {{- if templates.Exists "partials/extra-head.html" -}}
     {{ partial "extra-head.html" . }}
 {{- end }}
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>

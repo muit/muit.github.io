@@ -1,0 +1,23 @@
+backend:
+  name: github
+  repo: muit/muit.github.io
+  branch: main # Branch to update (optional; defaults to master)
+
+publish_mode: editorial_workflow
+
+media_folder: "static/img"
+public_folder: "/img"
+
+collections:
+  - name: "posts"
+    label: "Posts"
+    label_singular: 'Post'
+    folder: "content/posts"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "date" }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false}
+      - { label: "Cover Caption", name: "cover_caption", widget: "string", required: false}
+      - { label: "Series", name: "series", widget: "list", required: false}
+      - { label: "Body", name: "body", widget: "markdown" }
