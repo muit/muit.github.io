@@ -1,4 +1,49 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez Arce</title><link>https://muit.xyz/drafts/posts/</link><description>Recent content in Posts on Miguel Fernandez Arce</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Thu, 10 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://muit.xyz/drafts/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>A new approach to ECS APIs</title><link>https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/</link><pubDate>Thu, 10 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/</guid><description>Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez Arce</title><link>https://muit.xyz/drafts/posts/</link><description>Recent content in Posts on Miguel Fernandez Arce</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Sat, 30 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://muit.xyz/drafts/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Text and Binary serialization at once</title><link>https://muit.xyz/drafts/posts/2022/04/text-and-binary-serialization-at-once/</link><pubDate>Sat, 30 Apr 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/drafts/posts/2022/04/text-and-binary-serialization-at-once/</guid><description>You see, I like to spend my free time building a programming language called [**Rift**](https://github.com/PipeRift/rift). This surely wasn&amp;rsquo;t ambitious enough, so early on I designed it to be based on data files.
+This basically means code files are not saved as text, but stored as data in some format like json or binary, and interpreted by an editor/compiler later. Of course, there are many advantages and some disadvantages to this approach, but I will only focus on the serialization aspect of it today.</description><content type="html"><![CDATA[<img style="width: 100%" src="/img/covers/chips.png" />
+<br>You see, I like to spend my free time building a programming language called [**Rift**](https://github.com/PipeRift/rift).
+<p>This surely wasn&rsquo;t ambitious enough, so early on I designed it to be based on data files.</p>
+<p>This basically means code files are not saved as text, but stored as data in some format like json or binary, and interpreted by an editor/compiler later.
+Of course, there are many advantages and some disadvantages to this approach, but I will only focus on the serialization aspect of it today.</p>
+<p>I am going to describe what the serialization architecture looks like in Rift, and why I got there.
+I believe it is interesting to play with, and maybe it can bring some new ideas to the topic.</p>
+<h1 id="what-is-serialization">What is serialization?</h1>
+<p>In short, Serialization is simply transforming memory into text or binary formats.</p>
+<p>Even for those that are familiar with serialization it is important to remember this.
+Many serialization libraries try to do too much but fail to do the basics well and that difuses the term.</p>
+<h2 id="what-is-it-for">What is it for?</h2>
+<p>Serialization can have many uses.
+I suppose the most frequent ones are to store into files, or send over the network.</p>
+<p>
+
+
+
+
+
+    
+
+<a href="https://github.com/PipeRift/rift"  ><strong>Rift</strong></a>, for example, uses serialization for files primarily but also for transactions (like Undo/Redo in editor).</p>
+<p>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;sketch</p>
+<p>What are the pieces?
+<img src="/img/serialization-elements.png" alt="serialization-elements"></p>
+<p>There are two main elements:</p>
+<ul>
+<li><strong>Contexts</strong>: Facilitates serialization of supported types, and represents a single instance of serialization</li>
+<li><strong>Format</strong>: Receives basic data structures to be stored into the final data according to the format it implements</li>
+</ul>
+<p>It is scoped.</p>
+<p>Can have arrays, objects or native values.</p>
+<br>
+<p>Consider having a look at 
+
+
+
+
+
+    
+
+<a href="https://github.com/PipeRift/rift"  ><strong>Rift</strong></a>, which is a visual compiled programming language.
+It would be incredibly helpful to get your ideas, feedback and/or code contributions!</p>
+]]></content></item><item><title>A new approach to ECS APIs</title><link>https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/</link><pubDate>Thu, 10 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/drafts/posts/2022/02/a-new-approach-to-ecs-apis/</guid><description>Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.
 What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
 Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type).</description><content type="html"><![CDATA[<p>Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.</p>
 <h1 id="what-is-ecs-you-ask">What is ECS you ask?</h1>
