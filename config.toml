@@ -5,64 +5,105 @@ baseurl = "https://muit.xyz"
 languageCode = "en-us"
 paginate = 10
 theme = "hello-friend-ng"
-title = "Muit"
-[languages.en]
-copyright = "<a href=\"https://github.com/muit\" rel=\"noopener\">Miguel Fernandez Arce</a>"
-keywords = ""
 readOtherPosts = "Read other posts"
-subtitle = "Game systems programmer"
+
 title = "Miguel Fernandez Arce"
-[languages.en.params.logo]
-logoHomeLink = "/"
-logoText = "Miguel Fernandez Arce"
+subtitle = "Game systems programmer"
+copyright = "<a href=\"https://github.com/muit\" rel=\"noopener\">Miguel Fernandez Arce</a>"
+
 [markup.goldmark.renderer]
 unsafe = true
-[[menu.main]]
-name = "GitHub"
-url = "https://github.com/muit"
-weight = 3
-[[menu.main]]
-identifier = "about"
-name = "About"
-url = "/about"
-weight = 1
-[[menu.main]]
-identifier = "posts"
-name = "Posts"
-url = "/posts"
-weight = 2
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about"
+    weight = 1
+  #[[menu.main]]
+    #identifier = "voice"
+    #name = "Voice"
+    #url = "/voice"
+    #weight = 2
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts"
+    weight = 3
+  [[menu.main]]
+    name = "GitHub"
+    url = "https://github.com/muit"
+    weight = 4
+
 [params]
-dateform = "Jan 2, 2006"
-dateformNum = "2006-01-02"
-dateformNumTime = "2006-01-02 15:04"
-dateformShort = "Jan 2"
-defaultTheme = "dark"
-description = "Muit's portfolio & blog"
-disableReadOtherPosts = false
-enableSharingButtons = true
-homeSubtitle = "Game systems programmer"
-images = [""]
-justifyContent = true
-keywords = "muitxer, homepage, blog, portfolio, unreal engine, C++"
-[params.commento]
-url = "https://comments.piperift.com"
-[[params.social]]
-name = "linkedin"
-url = "https://www.linkedin.com/in/muitxer/"
-[[params.social]]
-name = "github"
-url = "https://github.com/muit"
-[[params.social]]
-name = "twitter"
-url = "https://twitter.com/muitxer"
-[[params.social]]
-name = "email"
-url = "mailto:muit@piperift.com"
-[permalinks]
-posts = "/posts/:year/:month/:title/"
-[privacy.googleAnalytics]
-disable = false
-[taxonomies]
-category = "blog"
-series = "series"
-tag = "tags"
+  dateform = "Jan 2, 2006"
+  dateformNum = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04"
+  dateformShort = "Jan 2"
+  defaultTheme = "dark"
+  description = "Muit's portfolio & blog"
+  disableReadOtherPosts = false
+  enableSharingButtons = true
+  homeSubtitle = "Game systems programmer"
+  images = [""]
+  justifyContent = true
+  keywords = "muitxer, homepage, blog, portfolio, unreal engine, C++, Rust, piperift"
+
+  [params.logo]
+    logoHomeLink = "/"
+    logoText = "Miguel Fernandez Arce"
+
+  [params.commento]
+    url = "https://comments.piperift.com"
+  [[params.social]]
+    name = "linkedin"
+    url = "https://www.linkedin.com/in/muitxer/"
+  [[params.social]]
+    name = "github"
+    url = "https://github.com/muit"
+  [[params.social]]
+    name = "twitter"
+    url = "https://twitter.com/muitxer"
+  [[params.social]]
+    name = "email"
+    url = "mailto:muit@piperift.com"
+  [permalinks]
+    posts = "/posts/:year/:month/:title/"
+  [privacy.googleAnalytics]
+    disable = false
+  [taxonomies]
+    category = "blog"
+    series = "series"
+    tag = "tags"
+
+[languages]
+  [languages.en]
+    keywords = ""
+    weight   = 1
+  [languages.es]
+    keywords = ""
+    subtitle = "Programador de sistemas de juego"
+    weight   = 2
+
+  [languages.es.params]
+    homeSubtitle = "Programador de sistemas de juego"
+
+  [[languages.es.menu.main]]
+      identifier = "about"
+      name = "Sobre mí"
+      url = "/about"
+      weight = 1
+  #[[languages.es.menu.main]]
+    #identifier = "voice"
+    #name = "Doblaje"
+    #url = "/voice"
+    #weight = 2
+  [[languages.es.menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "../posts"
+    weight = 3
+  [[languages.es.menu.main]]
+    name = "GitHub"
+    url = "https://github.com/muit"
+    weight = 4
