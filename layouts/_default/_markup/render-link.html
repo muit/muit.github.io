@@ -1,0 +1,17 @@
+{{ $url := urls.Parse .Destination }}
+{{ $parsedTitle := split .Title "||" }}
+{{ $title := strings.TrimRight " " (index $parsedTitle 0) }}
+{{ $tags := split (trim (index $parsedTitle 1) " ") "," }}
+
+{{ $blank := false }}
+{{ range $tag := $tags }}
+  {{ if eq $tag "blank" }}
+    {{ $blank = true }}
+  {{ end }}
+{{ end }}
+
+<a href="{{ if and (not $url.IsAbs) (strings.HasSuffix $url.Path ".md") }}{{ relref .Page .Destination }}{{ else }}{{ .Destination | safeURL }}{{ end }}"
+  {{ with $title}}title="{{ . }}" {{ end }} {{ if $blank }} target="_blank"
+  {{end}}>{{ .Text | safeHTML }}</a>
+
+{{- /* whitespace stripped here to avoid trailing newline in rendered result caused by file EOL */ -}}
