@@ -18,12 +18,12 @@ unsafe = true
   [[menu.main]]
     identifier = "about"
     name = "About"
-    url = "/about"
+    url = "/pages/about"
     weight = 1
   #[[menu.main]]
     #identifier = "voice"
     #name = "Voice"
-    #url = "/voice"
+    #url = "/pages/voice"
     #weight = 2
   [[menu.main]]
     identifier = "posts"
@@ -91,12 +91,12 @@ unsafe = true
   [[languages.es.menu.main]]
       identifier = "about"
       name = "Sobre mí"
-      url = "/about"
+      url = "/pages/about"
       weight = 1
   #[[languages.es.menu.main]]
     #identifier = "voice"
     #name = "Doblaje"
-    #url = "/voice"
+    #url = "/pages/voice"
     #weight = 2
   [[languages.es.menu.main]]
     identifier = "posts"

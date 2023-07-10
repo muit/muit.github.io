@@ -7,7 +7,7 @@ aliases = ["voice-over","voice-acting","doblaje"]
 +++
 
 ## Demos
-Todas las demos han sido grabadas en una toma<br>
+Todas las demos han sido grabadas en una toma.<br>
 Effectos: de-noiser
 
 ### Español
