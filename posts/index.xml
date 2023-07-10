@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez Arce</title><link>https://muit.xyz/posts/</link><description>Recent content in Posts on Miguel Fernandez Arce</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Thu, 10 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://muit.xyz/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>A new approach to ECS APIs</title><link>https://muit.xyz/posts/2022/02/a-new-approach-to-ecs-apis/</link><pubDate>Thu, 10 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/posts/2022/02/a-new-approach-to-ecs-apis/</guid><description>Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Miguel Fernandez Arce</title><link>https://muit.xyz/posts/</link><description>Recent content in Posts on Miguel Fernandez Arce</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>&lt;a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce&lt;/a></copyright><lastBuildDate>Thu, 10 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://muit.xyz/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>A new approach to ECS APIs</title><link>https://muit.xyz/posts/ecs-new-approach-to-ecs-apis/</link><pubDate>Thu, 10 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/posts/ecs-new-approach-to-ecs-apis/</guid><description>Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.
 What is ECS you ask? Fair question! ECS (as Entity-Component-System) is an architectural pattern based on DOD (data-oriented design), where you have three main elements:
 Entities: They are just an identifier and don’t hold any data. Components: Structs of data associated with a single entity (1 entity can have 1 component of each type).</description><content type="html"><![CDATA[<p>Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.</p>
 <h1 id="what-is-ecs-you-ask">What is ECS you ask?</h1>
@@ -14,17 +14,23 @@ Entities: They are just an identifier and don’t hold any data. Components: Str
 
 
 
-    
 
-<a href="https://www.youtube.com/watch?v=0_Byw9UMn9g"  >This talk</a> is a good start, and for more resources, you can also 
-
+  
 
 
+<a href="https://www.youtube.com/watch?v=0_Byw9UMn9g"
+   >This talk</a> is a good start, and for more resources, you can also 
 
 
-    
 
-<a href="https://github.com/SanderMertens/ecs-faq"  >read this</a>.</p>
+
+
+
+  
+
+
+<a href="https://github.com/SanderMertens/ecs-faq"
+   >read this</a>.</p>
 <p>I personally also like to consider <strong>Utilities</strong> as the forth secret child of ECS.
 Utilities are functions that can be reused between systems. Any code that is not part of a system is a utility. One example could be <em>hierarchy</em> where we can <em>add, remove, or transfer children from entities</em> from multiple systems.</p>
 <h1 id="current-approach-to-ecs-apis">Current approach to ECS APIs</h1>
@@ -122,9 +128,12 @@ But what if we have props that can move? But only when they are enabled.</p>
 
 
 
-    
 
-<a href="https://github.com/PipeRift/rift"  ><strong>Rift</strong></a>.
+  
+
+
+<a href="https://github.com/PipeRift/rift"
+   ><strong>Rift</strong></a>.
 This solution I came up with solves all the points above, so let&rsquo;s have a look rebuilding the previous examples with it:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// We pass an Access with the types we can write, and those we can only read (const)
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MoveProps</span>(TAccess<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Prop, <span style="color:#66d9ef">const</span> Movement, Transform<span style="color:#f92672">&gt;</span> access, <span style="color:#66d9ef">float</span> deltaTime)
@@ -187,9 +196,12 @@ This solution I came up with solves all the points above, so let&rsquo;s have a 
 
 
 
-    
 
-<a href="https://github.com/PipeRift/rift"  >Rift</a>, where the compiler precaches two lists, one for classes and one for structs:</p>
+  
+
+
+<a href="https://github.com/PipeRift/rift"
+   >Rift</a>, where the compiler precaches two lists, one for classes and one for structs:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>TArray<span style="color:#f92672">&lt;</span>AST<span style="color:#f92672">::</span>Id<span style="color:#f92672">&gt;</span> classes, structs;
 </span></span><span style="display:flex;"><span>AST<span style="color:#f92672">::</span>Hierarchy<span style="color:#f92672">::</span>GetChildren(ast, moduleId, classes);
 </span></span><span style="display:flex;"><span>AST<span style="color:#f92672">::</span>RemoveIfNot<span style="color:#f92672">&lt;</span>CType<span style="color:#f92672">&gt;</span>(ast, classes);
@@ -208,13 +220,30 @@ This solution I came up with solves all the points above, so let&rsquo;s have a 
 
 
 
-    
 
-<a href="https://github.com/PipeRift/rift"  ><strong>Rift</strong></a>, I already had filters (very similar to entt’s views). So I took the chance to do a one to one comparison with the following results:</p>
+  
+
+
+<a href="https://github.com/PipeRift/rift"
+   ><strong>Rift</strong></a>, I already had filters (very similar to entt’s views). So I took the chance to do a one to one comparison with the following results:</p>
 <p>In <strong>debug</strong> access filtering gets up to 3 times faster iterating than views.</p>
-<p><img src="/img/ecs-access-debug.png" alt="Access in Debug"></p>
+<p>
+
+
+
+<img src="/Assets/Img/ecs-access-debug.png"
+  
+   alt="Access in Debug" 
+/></p>
 <p>While in <strong>release</strong> the difference is tighter, between 35% to 50% faster in most runs.</p>
-<p><img src="/img/ecs-access-release.png" alt="Access in Release"></p>
+<p>
+
+
+
+<img src="/Assets/Img/ecs-access-release.png"
+  
+   alt="Access in Release" 
+/></p>
 <p>Should be noted that this benchmark runs an empty iteration loop. For views, this means their pool checks are very close in execution. In other words, it is their <strong>ideal scenario</strong>. It is unrealistically in their favor. However, they seem to run slower. Why is that?</p>
 <h3 id="why-is-it-faster">Why is it faster?</h3>
 <p>Unlike views, accesses don&rsquo;t need to find their pools, again and again, every time they get created. Most of the time, a access is created from another, which is literally just copying the relevant pool pointers.</p>
@@ -244,23 +273,40 @@ This solution I came up with solves all the points above, so let&rsquo;s have a 
 
 
 
-    
 
-<a href="https://github.com/PipeRift/rift"  ><strong>Rift</strong></a>. It would be incredibly helpful to get your ideas, feedback and/or code contributions!</p>
-]]></content></item><item><title>Implementing a general-use arena</title><link>https://muit.xyz/posts/2022/02/implementing-a-general-use-arena/</link><pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/posts/2022/02/implementing-a-general-use-arena/</guid><description>Now that we have learned about [arenas and allocators](/posts/2021/03/introduction-to-allocators-and-arenas/), we can get our hands dirty with an implementation of an arena.
+  
+
+
+<a href="https://github.com/PipeRift/rift"
+   ><strong>Rift</strong></a>. It would be incredibly helpful to get your ideas, feedback and/or code contributions!</p>
+]]></content></item><item><title>Implementing a general-use arena</title><link>https://muit.xyz/posts/memory-implementing-a-general-arena/</link><pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate><guid>https://muit.xyz/posts/memory-implementing-a-general-arena/</guid><description>Now that we have learned about arenas and allocators, we can get our hands dirty with an implementation of an arena.
 Best Fit Arena You see, for the last couple of months, I&amp;rsquo;ve been updating RiftCore with new features. RiftCore is a cross-platform framework I use for C++ projects, and it lacked some memory management.
 So the time came to design a general-purpose arena!
-This article will describe the design and implementation of a Best Fit Arena.</description><content type="html"><![CDATA[<p>Now that we have learned about <strong>[arenas and allocators](/posts/2021/03/introduction-to-allocators-and-arenas/)</strong>, we can get our hands dirty with an implementation of an arena.</p>
+This article will describe the design and implementation of a Best Fit Arena.</description><content type="html"><![CDATA[<p>Now that we have learned about 
+
+
+
+
+
+
+  
+
+
+<a href="/posts/memory-introduction-to-allocators-and-arenas/"
+   >arenas and allocators</a>, we can get our hands dirty with an implementation of an arena.</p>
 <h2 id="best-fit-arena">Best Fit Arena</h2>
-<p>You see, for the last couple of months, I&rsquo;ve been updating <strong>
+<p>You see, for the last couple of months, I&rsquo;ve been updating 
 
 
 
 
 
-    
 
-<a href="https://github.com/PipeRift/rift-core"  >RiftCore</a></strong> with new features.
+  
+
+
+<a href="https://github.com/PipeRift/rift-core"
+   >RiftCore</a> with new features.
 <strong>RiftCore</strong> is a cross-platform framework I use for C++ projects, and it lacked some memory management.</p>
 <p>So the time came to design a general-purpose arena!</p>
 <p>This article will describe the design and implementation of a <strong>Best Fit Arena</strong>.
@@ -278,42 +324,73 @@ As such, it has to be able to:</p>
 This opens the door to some optimizations, but, don&rsquo;t worry, the BestFitArena can be adapted to avoid this pattern.</p>
 <h2 id="implementation">Implementation</h2>
 <p>A <strong>BestFitArena</strong> works by <strong>tracking all unused spaces</strong>, called free slots.
-<img src="/img/best-fit-arena-slot-ids.png" alt="BestFitArena"></p>
+
+
+
+
+<img src="/Assets/Img/best-fit-arena-slot-ids.png"
+  
+   alt="BestFitArena" 
+/></p>
 <p>Let&rsquo;s go through what we see in this picture:</p>
 <ul>
 <li>Like most allocators, we have one or multiple memory blocks of pre-allocated memory.</li>
 <li>We also keep a list of <code>FreeSlots</code>, sorted by size. Bigger first.</li>
 <li>We don&rsquo;t track allocations in any way. No headers, no offsets and no sizes.</li>
 </ul>
-<p><img src="/img/best-fit-arena-slot-ptrs.png" alt="BestFitArena Slot Pointers">
+<p>
+
+
+
+<img src="/Assets/Img/best-fit-arena-slot-ptrs.png"
+  
+   alt="BestFitArena Slot Pointers" 
+/>
 Seen in more detail, each slot points to the start of its memory and its size.</p>
 <p>This algorithm has <strong>zero overhead</strong> when fragmentation is low. The less fragmentation, the more performant it is.
 However, it is also designed to minimize it, and, as you will see later, even in an scenario with a lot of fragmentation, performance is still excellent.</p>
 <h3 id="allocation">Allocation</h3>
 <p><strong>Allocation</strong> will always pick the smallest free slot possible and extract the pointer from it.
 Then, this slot is reduced removing the used space from it.
-<img src="/img/best-fit-arena-allocation.png" alt="BestFitArena Allocate"></p>
+
+
+
+
+<img src="/Assets/Img/best-fit-arena-allocation.png"
+  
+   alt="BestFitArena Allocate" 
+/></p>
 <h4 id="find-smallest-slot">Find Smallest Slot</h4>
 <p>Before anything else, we check if the arena is marked as pending sort.
-This is an optimization that prevents unneccesary sorts on consequent Free calls.
-But we also perform shrink on the slots if neccessary.</p>
+This is an optimization that prevents unnecessary sorts on consequent Free calls.
+But we also perform shrink on the slots if necessary.</p>
 <p>Once we know all slots are sorted, we perform a 
 
 
 
 
 
-    
 
-<a href="https://www.geeksforgeeks.org/binary-search/"  >binary search</a> by size.
+  
+
+
+<a href="https://www.geeksforgeeks.org/binary-search/"
+   >binary search</a> by size.
 The binary search will provide a complexity of O(logN).</p>
 <h3 id="free">Free</h3>
 <p><strong>Free</strong> expands the free slots that &ldquo;touch&rdquo; the freed memory, absorb it and growing the slot.</p>
 <p>We know of the size of the allocation because it is contained on the free slots list which we check anyway.
-<img src="/img/best-fit-arena-free.png" alt="BestFitArena Free"></p>
+
+
+
+
+<img src="/Assets/Img/best-fit-arena-free.png"
+  
+   alt="BestFitArena Free" 
+/></p>
 <br>
 <p><em>PS</em>: This is a post I never published when I wrote it. So some details might be missing but feel free to ask any questions :)</p>
-]]></content></item><item><title>Introduction to allocators and arenas</title><link>https://muit.xyz/posts/2021/03/introduction-to-allocators-and-arenas/</link><pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.xyz/posts/2021/03/introduction-to-allocators-and-arenas/</guid><description>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
+]]></content></item><item><title>Introduction to allocators and arenas</title><link>https://muit.xyz/posts/memory-introduction-to-allocators-and-arenas/</link><pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate><guid>https://muit.xyz/posts/memory-introduction-to-allocators-and-arenas/</guid><description>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
 Wow! Stop right there, Miguel. This line already deserves some introductions! Let&amp;rsquo;s talk about allocators.
 Crash course on allocations To keep this brief, I will assume that we have some experience with C++ and heap allocation (malloc and new).
 An allocation is when we request a pointer to a block of memory of a specified size.</description><content type="html"><![CDATA[<p>Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.</p>
@@ -364,7 +441,14 @@ However, allocators can give us much better memory locality.</p>
 </blockquote>
 <blockquote>
 <p><strong>Fragmentation</strong>
-<img src="/img/fragmentation.png" alt="Fragmentation">
+
+
+
+
+<img src="/Assets/Img/fragmentation.png"
+  
+   alt="Fragmentation" 
+/>
 Fragmentation occurs when we have allocated and freed multiple times leaving gaps that are not big enough to fit new allocations.</p>
 <p>This means we will need to request more memory. Some allocator algorithms don&rsquo;t have fragmentation at all. Others have the information to reduce it further than <code>malloc</code> can.</p>
 </blockquote>
@@ -375,16 +459,37 @@ We can use the arena that fits our problem and change it if needed.</p>
 Each of them brings benefits as well as limitations.</p>
 <p>There is no way I could explain all of them, but let me give you a quick rundown of the simplest ones.</p>
 <h3 id="linear">Linear</h3>
-<p><img src="/img/linear-allocator.png" alt="Linear Allocator"></p>
+<p>
+
+
+
+<img src="/Assets/Img/linear-allocator.png"
+  
+   alt="Linear Allocator" 
+/></p>
 <p>A <strong>Linear allocator</strong> reserves a big block of memory and then moves an offset to the next available position when allocating.
 Since it doesn&rsquo;t keep track of previous allocations, a linear allocator <strong>can&rsquo;t be freed</strong>.</p>
 <p>This algorithm is by far the most performant due to its simplicity.
 But it also has the most limitations, so its use in the real world is very specific.</p>
 <h3 id="stack">Stack</h3>
-<p><img src="/img/stack-allocator.png" alt="Stack Allocator">
+<p>
+
+
+
+<img src="/Assets/Img/stack-allocator.png"
+  
+   alt="Stack Allocator" 
+/>
 <strong>Stack</strong> is one step more advanced than Linear. It knows the size of all allocations, allowing us to free the <strong>last</strong> allocation.</p>
 <h3 id="pool">Pool</h3>
-<p><img src="/img/pool-allocator.png" alt="Pool Allocator"></p>
+<p>
+
+
+
+<img src="/Assets/Img/pool-allocator.png"
+  
+   alt="Pool Allocator" 
+/></p>
 <p>A <strong>Pool</strong> <em>allocator</em> contains a list of same size slots. All allocations must be smaller than one slot.</p>
 <p>To track which slots are available, we can use a bitset.
 They are very performant and compact containers where 1 bit represents one occupied slot.</p>
@@ -404,18 +509,24 @@ Each algorithm has advantages and disadvantages, and it&rsquo;s up to us to choo
 
 
 
-    
 
-<a href="https://en.wikipedia.org/wiki/Buddy_memory_allocation"  >Buddy allocator</a></li>
+  
+
+
+<a href="https://en.wikipedia.org/wiki/Buddy_memory_allocation"
+   >Buddy allocator</a></li>
 <li>
 
 
 
 
 
-    
 
-<a href="https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/"  >Slab allocator</a></li>
+  
+
+
+<a href="https://www.geeksforgeeks.org/operating-system-allocating-kernel-memory-buddy-system-slab-system/"
+   >Slab allocator</a></li>
 </ul>
 <h2 id="native-allocation-replacements">Native allocation replacements</h2>
 <p>Some libraries just provide an extra layer between us and <code>malloc</code> but not necessarily using the concepts we described before.
@@ -427,11 +538,15 @@ They still lack context about our use-case and need to solve every problem just 
 
 
 
-    
-        
-    
 
-<a href="https://github.com/microsoft/mimalloc"   target="_blank">microsoft/mimalloc</a>.</p>
+  
+    
+  
+
+
+<a href="https://github.com/microsoft/mimalloc"
+    target="_blank"
+  >microsoft/mimalloc</a>.</p>
 <h2 id="resources">Resources</h2>
 <ul>
 <li>
@@ -440,35 +555,47 @@ They still lack context about our use-case and need to solve every problem just 
 
 
 
-    
 
-<a href="https://gamasutra.com/blogs/MichaelKissner/20151104/258271/Writing_a_Game_Engine_from_Scratch__Part_2_Memory.php"  >Writing a Game Engine from Scratch - Part 2: Memory</a></li>
+  
+
+
+<a href="https://gamasutra.com/blogs/MichaelKissner/20151104/258271/Writing_a_Game_Engine_from_Scratch__Part_2_Memory.php"
+   >Writing a Game Engine from Scratch - Part 2: Memory</a></li>
 <li>
 
 
 
 
 
-    
 
-<a href="https://youtu.be/rX0ItVEVjHc?t=1830"  >CppCon 2014: Mike Acton &ldquo;Data-Oriented Design and C++&rdquo;</a></li>
+  
+
+
+<a href="https://youtu.be/rX0ItVEVjHc?t=1830"
+   >CppCon 2014: Mike Acton &ldquo;Data-Oriented Design and C++&rdquo;</a></li>
 <li>
 
 
 
 
 
-    
 
-<a href="https://www.gamasutra.com/blogs/ThomasYoung/20141002/226898/Custom_Vector_Allocation.php"  >Custom Vector Allocation</a></li>
+  
+
+
+<a href="https://www.gamasutra.com/blogs/ThomasYoung/20141002/226898/Custom_Vector_Allocation.php"
+   >Custom Vector Allocation</a></li>
 <li>Some allocator implementation examples: 
 
 
 
 
 
-    
 
-<a href="https://github.com/mtrebi/memory-allocators"  >mtrebi/memory-allocators</a></li>
+  
+
+
+<a href="https://github.com/mtrebi/memory-allocators"
+   >mtrebi/memory-allocators</a></li>
 </ul>
 ]]></content></item></channel></rss>
