@@ -73,7 +73,7 @@ Knowing this, I can think of three performance benefits from allocators:
 
  > 
  > **Fragmentation**
- > ![Fragmentation](/Img/fragmentation.png)
+ > ![Fragmentation](/Assets/Img/fragmentation.png)
  > Fragmentation occurs when we have allocated and freed multiple times leaving gaps that are not big enough to fit new allocations.
  > 
  > This means we will need to request more memory. Some allocator algorithms don't have fragmentation at all. Others have the information to reduce it further than `malloc` can.
@@ -90,7 +90,7 @@ There is no way I could explain all of them, but let me give you a quick rundown
 
 ### Linear
 
-![Linear Allocator](/Img/linear-allocator.png)
+![Linear Allocator](/Assets/Img/linear-allocator.png)
 
 A **Linear allocator** reserves a big block of memory and then moves an offset to the next available position when allocating.
 Since it doesn't keep track of previous allocations, a linear allocator **can't be freed**.
@@ -100,12 +100,12 @@ But it also has the most limitations, so its use in the real world is very speci
 
 ### Stack
 
-![Stack Allocator](/Img/stack-allocator.png)
+![Stack Allocator](/Assets/Img/stack-allocator.png)
 **Stack** is one step more advanced than Linear. It knows the size of all allocations, allowing us to free the **last** allocation.
 
 ### Pool
 
-![Pool Allocator](/Img/pool-allocator.png)
+![Pool Allocator](/Assets/Img/pool-allocator.png)
 
 A **Pool** *allocator* contains a list of same size slots. All allocations must be smaller than one slot.
 

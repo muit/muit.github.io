@@ -2,7 +2,7 @@
 title: Implementing a general-use arena
 date: 2022-02-03
 draft: false
-cover: /Img/Covers/storage.png
+cover: /Assets/Img/Covers/storage.png
 series:
 - memory
 ---
@@ -35,7 +35,7 @@ This opens the door to some optimizations, but, don't worry, the BestFitArena ca
 ## Implementation
 
 A **BestFitArena** works by **tracking all unused spaces**, called free slots.
-![BestFitArena](Assets/Img/best-fit-arena-slot-ids.png)
+![BestFitArena](/Assets/Img/best-fit-arena-slot-ids.png)
 
 Let's go through what we see in this picture:
 
@@ -43,7 +43,7 @@ Let's go through what we see in this picture:
 * We also keep a list of `FreeSlots`, sorted by size. Bigger first.
 * We don't track allocations in any way. No headers, no offsets and no sizes.
 
-![BestFitArena Slot Pointers](Img/best-fit-arena-slot-ptrs.png)
+![BestFitArena Slot Pointers](/Assets/Img/best-fit-arena-slot-ptrs.png)
 Seen in more detail, each slot points to the start of its memory and its size.
 
 This algorithm has **zero overhead** when fragmentation is low. The less fragmentation, the more performant it is.
@@ -53,13 +53,13 @@ However, it is also designed to minimize it, and, as you will see later, even in
 
 **Allocation** will always pick the smallest free slot possible and extract the pointer from it.
 Then, this slot is reduced removing the used space from it.
-![BestFitArena Allocate](Img/best-fit-arena-allocation.png)
+![BestFitArena Allocate](/Assets/Img/best-fit-arena-allocation.png)
 
 #### Find Smallest Slot
 
 Before anything else, we check if the arena is marked as pending sort.
-This is an optimization that prevents unneccesary sorts on consequent Free calls.
-But we also perform shrink on the slots if neccessary.
+This is an optimization that prevents unnecessary sorts on consequent Free calls.
+But we also perform shrink on the slots if necessary.
 
 Once we know all slots are sorted, we perform a [binary search](https://www.geeksforgeeks.org/binary-search/) by size.
 The binary search will provide a complexity of O(logN).
@@ -69,7 +69,7 @@ The binary search will provide a complexity of O(logN).
 **Free** expands the free slots that "touch" the freed memory, absorb it and growing the slot.
 
 We know of the size of the allocation because it is contained on the free slots list which we check anyway.
-![BestFitArena Free](Img/best-fit-arena-free.png)
+![BestFitArena Free](/Assets/Img/best-fit-arena-free.png)
 
 <br>
 

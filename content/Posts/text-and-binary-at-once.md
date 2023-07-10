@@ -6,7 +6,7 @@ series:
 - serialization
 ---
 
-<img style="width: 100%" src="/Img/Covers/chips.png" />
+<img style="width: 100%" src="/Assets/Img/Covers/chips.png" />
 <br>You see, I like to spend my free time building a programming language called [**Rift**](https://github.com/PipeRift/rift).
 
 This surely wasn't ambitious enough, so early on I designed it to be based on data files.
