@@ -2,7 +2,7 @@
 title: A new approach to ECS APIs
 date: 2022-02-10
 draft: false
-cover: /Assets/Img/Covers/patterns.png
+cover: Assets/Img/Covers/patterns.png
 series:
 - ecs
 ---
@@ -232,11 +232,11 @@ When I implemented accesses for [**Rift**](https://github.com/PipeRift/rift), I 
 
 In **debug** access filtering gets up to 3 times faster iterating than views.
 
-![Access in Debug](/Assets/Img/ecs-access-debug.png)
+![Access in Debug](Assets/Img/ecs-access-debug.png)
 
 While in **release** the difference is tighter, between 35% to 50% faster in most runs.
 
-![Access in Release](/Assets/Img/ecs-access-release.png)
+![Access in Release](Assets/Img/ecs-access-release.png)
 
 Should be noted that this benchmark runs an empty iteration loop. For views, this means their pool checks are very close in execution. In other words, it is their **ideal scenario**. It is unrealistically in their favor. However, they seem to run slower. Why is that?
 

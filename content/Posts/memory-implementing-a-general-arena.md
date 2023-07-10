@@ -2,7 +2,7 @@
 title: Implementing a general-use arena
 date: 2022-02-03
 draft: false
-cover: /Assets/Img/Covers/storage.png
+cover: Assets/Img/Covers/storage.png
 series:
 - memory
 ---
@@ -43,7 +43,7 @@ Let's go through what we see in this picture:
 * We also keep a list of `FreeSlots`, sorted by size. Bigger first.
 * We don't track allocations in any way. No headers, no offsets and no sizes.
 
-![BestFitArena Slot Pointers](/Assets/Img/best-fit-arena-slot-ptrs.png)
+![BestFitArena Slot Pointers](Assets/Img/best-fit-arena-slot-ptrs.png)
 Seen in more detail, each slot points to the start of its memory and its size.
 
 This algorithm has **zero overhead** when fragmentation is low. The less fragmentation, the more performant it is.
@@ -53,7 +53,7 @@ However, it is also designed to minimize it, and, as you will see later, even in
 
 **Allocation** will always pick the smallest free slot possible and extract the pointer from it.
 Then, this slot is reduced removing the used space from it.
-![BestFitArena Allocate](/Assets/Img/best-fit-arena-allocation.png)
+![BestFitArena Allocate](Assets/Img/best-fit-arena-allocation.png)
 
 #### Find Smallest Slot
 
@@ -69,7 +69,7 @@ The binary search will provide a complexity of O(logN).
 **Free** expands the free slots that "touch" the freed memory, absorb it and growing the slot.
 
 We know of the size of the allocation because it is contained on the free slots list which we check anyway.
-![BestFitArena Free](/Assets/Img/best-fit-arena-free.png)
+![BestFitArena Free](Assets/Img/best-fit-arena-free.png)
 
 <br>
 
