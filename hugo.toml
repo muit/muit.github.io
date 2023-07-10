@@ -78,14 +78,12 @@ unsafe = true
 
 [languages]
   [languages.en]
-    keywords = ""
     weight   = 1
   [languages.es]
-    keywords = ""
-    subtitle = "Programador de sistemas de juego"
     weight   = 2
 
   [languages.es.params]
+    subtitle = "Programador de sistemas de juego"
     homeSubtitle = "Programador de sistemas de juego"
 
   [[languages.es.menu.main]]
