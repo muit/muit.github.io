@@ -1,12 +1,12 @@
 ---
-title: "Text and Binary serialization at once"
+title: Text and Binary serialization at once
 date: 2022-04-30
 draft: true
 series:
-  - serialization
+- serialization
 ---
 
-<img style="width: 100%" src="Img/Covers/chips.png" />
+<img style="width: 100%" src="/Img/Covers/chips.png" />
 <br>You see, I like to spend my free time building a programming language called [**Rift**](https://github.com/PipeRift/rift).
 
 This surely wasn't ambitious enough, so early on I designed it to be based on data files.
@@ -31,30 +31,21 @@ I suppose the most frequent ones are to store into files, or send over the netwo
 
 [**Rift**](https://github.com/PipeRift/rift), for example, uses serialization for files primarily but also for transactions (like Undo/Redo in editor).
 
-
-
-
-
 -----------------------------------------------------sketch
 
 What are the pieces?
-![serialization-elements](Img/serialization-elements.png)
+![serialization-elements](/Img/serialization-elements.png)
 
 There are two main elements:
 
-- **Contexts**: Facilitates serialization of supported types, and represents a single instance of serialization
-- **Format**: Receives basic data structures to be stored into the final data according to the format it implements
+* **Contexts**: Facilitates serialization of supported types, and represents a single instance of serialization
+* **Format**: Receives basic data structures to be stored into the final data according to the format it implements
 
 It is scoped.
 
 Can have arrays, objects or native values.
 
-
-
-
-
 <br>
 
 Consider having a look at [**Rift**](https://github.com/PipeRift/rift), which is a visual compiled programming language.
 It would be incredibly helpful to get your ideas, feedback and/or code contributions!
-

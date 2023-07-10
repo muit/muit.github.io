@@ -2,11 +2,12 @@
 title: Implementing a general-use arena
 date: 2022-02-03
 draft: false
-cover: Img/Covers/storage.png
+cover: /Img/Covers/storage.png
 series:
-  - memory
+- memory
 ---
-Now that we have learned about [arenas and allocators]({{< ref "memory-introduction-to-allocators-and-arenas" >}}), we can get our hands dirty with an implementation of an arena.
+
+Now that we have learned about [arenas and allocators](memory-introduction-to-allocators-and-arenas.md), we can get our hands dirty with an implementation of an arena.
 
 ## Best Fit Arena
 
@@ -34,7 +35,7 @@ This opens the door to some optimizations, but, don't worry, the BestFitArena ca
 ## Implementation
 
 A **BestFitArena** works by **tracking all unused spaces**, called free slots.
-![BestFitArena](./Img/best-fit-arena-slot-ids.png)
+![BestFitArena](Assets/Img/best-fit-arena-slot-ids.png)
 
 Let's go through what we see in this picture:
 

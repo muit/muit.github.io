@@ -1,10 +1,12 @@
-+++
-title = "Sobre mí"
-date = "2021-03-28"
-aliases = ["about-me","contact"]
-[ author ]
-  name = "Miguel Fernandez Arce"
-+++
+---
+title: Sobre mí
+date: 2021-03-28
+aliases:
+- about-me
+- contact
+author:
+  name: Miguel Fernandez Arce
+---
 
 Hola!
 
@@ -17,4 +19,3 @@ Muchos de mis proyectos son open-source y puedes encontrarlos en [Piperift](http
 
 Si quieres hablar mandame un email!<br>
 [muit@piperift.com](mailto:muit@piperift.com)
-

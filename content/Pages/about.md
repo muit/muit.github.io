@@ -1,10 +1,12 @@
-+++
-title = "About"
-date = "2021-03-28"
-aliases = ["about-me","contact"]
-[ author ]
-  name = "Miguel Fernandez Arce"
-+++
+---
+title: About
+date: 2021-03-28
+aliases:
+- about-me
+- contact
+author: null
+  name: Miguel Fernandez Arce
+---
 
 Hi!
 
