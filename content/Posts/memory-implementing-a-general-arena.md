@@ -34,7 +34,7 @@ This opens the door to some optimizations, but, don't worry, the BestFitArena ca
 ## Implementation
 
 A **BestFitArena** works by **tracking all unused spaces**, called free slots.
-![BestFitArena](Img/best-fit-arena-slot-ids.png)
+![BestFitArena](./Img/best-fit-arena-slot-ids.png)
 
 Let's go through what we see in this picture:
 
