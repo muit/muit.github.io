@@ -34,7 +34,7 @@ I suppose the most frequent ones are to store into files, or send over the netwo
 -----------------------------------------------------sketch
 
 What are the pieces?
-![serialization-elements](/Img/serialization-elements.png)
+![serialization-elements](Assets/Img/serialization-elements.png)
 
 There are two main elements:
 
