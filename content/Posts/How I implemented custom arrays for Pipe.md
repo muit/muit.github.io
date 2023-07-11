@@ -23,4 +23,6 @@ As to why I needed my own array types. std::vector is great (no, really), BUT:
 I wonder if by the end of the post you will agree with me on that the result was actually pretty good.
 And the benefits, many (for my use-case at least).
 
-Pipe, the library I build the array for, is the base library I use on most of my cpp projects since ... 2013?? Time is scary. It has many great experimental features that I have failed to share as they deserve, because I am really lazy socially okay. Yo, its been like 2 years since the last post!
+For context, Pipe, the library that contains these shiny new arrays, is the base library I use on most of my cpp projects. It has many great experimental features that I have repeatedly failed to share as they deserve. But one not so shiny feature was a pretty big wrapper around std::vector with new features and fitting syntax to the library.
+
+Its been something like 9 years with this library and it was about time I did a proper rework to it. Specially now that I have done extensive work on improving its memory architecture.
