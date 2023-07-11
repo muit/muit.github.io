@@ -20,4 +20,7 @@ As to why I needed my own array types. std::vector is great (no, really), BUT:
   And finally, but most importantly:
 * It's fun to do your own stuff, not gonna lie.
 
-For context
+I wonder if by the end of the post you will agree with me on that the result was actually pretty good.
+And the benefits, many (for my use-case at least).
+
+Lets start with a short explanation of what Pipe is. This is a library I use at Piperift for everything C++,
