@@ -13,10 +13,10 @@ Which is what I did until a some weeks ago, when I decided enough was enough! It
 
 As to why I needed my own array types. std::vector is great (no, really), BUT:
 
-* It has an API based on iterators and allocators, which makes it more complex and its own internal code unintelligible. I am sure someone looking to have a career on the std standard will like it, but us humans need to understand how the tools we use work. I usually dont like black boxes
+* It has an API based on iterators and allocators, which makes it more complex and its own internal code unintelligible. I am sure someone looking to have a career on the std standard will like it, but us humans need to understand how the tools we use work. I usually dont like black boxes.
 * It has a templated allocator type. This on its own makes the complexity and use of the type exponential.
 * No obvious way to implement inline vectors (try with allocators if you want to sacrifice 500 lines to the gods and obtain shitty syntax)
-* Fuck std::vector<bool>
+* Fuck std::vector<bool> ...just use a bitmap
   And finally, but most importantly:
 * It's fun to do your own stuff, not gonna lie.
 
