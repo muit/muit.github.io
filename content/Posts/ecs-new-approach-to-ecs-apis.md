@@ -7,7 +7,6 @@ series:
 - ecs
 ---
 
-![Assets/Img/Covers/line-of-ducks.jpg](Assets/Img/Covers/line-of-ducks.jpg)
 Let’s talk about a different approach to ECS I have been rumbling about lately. Well, specifically, about how we query entities, manage dependencies and access/modify data.
 
 # What is ECS you ask?
