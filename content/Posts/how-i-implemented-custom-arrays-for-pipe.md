@@ -38,9 +38,16 @@ Some honorable mentions from above:
 ## Pipe's Requirements
 
 Let me give you some context.
-**[Pipe](https://github.com/PipeRift/pipe)**, the library that will contain these shiny new arrays, is the base library I use on most of my cpp projects. It has many great experimental features that I have repeatedly not talked about like they deserve. But one not so shiny was a wrapper around std::vector with extra features and an API that fits the library.
+**[Pipe](https://github.com/PipeRift/pipe)**, the library that will contain these shiny new arrays, is the foundational library I use on most of my Cpp projects. It has many great experimental features that I have repeatedly failed to share with others like they deserve... maybe if I manage to write more often.
 
-I've used this library for more than 9 years and it was about time I did a proper rework of Array.
+I have used this library for more than 9 years, and overcoming the limitations of std::vector started to be frustrating, specially when I needed to scratch some performance with features like inline memory.
+
+I needed an Array type that:
+
+* Natively supports inline allocation without sacrificing the syntax and user experience.
+* Integrates with allocation arenas
+* Has a combined index and iterator based API with an extensive list of helpers.
+* Can take advantage of its architecture to provide optimizations.
 
 ## Design Choices
 
