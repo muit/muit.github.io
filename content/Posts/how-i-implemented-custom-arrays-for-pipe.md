@@ -73,9 +73,9 @@ Usually you want to solve two problems with allocators:
 
 * Control how and where the container’s memory is allocated.
 * Inject and use inline elements in the container.
-* Optionally, you also want to share this allocator with different containers.
+  Optionally, you may want want to share this allocators with different containers.
 
-The third one is cute, but very problematic when you want to also achieve the other points. Different containers allocate differently. If an allocator is used on an array you know you only need to maintain a single block of memory, however maps, sets or page buffers don't work this way, and can allocate many.
+The third one is cute, but very problematic when you want to also achieve the other points. Different containers allocate differently. If an allocator is used on an array you know it only needs to maintain a single block of memory,. However *maps*, *sets* or *page buffers* don't work this way, and can allocate many.
 
 You can’t use an inline allocator for different types if you dont know how you will use the memory. The best you can do is give it an specific size of memory, which is not very convenient.
 
