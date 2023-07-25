@@ -38,39 +38,41 @@ Some honorable mentions from above:
 ## Pipe's Requirements
 
 Let me give you some context.
-**[Pipe](https://github.com/PipeRift/pipe)**, the library that will contain these shiny new arrays, is the foundational library I use on most of my Cpp projects. It has many great experimental features that I have repeatedly failed to share with others like they deserve... maybe if I manage to write more often.
+**[Pipe](https://github.com/PipeRift/pipe)**, the library that will contain these shiny new arrays, is the foundational library I use on most of my Cpp projects. It has many great experimental features that I have repeatedly failed to share with others like they deserve... maybe if I manage to write more often...
 
-I have used this library for more than 9 years, and overcoming the limitations of std::vector started to be frustrating, specially when I needed to scratch some performance with features like inline memory.
+I have used this library for more than 9 years, and overcoming the limitations of std::vector was increasingly frustrating. Specially when I needed to scratch extra performance with features like inline memory.
 
 I needed an Array type that:
 
-* Natively supports inline allocation without sacrificing the syntax and user experience.
-* Integrates with allocation arenas
+* Natively supports inline memory, without sacrificing the syntax and user experience.
+* Integrates with *arenas* to control the memory it allocates.
 * Has a combined index and iterator based API with an extensive list of helpers.
-* Can take advantage of its architecture to provide optimizations.
+* Its implementation MUST be simple.
 
 ## Design Choices
 
 Lets see how we can achieve reasonable simplicity for arrays.
 
-In Pipe any container with a contiguous list of elements, whether it owns it or not, inherits from IArray (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for finding, checking, sorting, swapping and iterating the elements in the list.
+In **Pipe** any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for **finding, checking, sorting, swapping** and **iterating** the elements in the list.
 
 Two classes use IArray (and some aliases):
 
-* **View**: Points to one or more contiguous elements that it does not own. These elements can be literals, arrays, or custom feed. Equivalent to std::span, or what is sometimes called an “ArrayView.
-* **InlineArray**: It owns a contiguous, variable list of elements. It can use an inline buffer for improved performance. Because of this it does not need specific allocators. Equivalent (to an extent) to std::vector or other array implementations.
-* **Array**: An alias for InlineArray with a buffer size of 0, meaning it uses exclusively allocated memory.
+* **View**: Points to one or more contiguous elements that it **does not own**. These elements can be literals, arrays, or custom feed. Equivalent to std::span, or what is sometimes called an “ArrayView.
+* **InlineArray**: **Owns a contiguous, variable list of elements**. It can use an optional inline buffer for performance. Because of this it does not need allocators. Equivalent (to an extent) to std::vector or other array implementations.
+* **Array**: An alias for **InlineArray** with an inline buffer size of 0, meaning it uses exclusively allocated memory.
 
-There are other aliases like “SmallArray” that use different combinations of the inline buffer, but the point is that there is a single implementation class for arrays, no matter if it uses inline buffers or not.
+There are other aliases like “**SmallArray**” that use different combinations of the inline buffer, but the point is that there is a single implementation class for arrays.
 
-Lets touch the topic of “no allocators”.
+### Allocation
 
-Over the years, I have seen and used many implementations of arrays. Like everything, they have different advantages and disadvantages, it is a balance. However, those that used templated allocators were specifically rigid, verbose or complex (or all those three).
+Lets go back to “*does not need allocators*”:
+
+Over the years, I have seen and used many implementations of arrays. Like everything, they have advantages and disadvantages. It is a balance. However, those that used templated allocators were specifically rigid, verbose or complex (or all those three).
 
 Usually you want to solve two problems with allocators:
 
-* You want to control how and where the container’s memory is allocated.
-* You want to inject and use inline elements in the container.
+* Control how and where the container’s memory is allocated.
+* Inject and use inline elements in the container.
 * Optionally, you also want to share this allocator with different containers.
 
 The third one is cute, but very problematic when you want to also achieve the other points. Different containers allocate differently. If an allocator is used on an array you know you only need to maintain a single block of memory, however maps, sets or page buffers don't work this way, and can allocate many.
