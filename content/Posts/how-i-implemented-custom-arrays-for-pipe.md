@@ -37,7 +37,8 @@ Some honorable mentions from above:
 
 ## Pipe's Requirements
 
-For context, **Pipe**, the library that contains these shiny new arrays, is the base library I use on most of my cpp projects. It has many great experimental features that I have repeatedly not talked about like they deserve. But one not so shiny was a wrapper around std::vector with extra features and an API that fits the library.
+Let me give you some context.
+**[Pipe](https://github.com/PipeRift/pipe)**, the library that will contain these shiny new arrays, is the base library I use on most of my cpp projects. It has many great experimental features that I have repeatedly not talked about like they deserve. But one not so shiny was a wrapper around std::vector with extra features and an API that fits the library.
 
 I've used this library for more than 9 years and it was about time I did a proper rework of Array.
 
@@ -45,7 +46,7 @@ I've used this library for more than 9 years and it was about time I did a prope
 
 Lets see how we can achieve reasonable simplicity for arrays.
 
-In Pipe any container with a contiguous list of elements, wether it owns it or not, inherits from IArray (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for finding, checking, sorting, swapping and iterating the elements in the list.
+In Pipe any container with a contiguous list of elements, whether it owns it or not, inherits from IArray (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for finding, checking, sorting, swapping and iterating the elements in the list.
 
 Two classes use IArray (and some aliases):
 
