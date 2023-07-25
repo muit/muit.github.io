@@ -16,11 +16,11 @@ Which is what I did until a some weeks ago, when I decided enough was enough! It
 Until now, I used a wrapper around std::vector, which was okay (no, really) but...
 
 * It makes solutions to simple problems unnecessarily complex.
-* Its API is strongly built using iterators.
+* Its API almost completely built using iterators.
 * It has a templated allocator types.
-* There is no built-in (or easy) way to use inline allocation (try with allocators if you want to sacrifice 500 lines of code to the gods and obtain shitty syntax in return).
+* There is no built-in (or easy) way to use inline memory (try with allocators if you want to sacrifice 500 lines of code to the gods and obtain shitty syntax in return).
 * It has an extensive & rigid API with years of features that I dont want or need to maintain.
-* Fuck `std::vector<bool>`
+* Fuck `std::vector<bool>`. Burn. It.
   And many others really, but most importantly:
 * **It's fun to do your own stuff** some times, not gonna lie.
 
