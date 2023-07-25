@@ -9,16 +9,25 @@ series:
 
 Just use **std::vector**.
 
-Which is what I did until a some weeks ago, when I decided enough was enough! It was about time to make an array type specifically for the needs of my library, Pipe.
+Which is what I did until a some weeks ago, when I decided enough was enough! It was about time I made an array type for the needs of my library (*Pipe*).
 
-As to why I needed my own array types. std::vector is great (no, really), BUT:
+## Why
 
-* It has an API based on iterators and allocators, which makes it more complex and its own internal code unintelligible. I am sure someone looking to have a career on the std standard will like it, but us humans need to understand how the tools we use work. I usually dont like black boxes.
-* It has a templated allocator type. This on its own makes the complexity and use of the type exponential.
-* No obvious way to implement inline vectors (try with allocators if you want to sacrifice 500 lines to the gods and obtain shitty syntax).
-* Fuck std::vector<bool>.
+Until now, I used a wrapper around std::vector, which was okay (no, really) but...
+
+* It makes solutions to simple problems unnecessarily complex.
+* Its API is strongly built using iterators.
+* It has a templated allocator types.
+* There is no built-in (or easy) way to use inline allocation (try with allocators if you want to sacrifice 500 lines of code to the gods and obtain shitty syntax in return).
+* It has an extensive & rigid API with years of features that I dont want or need to maintain.
+* Fuck `std::vector<bool>`
   And many others really, but most importantly:
-* It's fun to do your own stuff, not gonna lie.
+* **It's fun to do your own stuff** some times, not gonna lie.
+
+These points are not necessarily the wrong choice for the STD considering its scope, but for me they VERY much are.
+
+I am sure someone looking to have a career on the std standard will like it, but us humans need to understand how the tools we use work. I usually dont like black boxes.
+Its API is based on iterators and allocators, which 
 
 I wonder if by the end of the post you will agree with me on that the result was actually pretty good.
 And the benefits, many (for my use-case at least).
@@ -32,12 +41,12 @@ I've used this library for more than 9 years and it was about time I did a prope
 Even if this container works in a different way to std::vector internally, most of its functionality remains, so many of the functions can be found and work in a similar way.
 
 No allocators, no specific inline containers, no policies.
-TInlineArray\<T, N> is the array for any use, where T is the type, and N the inline buffer size.
-There is an alias TArray<T>, which simply refers to a TInlineArray\<T, 0>, with no inline buffer.
+`TInlineArray<T, N>` is the array for any use, where T is the type, and N the inline buffer size.
+There is an alias `TArray<T>`, which simply refers to a `TInlineArray<T, 0>`, with no inline buffer.
 
 They all inherit a base type IArray, which simply represents the data pointer and size. This is also used by TView (more on that later).
 
-## Design choices
+## Design Choices
 
 Lets see how we can achieve reasonable simplicity for arrays.
 
