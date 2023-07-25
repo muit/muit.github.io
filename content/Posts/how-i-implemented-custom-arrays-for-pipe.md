@@ -24,13 +24,15 @@ Until now, I used a wrapper around std::vector, which was okay (no, really) but.
   And many others really, but most importantly:
 * **It's fun to do your own stuff** some times, not gonna lie.
 
-These points are not necessarily the wrong choice for the STD considering its scope, but for me they VERY much are.
+These points are not necessarily the wrong choice for the standard library considering its scope, but for me they **very much are**.
 
-I am sure someone looking to have a career on the std standard will like it, but us humans need to understand how the tools we use work. I usually dont like black boxes.
-Its API is based on iterators and allocators, which 
+We, humans, should understand how the tools we use work. Otherwise we could be using them the wrong way, or the wrong tool. Containers are a tool like any other. If you ever read the code inside std::vector, no matter which std implementation it was, I wouldn't be surprised if you were not too keen to stick around.
 
-I wonder if by the end of the post you will agree with me on that the result was actually pretty good.
-And the benefits, many (for my use-case at least).
+That is, in good part, because the design it is built on top of carry an exponential amount of complexity.
+Just from the points I mentioned above:
+
+* The iterators based API force functions to be their own templates, where parameters could be iterators of any type, many checks need to be run, and the abstraction layer over just using indexes is not free.
+* Allocators make compatibility across otherwise equivalent vector types a nightmare, tries to solve memory allocation yet fails to be of real use in most scenarios, and multiplies the number of final compiled class variations (which makes build slower). Not forgetting it also guarantees a horrible implementation.
 
 For context, Pipe, the library that contains these shiny new arrays, is the base library I use on most of my cpp projects. It has many great experimental features that I have repeatedly not talked about like they deserve. But one not so shiny was a wrapper around std::vector with extra features and an API that fits the library.
 
