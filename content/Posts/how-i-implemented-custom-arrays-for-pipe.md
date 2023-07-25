@@ -37,6 +37,8 @@ There is an alias TArray<T>, which simply refers to a TInlineArray\<T, 0>, with 
 
 They all inherit a base type IArray, which simply represents the data pointer and size. This is also used by TView (more on that later).
 
+## Design choices
+
 Lets see how we can achieve reasonable simplicity for arrays.
 
 In Pipe any container with a contiguous list of elements, wether it owns it or not, inherits from IArray (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for finding, checking, sorting, swapping and iterating the elements in the list.
