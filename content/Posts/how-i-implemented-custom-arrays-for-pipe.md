@@ -26,7 +26,8 @@ Until now, I used a wrapper around std::vector, which was okay (no, really) but.
 
 These points are not necessarily the wrong choice for the standard library considering its scope, but for me they **very much are**.
 
-We, humans, should understand how the tools we use work. Otherwise we could be using them the wrong way, or the wrong tool. Containers are a tool like any other. If you ever read the code inside std::vector, no matter which std implementation it was, I wouldn't be surprised if you were not too keen to stick around.
+We, humans, should understand how the tools we use work. Otherwise we could be using them the wrong way, or the wrong tool. Containers are a tool like any other.
+If you ever read the code inside std::vector, no matter which std implementation it was, I wouldn't be surprised if you were not too keen to stick around.
 
 That is, in good part, because the design it is built on top of carry an exponential amount of complexity.
 Some honorable mentions from above:
