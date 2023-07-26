@@ -77,12 +77,18 @@ Usually you want to solve two problems with allocators:
 
 The third one is cute, but very problematic when you want to also achieve the other points. Different containers allocate differently. If an allocator is used on an array you know it only needs to maintain a single block of memory,. However *maps*, *sets* or *page buffers* don't work this way, and can allocate many.
 
-You can’t use an inline allocator for different types if you dont know how you will use the memory. The best you can do is give it an specific size of memory, which is not very convenient.
+Since most allocators need to know the type, they are forced to be templates, and create a dependency between the memory and the type.
 
-Not to mention, allocators like these need to be templated. They need to know the type they work with (in most cases) to understand, again, how that memory is used.
+Okay, but they surely must have many uses… right?
+I think it is pretty rare, I would dare to say extremely rare, to see an allocator that is **not** for inline memory in your everyday life (being used in a container).
 
-Okay, but they surely must have many uses. Their complexity is justified… right?
+My approach to the problem was to split it.
+Inline buffers are handled directly inside the array, and any other memory allocation is relegated to arenas, which are non templated, and entirely independent from the container.
 
-I think it is pretty rare, would dare to say extremely rare, to see an allocator that is **not** for inline memory handling in your everyday life.
+With this the user does not need to remember how to use inline memory. He can just say how much he wants on the type.
+He can also assign an arena to the array to manage how and where all its memory is used.
 
-The approach I took, was a bit different. Following the memory architecture of Pipe, I used arenas to control where allocated memory is stored and how. They are provided on construction.
+#### Using arenas on arrays
+
+One example I can think of where arenas are handy is reflection. In Pipe all reflection data is stored in a single linear arena. This arena is assigned to all containers that store reflection data so that all of its memory is together.
+This makes operations like checking inheritance much faster.
