@@ -176,7 +176,7 @@ void Swap(i32 firstIdx, i32 secondIdx)
 
 Their API will always contain 'Unsafe' at the end. This makes it likely that safe versions show up first while coding, and continuously gives a hint of their risk to the user.
 
-### Final Notes
+## Final Notes
 
 For anyone interested in having a look at the full implementation you can find it **[here (PipeArrays.h)](https://github.com/PipeRift/pipe/blob/feature/custom-arrays/Include/Pipe/PipeArrays.h)** along with the library (**[Pipe](https://github.com/PipeRift/pipe)**).
 
