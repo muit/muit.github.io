@@ -1,5 +1,5 @@
 ---
-title: Making your own arrays (for Pipe)
+title: Making your own array
 date: 2023-07-12
 draft: true
 cover: Assets/Img/Covers/line-of-ducks.png
