@@ -56,7 +56,7 @@ I needed an Array type that:
 * Has a combined index and iterator based API with an extensive list of helpers.
 * Its implementation MUST be simple.
 
-## The Implementation
+## The Design
 
 Lets see how we can achieve reasonable simplicity for arrays.
 
