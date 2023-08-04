@@ -13,15 +13,15 @@ Just use **std::vector**.
 
 Which is what I did until a some weeks ago, when I decided enough was enough!
 
-It was about time I made an array type for the needs of my library. So in this post I am going to go through the design decisions taken while doing so. Creating a custom array container.
+It was about time I made an array type for the needs of my library. In this post, I will go through the design decisions taken while doing it: Creating a custom array container.
 
 ## Why a custom array?
 
-Until now, I used a wrapper around `std::vector`, which was okay...  no, really. But:
+Until now, I used a wrapper around `std::vector`, which was okay…  no, really. But:
 
 * It makes solutions to simple problems unnecessarily complex.
 * Its API almost completely built using iterators.
-* It has a allocator types on the template
+* It has an allocator types on the template
 * There is no built-in (or easy) way to have inline memory (try with allocators if you want to sacrifice 500 lines of code to the gods and obtain shitty syntax in return).
 * It has an extensive & rigid API with years of features that I don't want or need to maintain.
 * Fuck `std::vector<bool>`. Burn it.
@@ -42,7 +42,7 @@ Some honorable mentions from the previous points:
 
 ## About Pipe's Requirements
 
-**[Pipe](https://github.com/PipeRift/pipe)**, the library that will contain these shiny new arrays, is the foundational library I use on most of my Cpp projects. It has many great experimental features that I have repeatedly failed to share with others like they deserve.
+**[Pipe](https://github.com/PipeRift/pipe)**, the library that will contain these shiny new arrays, is the foundational library I use on most of my C++ projects. It has many great experimental features that I have repeatedly failed to share with others like they deserve.
 
 I have used this library for more than 9 years, and overcoming the limitations of std::vector was increasingly frustrating. Specially when I needed to scratch extra performance with features like inline memory.
 
@@ -64,7 +64,7 @@ In **Pipe,** any container with a contiguous list of elements, whether it owns i
 
 Two classes use IArray (and some aliases too):
 
-* **View**: Points to **one or more contiguous elements** that **it does not own**. These elements can be literals, arrays, or any other pointer with a size. Equivalent to std::span, or what is sometimes called an "ArrayView".
+* **View**: Points to **one or more contiguous elements** that **it does not own**. These elements can be literals, arrays, or any other pointer with a size. Equivalent to std::span, or what is sometimes called an “ArrayView”.
 * **InlineArray**: **Owns a contiguous, variable list of elements**. It can use an optional inline buffer for performance. Because of this, it **does not use allocators**. Equivalent (to an extent) to std::vector or other array implementations.
 * **Array**: An alias for **InlineArray** with an inline buffer size of 0, meaning it uses exclusively allocated memory.
 
@@ -179,7 +179,7 @@ void Swap(i32 firstIdx, i32 secondIdx)
 }
 ````
 
-Their API will always contain 'Unsafe' at the end. This makes it likely that safe versions show up first while coding, and continuously gives a hint of their risk to the user.
+Their API will always contain “Unsafe” at the end. This makes it likely that safe versions show up first while coding, and continuously gives a hint of their risk to the user.
 
 ## Final Notes
 
