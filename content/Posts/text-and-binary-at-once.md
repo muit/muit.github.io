@@ -7,9 +7,7 @@ series:
 - serialization
 ---
 
-You see, I like to spend my free time building a programming language called [**Rift**](https://github.com/PipeRift/rift).
-
-This surely wasn't ambitious enough, so early on I designed it to be based on data files.
+Quite often I find myself working on a programming language ([**Rift**](https://github.com/PipeRift/rift)), editors, tools, or other projects that require quite a strong serialization solution, which I used to not have. It is now a different story though, since I implemented, once again, my own solution in Pipe
 
 This basically means code files are not saved as text, but stored as data in some format like json or binary, and interpreted by an editor/compiler later.
 Of course, there are many advantages and some disadvantages to this approach, but I will only focus on the serialization aspect of it today.

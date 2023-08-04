@@ -1,9 +1,11 @@
 ---
 title: Making your own array
-date: 2023-07-12
-draft: true
+date: 2023-08-01
+draft: false
 cover: Assets/Img/Covers/line-of-ducks.jpg
 series:
+- arrays
+- memory
 - pipe
 ---
 
@@ -44,6 +46,9 @@ Some honorable mentions from the previous points:
 
 I have used this library for more than 9 years, and overcoming the limitations of std::vector was increasingly frustrating. Specially when I needed to scratch extra performance with features like inline memory.
 
+ > 
+ > *By "**inline memory**" I mean having N items contained directly inside the array's instance)*
+
 I needed an Array type that:
 
 * Natively supports inline memory, without sacrificing the syntax or user experience.
@@ -57,7 +62,7 @@ Lets see how we can achieve reasonable simplicity for arrays.
 
 In **Pipe** any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for **finding, checking, sorting, swapping** and **iterating** the elements in the list.
 
-Two classes use IArray (and some aliases):
+Two classes use IArray (and some aliases too):
 
 * **View**: Points to **one or more contiguous elements** that **it does not own**. These elements can be literals, arrays, or any other pointer with a size. Equivalent to std::span, or what is sometimes called an "ArrayView".
 * **InlineArray**: **Owns a contiguous, variable list of elements**. It can use an optional inline buffer for performance. Because of this, it **does not use allocators**. Equivalent (to an extent) to std::vector or other array implementations.
@@ -148,9 +153,9 @@ Of course, iterators are still supported to allow range-for or iterator algorith
 
 ### Unsafe
 
-Sometimes when we work with arrays we might know the inputs we provide are safe. For that reason many functions in Pipe have an **unsafe** version which skips some safety checks. You use them at your own risk.
+Sometimes when we work with arrays we might know the inputs we provide are safe. For that reason many functions in Pipe have an **unsafe** version which skips some safety checks. Use them at your own risk.
 
-This can help gain back a little bit of performance in the large scale of things.
+This can help gain back some performance in the large scale of things.
 
 Very often the safe versions simply call the unsafe version after running those checks:
 
@@ -180,9 +185,8 @@ Their API will always contain 'Unsafe' at the end. This makes it likely that saf
 
 For anyone interested in having a look at the full implementation you can find it **[here (PipeArrays.h)](https://github.com/PipeRift/pipe/blob/feature/custom-arrays/Include/Pipe/PipeArrays.h)** along with the library (**[Pipe](https://github.com/PipeRift/pipe)**).
 
-I am sure I also forgot important details or didn't explain something correctly, so feel free to leave a comment and feedback.
-Also, if you happened to like it, let me know! I don't write often but your encouragement will help :)
+I am sure I also forgot important details or didn't explain something correctly, so feel free to leave a comment and feedback, and if you happened to like it, let me know! I don't write often but your encouragement will help :)
 
-Finally, I am aware that topics like this have such a wide amount of uses that my described solution (that works for **my needs**) will be as good for some as it will be bad for others. Lets keep it a constructive conversation anyway.
+Finally, I am aware that topics like this have such a wide amount of uses that my described solution (that works for *my needs*) will be as good for some as it will be bad for others. Lets keep it a constructive conversation anyway.
 
 Until next time, Muit.
