@@ -26,19 +26,19 @@ Until now, I used a wrapper around `std::vector`, which was okay...  no, really.
 * It has an extensive & rigid API with years of features that I don't want or need to maintain.
 * Fuck `std::vector<bool>`. Burn it.
   And many others really, but most importantly:
-* **It's fun to do your own stuff some times**, not gonna lie.
+* **It's fun to do your own stuff sometimes**, not going to lie.
 
 These points are not necessarily the wrong choice for the standard library considering its scope, but for me, they **very much are**.
 
-We, humans, should understand how the tools we use work. Otherwise we could be using them the wrong way or the wrong tool. Containers are a tool like any other.
+We, humans, should understand how the tools we use work. Otherwise, we could be using them the wrong way or the wrong tool. Containers are a tool like any other.
 If you ever read code inside std::vector, no matter which std implementation it was, I wouldn't be surprised if you chose to not stick around.
 
 Std implementations are often unintelligible, in good part because the design they are built on top of has a long list of requirements that adds up.
 
 Some honorable mentions from the previous points:
 
-* The iterator based API forces functions to be their own templates, where parameters could be iterators of any type, and many extra checks need to be run. The abstraction layer it adds over simply using indexes is not for free either.
-* Allocators make compatibility across otherwise equivalent vectors a nightmare, tries to solve memory allocation yet fails to be of real use in real scenarios, and multiplies the number of compiled class variations (which makes builds slower). Not forgetting it also guarantees a complex implementation.
+* The iterator based API forces functions to be their own templates, where parameters could be iterators of any type, and many extra checks need to be run. The abstraction layer it adds over simply using indexes is not for free, either.
+* Allocators make compatibility across otherwise equivalent vectors a nightmare, tries to solve memory allocation yet fails to be of real use in real scenarios, and multiplies the number of compiled class variations (which makes builds slower). Not forgetting, it also guarantees a complex implementation.
 
 ## About Pipe's Requirements
 
@@ -47,7 +47,7 @@ Some honorable mentions from the previous points:
 I have used this library for more than 9 years, and overcoming the limitations of std::vector was increasingly frustrating. Specially when I needed to scratch extra performance with features like inline memory.
 
  > 
- > *By "**inline memory**" I mean having N items contained directly inside the array's instance)*
+ > *By “**inline memory**” I mean having N items contained directly inside the array's instance)*
 
 I needed an Array type that:
 
@@ -60,7 +60,7 @@ I needed an Array type that:
 
 Lets see how we can achieve reasonable simplicity for arrays.
 
-In **Pipe** any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for **finding, checking, sorting, swapping** and **iterating** the elements in the list.
+In **Pipe,** any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for **finding, checking, sorting, swapping** and **iterating** the elements in the list.
 
 Two classes use IArray (and some aliases too):
 
@@ -76,13 +76,13 @@ Lets go back to “*does not use allocators*”:
 
 Over the years, I have seen and used many implementations of arrays. Like everything, they have advantages and disadvantages. It is a balance. However, those that used templated allocators were specifically rigid, verbose or complex (or all those three).
 
-Usually you want to solve two problems with allocators:
+Usually, you want to solve two problems with allocators:
 
 * Control how and where the container’s memory is allocated.
 * Inject and use inline elements in the container.
-  Optionally, you may want to share this allocators with different containers.
+  Optionally, you may want to share these allocators with different containers.
 
-Sharing allocators sounds ideal, but is very problematic when you also want to achieve the other points. Different containers allocate differently. If an allocator is used in an array you know it only needs to maintain a single block of memory. However *maps*, *sets* or *page buffers* don't work this way, and can allocate many blocks. They have requirements that can be incompatible with each other.
+Sharing allocators sounds ideal, but is very problematic when you also want to achieve the other points. Different containers allocate differently. If an allocator is used in an array, you know it only needs to maintain a single block of memory. However, *maps, sets, or page buffers* don't work this way, and can allocate many blocks. They have requirements that can be incompatible with each other.
 
 Most allocators also need to know the type the container holds, so they need to be templates. They have a dependency between the memory and the type since many times they are the ones doing the copying of elements, among other operations.
 
@@ -91,7 +91,7 @@ Most allocators also need to know the type the container holds, so they need to 
 
 I think it is pretty rare, would even dare to say extremely rare, to see in your everyday life a container allocator that is **not** for inline memory or for a very specific use.
 
-If we imagine we had an "inline allocator" in different APIs it could look like:
+If we imagine we had an “inline allocator” in different APIs, it could look like:
 
 ````cpp
 std::vector<String, InlineAllocator<String, 5>> values; // standard library
@@ -109,21 +109,21 @@ I choose to split the problem of allocation:
 * **Inline memory** is handled by the array itself.
 * **Allocated memory** is handled by arenas.
 
-#### Inline memory
+#### Inline Memory
 
-**Inline buffers** are handled by the array itself.
-When we use for example `TInlineArray<T, 5>` the array will be able to hold up to **5** inline elements. If we exceed this capacity it will use allocation. Similarly, if it fits, it will move to inline from allocation.
+It is handled by the array itself.
+When we use for example `TInlineArray<T, 5>` the array will be able to hold up to **5** inline elements. If we exceed this capacity, it will use allocation. Similarly, if it fits, it will move to inline from allocation.
 Of course, you can assign an inline buffer of size 0, this is actually very common.
 
 The user does not need to remember how to use inline memory since it is always available on the container.
 
-#### Allocated memory
+#### Allocated Memory
 
-**Memory allocation** is handled exclusively by **arenas**.
-Arenas handle allocation following a particular algorithm. They are non-templated, and completely independent from the container itself.
+I is handled exclusively by **arenas**.
+Arenas handle allocation following a particular algorithm. They are non-templated, and completely independent of the container itself.
 
  > 
- > **To give you an example**: I use them for reflection, where a single linear arena is assigned to all containers allocating reflection data. This means reflection has great data locality and reduces cache misses. It makes operations like checking inheritance much faster since we access memory that is very close.
+ > **To give you an example**: I use them for reflection, where a single linear arena is assigned to all containers allocating reflection data. This means reflection has great data locality and reduces cache misses. It makes operations like checking inheritance much faster, since we access memory that is very close.
 
 An array can be assigned an arena during its construction.
 
@@ -153,11 +153,11 @@ Of course, iterators are still supported to allow range-for or iterator algorith
 
 ### Unsafe
 
-Sometimes when we work with arrays we might know the inputs we provide are safe. For that reason many functions in Pipe have an **unsafe** version which skips some safety checks. Use them at your own risk.
+Sometimes when we work with arrays, we might know the inputs we provide are safe. For that reason, many functions in Pipe have an **unsafe** version which skips some safety checks. Use them at your own risk.
 
 This can help gain back some performance in the large scale of things.
 
-Very often the safe versions simply call the unsafe version after running those checks:
+Very often, the safe versions simply call the unsafe version after running those checks:
 
 ````cpp
 bool RemoveAt(i32 index, const bool shouldShrink)
@@ -183,10 +183,10 @@ Their API will always contain 'Unsafe' at the end. This makes it likely that saf
 
 ## Final Notes
 
-For anyone interested in having a look at the full implementation you can find it **[here (PipeArrays.h)](https://github.com/PipeRift/pipe/blob/feature/custom-arrays/Include/Pipe/PipeArrays.h)** along with the library (**[Pipe](https://github.com/PipeRift/pipe)**).
+For anyone interested in taking a look at the full implementation, you can find it **[here (PipeArrays.h)](https://github.com/PipeRift/pipe/blob/feature/custom-arrays/Include/Pipe/PipeArrays.h)** along with the library (**[Pipe](https://github.com/PipeRift/pipe)**).
 
-I am sure I also forgot important details or didn't explain something correctly, so feel free to leave a comment and feedback, and if you happened to like it, let me know! I don't write often but your encouragement will help :)
+I am sure I also forgot important details or didn't explain something correctly, so feel free to leave a comment and feedback, and if you happened to like it, let me know! I don't write often, but your encouragement will help :)
 
-Finally, I am aware that topics like this have such a wide amount of uses that my described solution (that works for *my needs*) will be as good for some as it will be bad for others. Lets keep it a constructive conversation anyway.
+Finally, I am aware that topics like this have such a wide amount of uses that my described solution (that works for *my needs*) will be as good for some as it will be bad for others. Let's keep it a constructive conversation anyway.
 
 Until next time, Muit.
