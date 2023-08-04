@@ -17,7 +17,7 @@ It was about time I made an array type for the needs of my library. In this post
 
 ## Why a custom array?
 
-Until now, I used a wrapper around `std::vector`, which was okay…  no, really. But:
+Until now, I used a wrapper around `std::vector`, which was okay…  No, really. But:
 
 * It makes solutions to simple problems unnecessarily complex.
 * Its API almost completely built using iterators.
@@ -30,15 +30,15 @@ Until now, I used a wrapper around `std::vector`, which was okay…  no, really.
 
 These points are not necessarily the wrong choice for the standard library considering its scope, but for me, they **very much are**.
 
-We, humans, should understand how the tools we use work. Otherwise, we could be using them the wrong way or the wrong tool. Containers are a tool like any other.
+We, humans, should understand how the tools we use work. Otherwise, we could be using them the wrong way or the wrong tool. And containers are a tool like any other.
 If you ever read code inside std::vector, no matter which std implementation it was, I wouldn't be surprised if you chose to not stick around.
 
-Std implementations are often unintelligible, in good part because the design they are built on top of has a long list of requirements that adds up.
+Std implementations are often unintelligible, in good part, because the design they are built on top of has a long list of requirements that adds up.
 
 Some honorable mentions from the previous points:
 
-* The iterator based API forces functions to be their own templates, where parameters could be iterators of any type, and many extra checks need to be run. The abstraction layer it adds over simply using indexes is not for free, either.
-* Allocators make compatibility across otherwise equivalent vectors a nightmare, tries to solve memory allocation yet fails to be of real use in real scenarios, and multiplies the number of compiled class variations (which makes builds slower). Not forgetting, it also guarantees a complex implementation.
+* The iterator based API forces functions to be their own templates, where parameters could be iterators of any type, and many extra checks need to be run. The abstraction layer it adds, over simply using indexes, is not for free either.
+* Allocators make compatibility across otherwise equivalent vectors a nightmare. They try to solve memory allocation, yet fail to be of real use in real scenarios, and they multiply the number of compiled class variations (which makes compiling slower). Not forgetting, it also guarantees a complex implementation.
 
 ## About Pipe's Requirements
 
