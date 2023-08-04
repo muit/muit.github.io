@@ -13,7 +13,7 @@ Just use **std::vector**.
 
 Which is what I did until a some weeks ago, when I decided enough was enough!
 
-It was about time I made an array type for the needs of my library. In this post, I will go through the design decisions taken while doing it: Creating a custom array container.
+It was about time I made an array type for the needs of my library. In this post, I will go through the design decisions taken while doing so: Creating a custom array container.
 
 ## Why a custom array?
 
@@ -60,12 +60,12 @@ I needed an Array type that:
 
 Lets see how we can achieve reasonable simplicity for arrays.
 
-In **Pipe,** any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (new name suggestions are welcome). This class is not intended for the user to use directly, but it provides shared functionality for **finding, checking, sorting, swapping** and **iterating** the elements in the list.
+In **Pipe,** any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (I welcome better name suggestions). This class is not intended for the user to use directly, but it provides shared functionality for **finding, checking, sorting, swapping** and **iterating** the elements in the list.
 
 Two classes use IArray (and some aliases too):
 
 * **View**: Points to **one or more contiguous elements** that **it does not own**. These elements can be literals, arrays, or any other pointer with a size. Equivalent to std::span, or what is sometimes called an “ArrayView”.
-* **InlineArray**: **Owns a contiguous, variable list of elements**. It can use an optional inline buffer for performance. Because of this, it **does not use allocators**. Equivalent (to an extent) to std::vector or other array implementations.
+* **InlineArray**: **Owns a contiguous, mutable list of elements**. It can use an optional inline buffer for performance. Because of this, it **does not use allocators**. Somewhat equivalent to std::vector or other array implementations.
 * **Array**: An alias for **InlineArray** with an inline buffer size of 0, meaning it uses exclusively allocated memory.
 
 There can be other aliases like “**SmallArray**” that use different combinations of the inline buffer, but the point is that there is a single implementation class for arrays.
