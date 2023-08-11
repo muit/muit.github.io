@@ -7,11 +7,11 @@ series:
 - serialization
 ---
 
-Quite often I find myself working on a programming language ([**Rift**](https://github.com/PipeRift/rift)), editors, tools, or other projects that require quite a strong serialization solution, which I used to not have. It is now a different story though, since I implemented, once again, my own solution in Pipe
+Quite often I find myself working on a programming language, editors, tools, or other projects that require quite a strong serialization solution, which I used to not have.
 
-This basically means code files are not saved as text, but stored as data in some format like json or binary, and interpreted by an editor/compiler later.
-Of course, there are many advantages and some disadvantages to this approach, but I will only focus on the serialization aspect of it today.
+It is now a different story, since I implemented, once again, my own solution in Pipe.
 
+So, this time let's talk about 
 I am going to describe what the serialization architecture looks like in Rift, and why I got there.
 I believe it is interesting to play with, and maybe it can bring some new ideas to the topic.
 

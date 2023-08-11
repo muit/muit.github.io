@@ -28,7 +28,7 @@ Until now, I used a wrapper around `std::vector`, which was okay…  No, really.
   And many others really, but most importantly:
 * **It's fun to do your own stuff sometimes**, not going to lie.
 
-These points are not necessarily the wrong choice for the standard library considering its scope, but for me, they **very much are**.
+These points are not necessarily the wrong choice for the standard library considering its scope, but for me, *they very much are*.
 
 We, humans, should understand how the tools we use work. Otherwise, we could be using them the wrong way or the wrong tool. And containers are a tool like any other.
 If you ever read code inside std::vector, no matter which std implementation it was, I wouldn't be surprised if you chose to not stick around.
@@ -60,12 +60,12 @@ I needed an Array type that:
 
 Lets see how we can achieve reasonable simplicity for arrays.
 
-In **Pipe,** any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (I welcome better name suggestions). This class is not intended for the user to use directly, but it provides shared functionality for **finding, checking, sorting, swapping** and **iterating** the elements in the list.
+In Pipe, any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (I welcome better name suggestions). This class is not intended for the user to use directly, but it provides shared functionality for finding, checking, sorting, swapping and iterating the elements in the list.
 
 Two classes use IArray (and some aliases too):
 
-* **View**: Points to **one or more contiguous elements** that **it does not own**. These elements can be literals, arrays, or any other pointer with a size. Equivalent to std::span, or what is sometimes called an “ArrayView”.
-* **InlineArray**: **Owns a contiguous, mutable list of elements**. It can use an optional inline buffer for performance. Because of this, it **does not use allocators**. Somewhat equivalent to std::vector or other array implementations.
+* **View**: Points to one or more contiguous elements\* that **it does not own**. These elements can be literals, arrays, or any other pointer with a size. Equivalent to std::span, or what is sometimes called an “ArrayView”.
+* **InlineArray**: \*Owns a contiguous, mutable list of elements. It can use an optional inline buffer for performance. Because of this, it *does not use allocators*. Somewhat equivalent to std::vector or other array implementations.
 * **Array**: An alias for **InlineArray** with an inline buffer size of 0, meaning it uses exclusively allocated memory.
 
 There can be other aliases like “**SmallArray**” that use different combinations of the inline buffer, but the point is that there is a single implementation class for arrays.
@@ -101,7 +101,7 @@ TArray<String, InlineAllocator<5>> values; // unreal engine
 In Pipe, this would look a bit different:
 
 ````cpp
-TInlineArray<String, 5> values;
+InlineArray<String, 5> values;
 ````
 
 I choose to split the problem of allocation:
@@ -112,7 +112,7 @@ I choose to split the problem of allocation:
 #### Inline Memory
 
 It is handled by the array itself.
-When we use for example `TInlineArray<T, 5>` the array will be able to hold up to **5** inline elements. If we exceed this capacity, it will use allocation. Similarly, if it fits, it will move to inline from allocation.
+When we use for example `InlineArray<T, 5>` the array will be able to hold up to **5** inline elements. If we exceed this capacity, it will use allocation. Similarly, if it fits, it will move to inline from allocation.
 Of course, you can assign an inline buffer of size 0, this is actually very common.
 
 The user does not need to remember how to use inline memory since it is always available on the container.
@@ -129,10 +129,10 @@ An array can be assigned an arena during its construction.
 
 ````cpp
 MultiLinearArena arena;
-TArray<String> names{arena};
+Array<String> names{arena};
 ````
 
-When no arena is provided, a global or scope arena is used. *I should write another post about arenas...*
+When no arena is provided, a global or scope arena is used. *I should write another post about arenas…*
 
 With this design, an array can copy or move to another array with a different arena seamlessly, just like it does with the inline buffer. No extra code is needed to achieve arenas or inline, and if we need to control allocation, we can use an arena of our choice.
 
@@ -140,7 +140,7 @@ With this design, an array can copy or move to another array with a different ar
 
 On the topic of indexes, there is not that much to mention.
 
-Simply put, most of the functions in TArray prefer indexes or counts over iterators.
+Simply put, most of the functions in the array prefer indexes or counts over iterators.
 This makes their use and implementation easier.
 
 ````cpp
@@ -180,6 +180,23 @@ void Swap(i32 firstIdx, i32 secondIdx)
 ````
 
 Their API will always contain “Unsafe” at the end. This makes it likely that safe versions show up first while coding, and continuously gives a hint of their risk to the user.
+
+### Plurals
+
+It is always better to do an operation once for N items, than N times for N items.
+This is why, in this design, many operations the array does (like adding or removing) can be performed in bulk.
+
+You can add, remove, swap or sort many at once. This can provide a substantial performance benefit, while also simplifying the user code.
+
+This can be done by providing another span or array to the function, or a range of indexes or iterators:
+
+````cpp
+// Some examples of bulk operations in InlineArray:
+void Append(const IArray<Type>& values);
+void Assign(const IArray<Type>& values);
+i32 Remove(const IArray<const Type>& items, bool shouldShrink = true);
+i32 Remove(const IArray<i32>& indices, bool shouldShrink = true);
+````
 
 ## Final Notes
 
