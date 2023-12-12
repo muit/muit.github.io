@@ -24,8 +24,10 @@ Until now, I used a wrapper around `std::vector`, which was okay…  No, really.
 * It has an allocator types on the template
 * There is no built-in (or easy) way to have inline memory (try with allocators if you want to sacrifice 500 lines of code to the gods and obtain shitty syntax in return).
 * It has an extensive & rigid API with years of features that I don't want or need to maintain.
-* Fuck `std::vector<bool>`. Burn it.
-  And many others really, but most importantly:
+* `std::vector<bool>`? Really? Burn it.
+
+And many others really, but most importantly:
+
 * **It's fun to do your own stuff sometimes**, not going to lie.
 
 These points are not necessarily the wrong choice for the standard library considering its scope, but for me, *they very much are*.
@@ -47,7 +49,7 @@ Some honorable mentions from the previous points:
 I have used this library for more than 9 years, and overcoming the limitations of std::vector was increasingly frustrating. Specially when I needed to scratch extra performance with features like inline memory.
 
  > 
- > *By “**inline memory**” I mean having N items contained directly inside the array's instance)*
+ > *By “**inline memory**” I mean having N items contained directly inside the array's instance*
 
 I needed an Array type that:
 
@@ -60,15 +62,17 @@ I needed an Array type that:
 
 Lets see how we can achieve reasonable simplicity for arrays.
 
-In Pipe, any container with a contiguous list of elements, whether it owns it or not, inherits from **IArray** (I welcome better name suggestions). This class is not intended for the user to use directly, but it provides shared functionality for finding, checking, sorting, swapping and iterating the elements in the list.
+In Pipe, any container with a contiguous list of elements, whether it owns it or not, inherits from *IArray* (I welcome better name suggestions).
 
-Two classes use IArray (and some aliases too):
+This class is not intended for the user to use directly, but it provides shared functionality for finding, checking, sorting, swapping and iterating the elements in the list.
 
-* **View**: Points to one or more contiguous elements\* that **it does not own**. These elements can be literals, arrays, or any other pointer with a size. Equivalent to std::span, or what is sometimes called an “ArrayView”.
-* **InlineArray**: \*Owns a contiguous, mutable list of elements. It can use an optional inline buffer for performance. Because of this, it *does not use allocators*. Somewhat equivalent to std::vector or other array implementations.
-* **Array**: An alias for **InlineArray** with an inline buffer size of 0, meaning it uses exclusively allocated memory.
+Two classes use *IArray* (and some aliases too):
 
-There can be other aliases like “**SmallArray**” that use different combinations of the inline buffer, but the point is that there is a single implementation class for arrays.
+* **View**: Points to one or more contiguous elements that **it does not own**. These elements can be literals, arrays, or any other pointer with a size. Equivalent to *std::span*, or what is sometimes called an *ArrayView*.
+* **InlineArray**: Owns a contiguous, mutable list of elements. It can use an optional inline buffer for performance. Because of this, it *does not use allocators*. Somewhat equivalent to std::vector or other array implementations.
+* **Array**: An alias for *InlineArray* with an inline buffer size of 0, meaning it uses exclusively allocated memory.
+
+There can be other aliases like **SmallArray** that use different combinations of the inline buffer, but the point is that there is a single implementation class for arrays.
 
 ### Allocation
 
@@ -119,7 +123,7 @@ The user does not need to remember how to use inline memory since it is always a
 
 #### Allocated Memory
 
-I is handled exclusively by **arenas**.
+It is handled exclusively by **arenas**.
 Arenas handle allocation following a particular algorithm. They are non-templated, and completely independent of the container itself.
 
  > 
