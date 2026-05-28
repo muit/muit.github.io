@@ -12,7 +12,7 @@ other = "Disponibil și în"
 
 # 404.html
 #
-[posts]
+[archives]
 other = "Arhive"
 
 [home]
@@ -37,3 +37,8 @@ other = "{{ .Count }} de cuvinte"
 
 [lastModified]
 other = "Ultima modificare"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "Intrări mai noi"
+olderPosts = "Intrări mai vechi"

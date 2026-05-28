@@ -12,8 +12,8 @@ other = "Auch verfügbar auf"
 
 # 404.html
 #
-[posts]
-other = "Einträge"
+[archives]
+other = "Archiv"
 
 [home]
 other = "Home"
@@ -37,3 +37,8 @@ other = "{{ .Count }} Wörter"
 
 [lastModified]
 other = "Letzte Aktualisierung"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "Neuere Beiträge"
+olderPosts = "Ältere Beiträge"

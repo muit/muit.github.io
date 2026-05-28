@@ -1,4 +1,4 @@
-# Translations for English
+# Translations for Lombardian
 # https://gohugo.io/content-management/multilingual/#translation-of-strings
 
 # Generic
@@ -12,7 +12,7 @@ other = "Disponibel anca in"
 
 # 404.html
 #
-[posts]
+[archives]
 other = "Archivi"
 
 [home]
