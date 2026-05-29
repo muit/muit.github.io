@@ -10,10 +10,16 @@ title: "Miguel Fernandez Arce"
 subtitle: "Game systems programmer"
 copyright: '<a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce</a>'
 
+enableGitInfo: false # Enabled git commit info and link in posts
+
 markup:
   goldmark:
     renderer:
       unsafe: true
+  highlight:
+    lineNoStart: 1
+    lineNos: false
+    lineNumbersInTable: false
 
 menu:
   main:
@@ -36,7 +42,7 @@ menu:
 params:
   dateform: "Jan 2, 2006"
   dateformNum: "2006-01-02"
-  dateformNumTime: "2006-01-02 15:04"
+  dateformNumTime: "2006-01-02"
   dateformShort: "Jan 2"
   defaultTheme: "dark"
   description: "Muit's portfolio & blog"
@@ -63,8 +69,8 @@ params:
       - "Powered by <a href=\"http://gohugo.io\">Hugo</a>"
       - "<a href=\"https://piperift.com\">Piperift</a>"
 
-  commento:
-    url: "https://comments.piperift.com"
+  #commento:
+  #  url: "https://comments.piperift.com/js/commento.js"
 
   social:
     - name: "linkedin"
@@ -75,6 +81,8 @@ params:
       url: "https://mastodon.social/@muit"
     - name: "email"
       url: "mailto:muit@piperift.com"
+
+  gitUrl: "https://github.com/muit/muit.github.io/commit/"
 
 permalinks:
   posts: "/posts/:year/:month/:title/"
