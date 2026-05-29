@@ -13,7 +13,7 @@ Hi!
 I'm Miguel, also known as Muit.<br>
 Game programmer & voice actor.
 
-The majority of my work in videogames is centered around the design and implementation of videogame systems and tools in C++. If you like to code, stick around and have a look at my [posts](./posts)!
+The majority of my work in videogames is centered around the design and implementation of videogame systems and tools in C++. If you like to code, stick around and have a look at my [posts](/posts)!
 
 Many of my projects are open-source and can be found at [Piperift](https://github.com/piperift). Currently working at CI Games, previously Ubisoft Stockholm, EA DICE & Splash Damage.
 

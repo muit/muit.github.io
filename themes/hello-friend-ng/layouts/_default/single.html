@@ -3,7 +3,7 @@
         <main class="post">
 
             <div class="post-info">
-                {{ if .IsTranslated }}
+                {{ if and .IsTranslated (not .Site.Params.EnableGlobalLanguageMenu) }}
                     {{ i18n "postAvailable" }}
                     {{ range .Translations }}
                         <a href="{{ .Permalink }}"><span class="flag fi fi-{{ index hugo.Data.langFlags (.Lang) }}"></span></a>

@@ -11,8 +11,11 @@
             </svg>
             {{ i18n "readingTime" .Page.ReadingTime }}
           {{ end }}
-
-          {{ if .IsTranslated }} | {{ i18n "postAvailable" }}
+          
+          {{ $show_language_change := and .IsTranslated (not .Site.Params.EnableGlobalLanguageMenu) }}
+          {{- if and .Site.Params.EnableReadingTime $show_language_change }} | {{ end }}
+          {{- if $show_language_change }}
+            {{ i18n "postAvailable" }}
             {{ range .Translations }}
                 <a href="{{ .Permalink }}"><span class="flag fi fi-{{ index hugo.Data.langFlags (.Lang) }}"></span></a>
             {{ end}}

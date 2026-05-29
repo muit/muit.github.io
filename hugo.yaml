@@ -7,8 +7,8 @@ theme: "hello-friend-ng"
 readOtherPosts: "Read other posts"
 
 title: "Miguel Fernández Arce"
-subtitle: "Game systems programmer"
-copyright: '<a href="https://github.com/muit" rel="noopener">Miguel Fernandez Arce</a>'
+subtitle: "Game-Systems Programmer"
+copyright: '<a href="https://github.com/muit" rel="noopener">Miguel Fernández Arce</a>'
 
 enableGitInfo: false # Enabled git commit info and link in posts
 
@@ -35,6 +35,8 @@ menu:
       name: "Posts"
       url: "/posts"
       weight: 3
+      params:
+        unlocalized: true
     - name: "GitHub"
       url: "https://github.com/muit"
       weight: 4
@@ -47,12 +49,14 @@ params:
   defaultTheme: "dark"
   description: "Muit's portfolio & blog"
   disableReadOtherPosts: false
+  enableReadingTime: true
   enableSharingButtons: true
-  homeSubtitle: "Game-Systems programmer"
+  homeSubtitle: "Game-Systems Programmer"
   images: [""]
   justifyContent: true
   keywords: "muitxer, homepage, blog, portfolio, unreal engine, C++, Rust, piperift"
-
+  enableGlobalLanguageMenu: true
+  
   logo:
     logoHomeLink: "/"
     logoText: "Muit"
@@ -74,7 +78,7 @@ params:
 
   social:
     - name: "resume"
-      url: "https://www.linkedin.com/in/muitxer/"
+      url: "/Resume.pdf"
       icon: "address-card"
     - name: "linkedin"
       url: "https://www.linkedin.com/in/muitxer/"
@@ -98,11 +102,13 @@ taxonomies:
 languages:
   en:
     weight: 1
+    label: "English"
   es:
     weight: 2
+    label: "Español"
     params:
-      subtitle: "Programador de sistemas de juego"
-      homeSubtitle: "Programador de sistemas de juego"
+      subtitle: "Programador de Sistemas de Juego"
+      homeSubtitle: "Programador de Sistemas de Juego"
       menu:
         main:
           - identifier: "about"
