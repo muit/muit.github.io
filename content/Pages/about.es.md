@@ -5,12 +5,12 @@ aliases:
 - about-me
 - contact
 author:
-  name: Miguel Fernandez Arce
+  name: Muit
 ---
 
 Hola!
 
-Soy Miguel, también conocido como muit.<br>
+Soy Miguel, también conocido como Muit.<br>
 Programador de videojuegos y actor de doblaje.
 
 La mayoría de mi trabajo en videojuegos se centra en el diseño e implementación de sistemas de juego y herramientas en C++. Si te gusta programar, echale un ojo a mis [posts](./posts)!

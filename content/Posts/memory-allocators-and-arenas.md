@@ -1,5 +1,5 @@
 ---
-title: Introduction to allocators and arenas
+title: Allocators and arenas
 date: 2021-03-30
 draft: false
 cover: Assets/Img/Covers/storage.png
@@ -9,7 +9,7 @@ series:
 
 Lately, I have been playing around with the implementation of custom allocators and arenas to replace native allocations on my C++ projects.
 
-Wow! Stop right there, Miguel. This line already deserves some introductions!
+Wow! Stop right there, Muit. This line already deserves some introductions!
 Let's talk about allocators.
 
 ## Crash course on allocations
