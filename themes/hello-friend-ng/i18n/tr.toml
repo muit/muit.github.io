@@ -1,4 +1,4 @@
-# Translations for English
+# Translations for Turkish
 # https://gohugo.io/content-management/multilingual/#translation-of-strings
 
 # Generic
@@ -12,7 +12,7 @@ other = "Ayrıca"
 
 # 404.html
 #
-[posts]
+[archives]
 other = "Arşiv"
 
 [home]
@@ -37,3 +37,8 @@ other = "{{ .Count }} Kelime"
 
 [lastModified]
 other = "Son güncelleme"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "Daha yeni girişler"
+olderPosts = "Eski girişler"

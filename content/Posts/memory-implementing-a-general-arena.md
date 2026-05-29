@@ -7,7 +7,7 @@ series:
 - memory
 ---
 
-Now that we have learned about [arenas and allocators](memory-introduction-to-allocators-and-arenas.md), we can get our hands dirty with an implementation of an arena.
+Now that we have learned about [arenas and allocators](memory-allocators-and-arenas.md), we can get our hands dirty with an implementation of an arena.
 
 ## Best Fit Arena
 

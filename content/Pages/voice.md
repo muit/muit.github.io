@@ -6,7 +6,7 @@ aliases:
 - voice-acting
 - doblaje
 author:
-  name: Miguel Fernandez Arce
+  name: Muit
 ---
 
 ## Demos

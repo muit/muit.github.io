@@ -1,4 +1,4 @@
-# Translations for Portuguese
+# Translations for Portuguese (Brasilian)
 # https://gohugo.io/content-management/multilingual/#translation-of-strings
 
 # Generic
@@ -12,7 +12,7 @@ other = "Também disponível em"
 
 # 404.html
 #
-[posts]
+[archives]
 other = "Arquivo"
 
 [home]
@@ -37,3 +37,8 @@ other = "{{ .Count }} Palavras"
 
 [lastModified]
 other = "Última actualização"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "Entradas mais recentes"
+olderPosts = "Entradas mais antigas"
