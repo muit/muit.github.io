@@ -5,8 +5,7 @@ Use [RealFaviconGenerator](https://realfavicongenerator.net/) to generate these 
 - android-chrome-192x192.png
 - android-chrome-512x512.png
 - apple-touch-icon.png
-- favicon-16x16.png
-- favicon-32x32.png
+- favicon-96x96.png
 - favicon.ico
 - mstile-150x150.png
 - safari-pinned-tab.svg

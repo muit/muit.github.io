@@ -73,6 +73,9 @@ params:
   #  url: "https://comments.piperift.com/js/commento.js"
 
   social:
+    - name: "resume"
+      url: "https://www.linkedin.com/in/muitxer/"
+      icon: "address-card"
     - name: "linkedin"
       url: "https://www.linkedin.com/in/muitxer/"
     - name: "github"
