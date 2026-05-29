@@ -36,7 +36,7 @@ body {
   color: $light-color;
 
   @media #{$media-size-phone} {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -212,7 +212,7 @@ em, i, strong {
   }
 }
 
-body > code {
+code {
   font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
   font-display: auto;
   font-feature-settings: normal;
