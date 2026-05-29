@@ -51,6 +51,18 @@ params:
     logoHomeLink: "/"
     logoText: "Miguel Fernandez Arce"
 
+  enableThemeToggle: true
+  
+  footer:
+    trademark: 2026
+    rss: true
+    copyright: true
+    author: false
+    topText: 
+    bottomText:
+      - "Powered by <a href=\"http://gohugo.io\">Hugo</a>"
+      - "<a href=\"https://piperift.com\">Piperift</a>"
+
   commento:
     url: "https://comments.piperift.com"
 
@@ -59,8 +71,8 @@ params:
       url: "https://www.linkedin.com/in/muitxer/"
     - name: "github"
       url: "https://github.com/muit"
-    - name: "twitter"
-      url: "https://twitter.com/muitxer"
+    - name: "mastodon"
+      url: "https://mastodon.social/@muit"
     - name: "email"
       url: "mailto:muit@piperift.com"
 
