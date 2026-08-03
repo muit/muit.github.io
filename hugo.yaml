@@ -78,7 +78,7 @@ params:
 
   social:
     - name: "resume"
-      url: "/Resume.pdf"
+      url: "/MiguelFernandezArce_GameSystemsDeveloper.pdf"
       icon: "address-card"
     - name: "linkedin"
       url: "https://www.linkedin.com/in/muitxer/"
