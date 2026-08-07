@@ -38,7 +38,7 @@ jobs:
         run: hugo --minify
 
       - name: Build drafts (/drafts)
-        run: hugo --minify -D -d "public/drafts" --baseURL "https://muit.xyz/drafts"
+        run: hugo --minify -D -d "public/drafts" --baseURL "https://muit.dev/drafts"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

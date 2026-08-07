@@ -1,6 +1,6 @@
 PygmentsCodeFences: true
 PygmentsStyle: "monokai"
-baseurl: "https://muit.xyz"
+baseurl: "https://muit.dev"
 locale: "en-us"
 paginate: 10
 theme: "hello-friend-ng"
